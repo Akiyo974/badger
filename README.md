@@ -40,6 +40,22 @@ Pour tester une pull request : `git checkout <branche>` puis `./tools/deploy.ps1
 2. Copier le contenu de `system/` sur le lecteur **BADGER**.
 3. Éjecter le lecteur, puis redémarrer le badge.
 
+## Exporter les contacts
+
+```powershell
+./tools/export_contacts.ps1 -OutDir ~/Desktop
+```
+
+Lit les cartes échangées avec l'app **Contacts** (dans `/state`, hors du lecteur USB) et écrit `contacts.csv` et `contacts.vcf`, à importer dans un téléphone, Outlook ou Google Contacts.
+
+## Tests
+
+```powershell
+py tests/test_contacts_compat.py
+```
+
+Simule des échanges de cartes entre l'app Contacts d'origine (lue depuis le premier commit) et la version de ce repo, pour vérifier qu'on peut toujours échanger avec un badge non modifié.
+
 ## Réglages
 
 Utiliser l'app **Settings** du badge, ou copier `secrets.example.py` en `secrets.py` sur le lecteur et le remplir.
