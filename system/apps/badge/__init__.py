@@ -344,8 +344,13 @@ class Activity:
                 events = json.load(f)
         except (OSError, ValueError):
             return
+        # Forget what was shown before: the new list may be empty or for another user
+        self.label = self.repo = self.created = None
+        handle = self.handle.lower()
         fallback = None
-        for event in events:
+        for event in events if isinstance(events, list) else []:
+            if str(event.get("actor", {}).get("login", "")).lower() != handle:
+                continue
             if event.get("type") == "PushEvent":
                 fallback = event
                 break
