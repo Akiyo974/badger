@@ -5,6 +5,8 @@ Notable changes to this repo. Format based on [Keep a Changelog](https://keepach
 ## Unreleased
 
 ### Added
+- Badge app: the NFC tag holds a **contact card** (vCard with name, title, company and labelled Website / LinkedIn / GitHub links), followed by the website link; `CONTACT_TITLE`, `CONTACT_COMPANY` and `NFC_CARD` in `secrets.py`.
+- Badge app: **reaction when a phone scans the tag**, detected through the ST25DV's RF field status: Mona with hearts and "thanks for the scan!" on screen, a pulsing heart on the LED matrix, a buzz from the DRV2605 and a scan counter.
 - Hardware add-ons on the Qw/ST port, all optional: a 13×9 RGB LED matrix (IS31FL3741) shows the contribution graph in Badge and a mini radar in Radar; an NFC tag (ST25DV) is programmed with the website link by Badge; a haptic driver (DRV2605) makes Radar vibrate when a badge shows up.
 - Menu: apps without a built-in icon can ship an `icon.png`, which Radar now does. Badge and Radar also have their own `README.md`.
 - **Badger Remote** (`wear/`): Wear OS watch app that presses the badge's buttons over Bluetooth LE (tap, hold, crown for ↑ / ↓), with `system/remote.py` on the badge side (`WATCH_REMOTE` in `secrets.py`).

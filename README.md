@@ -13,11 +13,11 @@ Screenshots taken straight from the badge with `tools/screenshot.ps1`.
 
 ### Apps changed in this repo
 
-| Badge | Badge: QR codes | Contacts |
+| Badge | Badge: QR codes | Badge: NFC scan |
 |---|---|---|
-| ![Badge](docs/screenshots/badge.png) | ![Website QR code](docs/screenshots/badge-qr.png) | ![Contacts](docs/screenshots/contacts.png) |
-| **Radar** | **Radar: list** | |
-| ![Radar](docs/screenshots/radar.png) | ![Radar list](docs/screenshots/radar-list.png) | |
+| ![Badge](docs/screenshots/badge.png) | ![Website QR code](docs/screenshots/badge-qr.png) | ![Thanks for the scan](docs/screenshots/badge-scan.png) |
+| **Contacts** | **Radar** | **Radar: list** |
+| ![Contacts](docs/screenshots/contacts.png) | ![Radar](docs/screenshots/radar.png) | ![Radar list](docs/screenshots/radar-list.png) |
 
 The badges on the Radar screenshots are simulated (I only have one badge).
 
@@ -79,7 +79,7 @@ To try a pull request: `git checkout <branch>` then `./tools/deploy.ps1`.
 
 | App | What changes |
 |---|---|
-| **Badge** | QR code pages (↑ / ↓), a "Last push" line under the name, contribution graph on an LED matrix, NFC tag with my website |
+| **Badge** | QR code pages (↑ / ↓), a "Last push" line under the name, contribution graph on an LED matrix, NFC contact card and a reaction when a phone scans it |
 | **Contacts** | Received links are checked, website field, delete a contact, export to the PC |
 | **Radar** (new) | The badges around you, placed by distance, with their name and status; mirrored on an LED matrix, vibration when a badge shows up |
 | **Menu** | Shows an app's `icon.png` when it has no built-in icon (Radar ships one; Badge keeps its built-in icon) |
@@ -99,8 +99,8 @@ The badge has a Qw/ST (Qwiic / STEMMA QT) I²C connector. Badge and Radar look f
 | Board | I²C address | Used by | What it does |
 |---|---|---|---|
 | 13×9 RGB LED matrix (IS31FL3741) | `0x30` | Badge, Radar | **Badge**: the last 13 weeks of the contribution graph in green, plus the weekly total on the bottom row; a blue dot sweeps the top row while loading, amber means missing settings, red a connection error. **Radar**: a small radar with the sweep and the nearby badges, coloured by app (blue Radar, yellow Contacts, orange Pong). |
-| NFC tag (Adafruit ST25DV) | `0x53` (+ `0x57`) | Badge | Writes `https://christendijoux.com` to the tag when Badge starts, so a phone held near the antenna opens the site. The link stays on the passive tag after leaving the app. Any data already on the tag is replaced. |
-| Haptic driver (DRV2605) + ERM motor | `0x5A` | Radar | A short vibration when a badge is first detected, and again if it leaves and comes back. |
+| NFC tag (Adafruit ST25DV) | `0x53` (+ `0x57`) | Badge | Holds a **contact card**: a phone held near the antenna offers to add the contact (name, title, company, labelled Website / LinkedIn / GitHub links), with the website link as a fallback. While Badge is open, a **scan is detected**: Mona appears with hearts and "thanks for the scan!", a heart pulses on the matrix, the motor buzzes and a scan counter goes up. The tag must be NDEF-formatted; any data already on it is replaced. |
+| Haptic driver (DRV2605 or DRV2605L) + ERM motor | `0x5A` | Radar, Badge | **Radar**: a short vibration when a badge is first detected, and again if it leaves and comes back. **Badge**: a buzz on each NFC scan. |
 
 - The matrix runs at a limited global current (`0x40`), and its previous registers are restored when the app exits.
 - Each app checks the chip id before using a board, and prints what it found in the serial console (e.g. `Radar matrix: IS31FL3741 at 0x30, 13x9 RGB`).

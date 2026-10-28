@@ -9,6 +9,7 @@ import fetch
 import machine
 import missing_details
 import wifi
+from badgeware import State
 from badgeware import link as badgelink
 
 try:
@@ -75,6 +76,29 @@ AVATAR_SIZE = 150
 MATRIX_UPDATE_MS = 250
 MATRIX_LEVELS = (0, 24, 55, 105, 175)
 NFC_LINK = "https://christendijoux.com"
+# ST25DV dynamic register EH_CTRL_Dyn: FIELD_ON is set while a phone's RF
+# field powers the tag, so a scan is seen by polling, no GPO wire needed
+NFC_FIELD_REGISTER = 0x2002
+NFC_FIELD_ON = 0x04
+NFC_POLL_MS = 100
+SCAN_SHOW_MS = 2600
+SCAN_COOLDOWN_MS = 3000
+SCAN_STATE = "badge_scans"
+MONA_HEART = "/system/apps/mona_pet/assets/mona-sprites/mona-heart.png"
+MONA_HEART_FRAMES = 14
+MONA_SIZE = 96
+# 11×9 heart drawn on the 13×9 matrix while a scan is celebrated
+MATRIX_HEART = (
+    "..XX...XX..",
+    ".XXXX.XXXX.",
+    "XXXXXXXXXXX",
+    "XXXXXXXXXXX",
+    ".XXXXXXXXX.",
+    "..XXXXXXX..",
+    "...XXXXX...",
+    "....XXX....",
+    ".....X.....",
+)
 
 try:
     os.mkdir(CACHE_DIR)
@@ -238,12 +262,19 @@ class ContributionMatrix:
                 if value > frame[address]:
                     frame[address] = value
 
-    def render(self, user, now):
+    def render(self, user, now, celebrating=False):
         if not self.available or now - self.last_update < MATRIX_UPDATE_MS:
             return
 
         frame = bytearray(351)
-        if user.contribution_data is None:
+        if celebrating:
+            # A pulsing pink heart while a phone scan is celebrated
+            level = 90 + int(80 * abs(math.sin(now / 180)))
+            for y, row in enumerate(MATRIX_HEART):
+                for x, cell in enumerate(row):
+                    if cell == "X":
+                        self.plot(frame, x + 1, y, level, level // 6, level // 3)
+        elif user.contribution_data is None:
             if user.failed:
                 self.plot(frame, 6, 0, 120, 0, 0)
             elif user.missing or not user.handle:
@@ -326,8 +357,55 @@ def ndef_message(records):
     )
 
 
+def vcard_text(value):
+    return value.replace("\\", "\\\\").replace(";", "\\;").replace(",", "\\,").replace("\n", " ")
+
+
+def linkedin_link():
+    value = setting("CONTACT_LINKEDIN")
+    if "linkedin.com/" in value:
+        return "https://" + value.split("://")[-1]
+    return "https://www.linkedin.com/in/" + value.strip("/") if value else ""
+
+
+def contact_vcard(website):
+    given, _, family = contact_name.rpartition(" ")
+    if not given:
+        given, family = family, ""
+    lines = [
+        "BEGIN:VCARD",
+        "VERSION:3.0",
+        "N:%s;%s;;;" % (vcard_text(family), vcard_text(given)),
+        "FN:" + vcard_text(contact_name),
+    ]
+    if setting("CONTACT_TITLE"):
+        lines.append("TITLE:" + vcard_text(setting("CONTACT_TITLE")))
+    if setting("CONTACT_COMPANY"):
+        lines.append("ORG:" + vcard_text(setting("CONTACT_COMPANY")))
+    # Labelled links, so phones show "LinkedIn" rather than a translated "Other"
+    links = (
+        ("Website", website),
+        ("LinkedIn", linkedin_link()),
+        ("GitHub", "https://github.com/" + handle if handle else ""),
+    )
+    for index, (label, url) in enumerate(links):
+        if url:
+            lines.append("item%d.URL:%s" % (index + 1, url))
+            lines.append("item%d.X-ABLabel:%s" % (index + 1, label))
+    lines += ["NOTE:Scanned from my GitHub Universe '26 badge", "END:VCARD"]
+    return ("\r\n".join(lines) + "\r\n").encode()
+
+
 def nfc_records():
-    return [(0x01, b"U", ndef_uri_payload(NFC_LINK))]
+    # A contact card first (phones offer "Add contact"), then the website for
+    # readers that skip vCards. NFC_CARD = "link" in secrets.py keeps the link only.
+    website = setting("CONTACT_WEBSITE") or NFC_LINK
+    if "://" not in website:
+        website = "https://" + website
+    link = (0x01, b"U", ndef_uri_payload(website))
+    if setting("NFC_CARD").lower() == "link" or not contact_name:
+        return [link]
+    return [(0x02, b"text/vcard", contact_vcard(website)), link]
 
 
 class NFCLink:
@@ -342,12 +420,17 @@ class NFCLink:
         self.steps = []
         self.next_write = 0
         self.state = "unavailable"
+        self.present = False
+        self.field = 0
+        self.next_poll = 0
+        self.quiet_until = 0
         try:
             if self.bus is None:
                 self.bus = machine.I2C()
             if self.ADDRESS not in self.bus.scan():
                 print("Badge NFC: ST25DV user memory not found")
                 return
+            self.present = True
 
             cc = self.bus.readfrom_mem(self.ADDRESS, 0, 8, addrsize=16)
             if cc[0] not in (0xE1, 0xE2) or cc[1] & 0xFC != 0x40:
@@ -419,6 +502,94 @@ class NFCLink:
         except (OSError, TypeError) as error:
             self.state = "failed"
             print("Badge NFC write failed:", error)
+
+    def scanned(self, now):
+        """True once when a phone's field shows up (with a cooldown between scans)."""
+        if not self.present or now < self.next_poll:
+            return False
+        self.next_poll = now + NFC_POLL_MS
+        try:
+            field = self.bus.readfrom_mem(self.ADDRESS, NFC_FIELD_REGISTER, 1, addrsize=16)[0] & NFC_FIELD_ON
+        except (OSError, TypeError):
+            return False
+        appeared = field and not self.field
+        self.field = field
+        if appeared and now >= self.quiet_until:
+            self.quiet_until = now + SCAN_COOLDOWN_MS
+            return True
+        return False
+
+
+class Haptics:
+    """Optional DRV2605 haptic driver with an ERM motor, same setup as Radar."""
+
+    ADDRESS = 0x5A
+    STRONG_CLICK = 0x02
+
+    def __init__(self, bus):
+        self.bus = bus
+        self.available = False
+        try:
+            if bus is None or self.ADDRESS not in bus.scan():
+                return
+            # Device id in STATUS bits 7:5: 0x60 for the DRV2605, 0xE0 for the DRV2605L
+            if bus.readfrom_mem(self.ADDRESS, 0x00, 1)[0] & 0xE0 not in (0x60, 0xE0):
+                return
+            bus.writeto_mem(self.ADDRESS, 0x01, b"\x00")
+            bus.writeto_mem(self.ADDRESS, 0x03, b"\x01")
+            for register in range(0x04, 0x0C):
+                bus.writeto_mem(self.ADDRESS, register, b"\x00")
+            self.available = True
+            print("Badge haptics: DRV2605 ERM at 0x5a")
+        except OSError as error:
+            print("Badge haptics unavailable:", error)
+
+    def buzz(self):
+        if not self.available:
+            return
+        try:
+            self.bus.writeto_mem(self.ADDRESS, 0x04, bytes((self.STRONG_CLICK,)))
+            self.bus.writeto_mem(self.ADDRESS, 0x05, b"\x00")
+            self.bus.writeto_mem(self.ADDRESS, 0x0C, b"\x01")
+        except OSError as error:
+            print("Badge haptics failed:", error)
+            self.available = False
+
+
+class ScanReaction:
+    """Mona and a thank-you on screen for a moment after each phone scan."""
+
+    def __init__(self):
+        data = {"scans": 0}
+        State.load(SCAN_STATE, data)
+        self.count = int(data.get("scans") or 0)
+        self.until = 0
+        self.sheet = None
+
+    def trigger(self, now):
+        self.until = now + SCAN_SHOW_MS
+        self.count += 1
+        State.save(SCAN_STATE, {"scans": self.count})
+
+    def active(self, now):
+        return now < self.until
+
+    def draw(self, now):
+        screen.pen = color.rgb(0, 0, 0, 240)
+        screen.rectangle(0, 0, screen.width, screen.height)
+        if self.sheet is None:
+            try:
+                self.sheet = image.load(MONA_HEART).spritesheet(MONA_HEART_FRAMES, 1)
+            except (OSError, ValueError):
+                self.sheet = False
+        if self.sheet:
+            sprite = self.sheet.sprite((now // 80) % MONA_HEART_FRAMES, 0)
+            screen.blit(sprite, rect((screen.width - MONA_SIZE) // 2, 30, MONA_SIZE, MONA_SIZE))
+        screen.font = mona_sans
+        screen.pen = white
+        center_text("thanks for the scan!", 146, 24)
+        screen.pen = phosphor
+        center_text("scan #%d" % self.count, 182, LABEL_SIZE + 2)
 
 
 class User:
@@ -754,6 +925,8 @@ qr_pages = QRPages()
 badge_id = bytes(machine.unique_id())[:badgelink.ID_LEN]
 matrix = ContributionMatrix()
 nfc_link = NFCLink(matrix.bus)
+haptics = Haptics(matrix.bus)
+reaction = ScanReaction()
 
 
 def draw_simple(status):
@@ -784,12 +957,24 @@ def draw_simple(status):
 
 
 def update():
+    now = badge.ticks
+    if nfc_link.scanned(now):
+        reaction.trigger(now)
+        haptics.buzz()
+    celebrating = reaction.active(now)
+
+    draw_badge(celebrating)
+    if celebrating:
+        reaction.draw(now)
+
+
+def draw_badge(celebrating):
     tilt.update()
 
     screen.pen = black
     screen.clear()
 
-    matrix.render(user, badge.ticks)
+    matrix.render(user, badge.ticks, celebrating)
     nfc_link.update(badge.ticks)
 
     if not handle and not contact_name and not linkedin:
