@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Badger Remote</string>
+    <string name="status_searching">Looking for the badge…</string>
+    <string name="status_connecting">Connecting…</string>
+    <string name="status_off">Bluetooth is off</string>
+    <string name="status_no_permission">Bluetooth permission needed</string>
+    <string name="status_error">Badge lost, retrying…</string>
+    <string name="grant">Allow</string>
+    <string name="forget">Tap to pick another badge</string>
+    <string name="button_up">Up</string>
+    <string name="button_down">Down</string>
+    <string name="button_left">Left</string>
+    <string name="button_right">Right</string>
+    <string name="button_select">Select</string>
+    <string name="button_back">Back</string>
+    <string name="button_home">Home</string>
+</resources>

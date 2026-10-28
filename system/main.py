@@ -35,6 +35,17 @@ if sparkle is not None:
     except Exception as error:  # noqa: BLE001
         print("sparkle unavailable:", error)
 
+# Watch remote: the watch's presses are merged into badge.poll() for every app
+sys.path.insert(0, "/system")
+try:
+    import remote
+    if remote.enabled():
+        remote.start(badge, (BUTTON_UP, BUTTON_DOWN, BUTTON_LEFT, BUTTON_RIGHT, BUTTON_SELECT, BUTTON_BACK, BUTTON_HOME))
+except Exception as error:  # noqa: BLE001
+    print("remote unavailable:", error)
+finally:
+    sys.path.remove("/system")
+
 # Eat the wakeup button press to prevent it leaking into the menu
 badge.poll()
 

@@ -144,7 +144,9 @@ if (-not $changed) {
 foreach ($file in $changed) {
     Write-Host "  $($file.Path)"
     if (-not $DryRun) {
-        New-Item -ItemType Directory -Force (Split-Path $file.Target) | Out-Null
+        # Files at the root of system/ go straight to the drive root, which New-Item rejects
+        $folder = Split-Path $file.Target
+        if (-not (Test-Path $folder)) { New-Item -ItemType Directory -Force $folder | Out-Null }
         Copy-Item $file.Source $file.Target -Force
     }
 }

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Directional pad with the select button, centred in the 66 dp safe zone of the 108 dp adaptive icon -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+    <path
+        android:fillColor="@color/accent"
+        android:pathData="M54,30 L62,40 L46,40 Z M54,78 L46,68 L62,68 Z M30,54 L40,46 L40,62 Z M78,54 L68,62 L68,46 Z" />
+    <path
+        android:fillColor="@color/paper"
+        android:pathData="M54,47a7,7 0 1,0 0.01,0" />
+</vector>
