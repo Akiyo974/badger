@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Badger Remote</string>
+    <string name="app_name" translatable="false">Badger Remote</string>
     <string name="status_searching">Looking for the badge…</string>
     <string name="status_connecting">Connecting…</string>
     <string name="status_off">Bluetooth is off</string>
