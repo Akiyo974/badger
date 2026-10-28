@@ -1,0 +1,18 @@
+[
+  { "app": "badge", "file": "docs/screenshots/badge.png", "seconds": 5 },
+  { "app": "badge", "file": "docs/screenshots/badge-qr.png", "seconds": 2, "setup": "g['qr_pages'].page = 1" },
+  { "app": "contacts", "file": "docs/screenshots/contacts.png", "seconds": 3 },
+  { "app": "radar", "file": "docs/screenshots/radar.png", "seconds": 3, "setup": "R = g['radar']; R.queue.clear(); [R.irq(5, (0, bytes([n] * 6), 0, rssi, b'\\x02\\x01\\x06\\x0e\\xff\\xff\\xffRD\\x01' + bytes([n * 37 % 256, n * 91 % 256]) + b'demo00')) for n, rssi in ((1, -52), (2, -66), (3, -78), (4, -88))]; [R.irq(5, (0, bytes([n] * 6), 4, rssi, bytes([len(t) + 5, 0xff, 0xff, 0xff, 0x52, 0x53]) + t)) for n, rssi, t in ((1, -52, b'Ada|Rust CLI'), (2, -66, b'Linus|hiring'), (3, -78, b'Grace|COBOL fan'), (4, -88, b'Alan|AI'))]" },
+  { "app": "radar", "file": "docs/screenshots/radar-list.png", "seconds": 2, "setup": "R = g['radar']; R.queue.clear(); [R.irq(5, (0, bytes([n] * 6), 0, rssi, b'\\x02\\x01\\x06\\x0e\\xff\\xff\\xffRD\\x01' + bytes([n * 37 % 256, n * 91 % 256]) + b'demo00')) for n, rssi in ((1, -52), (2, -66), (3, -78), (4, -88))]; [R.irq(5, (0, bytes([n] * 6), 4, rssi, bytes([len(t) + 5, 0xff, 0xff, 0xff, 0x52, 0x53]) + t)) for n, rssi, t in ((1, -52, b'Ada|Rust CLI'), (2, -66, b'Linus|hiring'), (3, -78, b'Grace|COBOL fan'), (4, -88, b'Alan|AI'))]; R.list_view = True" },
+  { "app": "menu", "file": "docs/screenshots/menu.png", "seconds": 4 },
+  { "app": "snake", "file": "docs/screenshots/snake.png", "seconds": 4 },
+  { "app": "pong", "file": "docs/screenshots/pong.png", "seconds": 3 },
+  { "app": "merge_conflict", "file": "docs/screenshots/merge_conflict.png", "seconds": 3 },
+  { "app": "flappy_mona", "file": "docs/screenshots/flappy_mona.png", "seconds": 3 },
+  { "app": "mona_pet", "file": "docs/screenshots/mona_pet.png", "seconds": 3 },
+  { "app": "mona_paint", "file": "docs/screenshots/mona_paint.png", "seconds": 3 },
+  { "app": "rogue", "file": "docs/screenshots/rogue.png", "seconds": 4 },
+  { "app": "brattal", "file": "docs/screenshots/brattal.png", "seconds": 4 },
+  { "app": "life", "file": "docs/screenshots/life.png", "seconds": 4 },
+  { "app": "iss", "file": "docs/screenshots/iss.png", "seconds": 8 }
+]

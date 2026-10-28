@@ -2,12 +2,44 @@
 
 Mes modifications du badge **GitHub Universe '26** (Badger 2350 : RP2350, écran 320×240, MonaOS 4.0, MicroPython).
 
+<p align="center">
+  <img src="docs/screenshots/menu.png" width="320" alt="Menu MonaOS">
+  <img src="docs/screenshots/badge.png" width="320" alt="App Badge : stats GitHub">
+</p>
+
+## Galerie
+
+Captures prises directement sur le badge avec `tools/screenshot.ps1`.
+
+### Apps modifiées dans ce repo
+
+| Badge | Badge : QR codes | Contacts |
+|---|---|---|
+| ![Badge](docs/screenshots/badge.png) | ![QR du site](docs/screenshots/badge-qr.png) | ![Contacts](docs/screenshots/contacts.png) |
+| **Radar** | **Radar : liste** | |
+| ![Radar](docs/screenshots/radar.png) | ![Liste du Radar](docs/screenshots/radar-list.png) | |
+
+Les badges du Radar sur ces captures sont simulés (je n'ai qu'un badge).
+
+### Apps d'origine
+
+| Menu | Snake | Pong |
+|---|---|---|
+| ![Menu](docs/screenshots/menu.png) | ![Snake](docs/screenshots/snake.png) | ![Pong](docs/screenshots/pong.png) |
+| **Merge Conflict** | **Flappy Mona** | **Mona Pet** |
+| ![Merge Conflict](docs/screenshots/merge_conflict.png) | ![Flappy Mona](docs/screenshots/flappy_mona.png) | ![Mona Pet](docs/screenshots/mona_pet.png) |
+| **Mona Paint** | **Rogue** | **Brattal** |
+| ![Mona Paint](docs/screenshots/mona_paint.png) | ![Rogue](docs/screenshots/rogue.png) | ![Brattal](docs/screenshots/brattal.png) |
+| **Life** | **ISS** | |
+| ![Life](docs/screenshots/life.png) | ![ISS](docs/screenshots/iss.png) | |
+
 ## Contenu
 
 | Dossier | Rôle |
 |---|---|
 | `system/` | Copie exacte du lecteur USB du badge (`/system` sur l'appareil) : `main.py`, l'animation de démarrage, les apps et les assets |
-| `tools/` | Scripts à lancer sur le PC : déploiement, génération des QR codes |
+| `tools/` | Scripts à lancer sur le PC : déploiement, captures d'écran, export des contacts, QR codes |
+| `docs/screenshots/` | Captures du README et leur liste (`captures.json`) |
 | `secrets.example.py` | Modèle des réglages ; le vrai `secrets.py` n'est jamais commité |
 | `CHANGELOG.md` | Historique des changements |
 
@@ -55,6 +87,17 @@ Pour tester une pull request : `git checkout <branche>` puis `./tools/deploy.ps1
 - **Ton statut** : `RADAR_STATUS` dans `secrets.py`, partagé avec les autres badges Radar (nom + statut : 25 octets au total).
 - **Select** passe de la vue radar à la liste, **↑ / ↓** fait défiler la liste. Les LED du boîtier brillent plus fort quand un badge s'approche.
 - Seuls les badges sont affichés, jamais les téléphones ou autres appareils Bluetooth.
+
+## Captures d'écran
+
+```powershell
+./tools/screenshot.ps1                      # refait toutes les captures de docs/screenshots/
+./tools/screenshot.ps1 -App snake -Seconds 5 # une seule app
+```
+
+Le script lance l'app par la console série, la laisse tourner quelques secondes, récupère l'image de l'écran (RGB565, 320×240 ou 160×120) et l'enregistre en PNG agrandi ×2. La liste des captures et leur réglage (`setup`, par exemple ouvrir une page ou simuler des badges) est dans `docs/screenshots/captures.json`. Il faut compter environ 25 s par capture.
+
+Après une modification d'app : `./tools/deploy.ps1`, puis `./tools/screenshot.ps1`.
 
 ## Exporter les contacts
 
