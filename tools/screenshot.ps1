@@ -136,14 +136,22 @@ SETUP = binascii.a2b_base64('$setup64').decode()
 class StopCapture(Exception):
     pass
 
-def run_setup():
-    global SETUP
+REAL_BADGE = badge
+MIN_FRAMES = 3
+DEADLINE = None
+FRAMES = 0
+
+# Le délai démarre à la première image, une fois l'app initialisée (l'ISS se
+# connecte au Wi-Fi avant) ; on s'arrête après le délai ET quelques images.
+def frame_done():
+    global SETUP, DEADLINE, FRAMES
     if SETUP:
         code, SETUP = SETUP, ''
         exec(code, globals())
-
-REAL_BADGE = badge
-DEADLINE = time.ticks_add(time.ticks_ms(), $ms)
+    if DEADLINE is None:
+        DEADLINE = time.ticks_add(time.ticks_ms(), $ms)
+    FRAMES += 1
+    return FRAMES >= MIN_FRAMES and time.ticks_diff(time.ticks_ms(), DEADLINE) >= 0
 
 class CaptureBadge:
     def __getattr__(self, name):
@@ -153,19 +161,18 @@ class CaptureBadge:
         setattr(REAL_BADGE, name, value)
 
     def update(self, *args):
-        run_setup()
         result = REAL_BADGE.update(*args)
-        if time.ticks_diff(time.ticks_ms(), DEADLINE) >= 0:
+        if frame_done():
             raise StopCapture()
         return result
 
 def capture_run(f):
-    run_setup()
-    while time.ticks_diff(time.ticks_ms(), DEADLINE) < 0:
+    while True:
         REAL_BADGE.update()
         f()
         display.update()
-    raise StopCapture()
+        if frame_done():
+            raise StopCapture()
 
 g = dict(globals())
 g['run'] = capture_run
@@ -177,11 +184,12 @@ g['__name__'] = 'capture'
     # les apps en haute résolution la demandent elles-mêmes
     $launch = @"
 badge.mode(LORES | VSYNC)
-DEADLINE = time.ticks_add(time.ticks_ms(), $ms)
 try:
     exec(open('$path/__init__.py').read(), g)
 except StopCapture:
     pass
+if FRAMES < MIN_FRAMES:
+    raise RuntimeError('app stopped after %d frame(s), nothing to capture' % FRAMES)
 "@
     $null = Invoke-Code $serial $launch ([int]$RunSeconds + 60)
 
