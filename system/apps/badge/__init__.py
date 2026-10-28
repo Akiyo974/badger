@@ -246,7 +246,9 @@ class ContributionMatrix:
         if user.contribution_data is None:
             if user.failed:
                 self.plot(frame, 6, 0, 120, 0, 0)
-            elif user.missing:
+            elif user.missing or not user.handle:
+                # Amber: Wi-Fi or GitHub username missing (no handle means
+                # fetch_step() never runs, so user.missing stays empty)
                 self.plot(frame, 6, 0, 100, 45, 0)
             else:
                 x = int(now / 250) % 13
@@ -268,8 +270,14 @@ class ContributionMatrix:
             self.plot(frame, 6, 0, 0, 0, 100)
 
         if frame != self.frame:
-            self.write_page(0, frame[:180])
-            self.write_page(1, frame[180:])
+            try:
+                self.write_page(0, frame[:180])
+                self.write_page(1, frame[180:])
+            except OSError as error:
+                # The matrix is optional: drop it, keep the app running
+                print("Badge matrix write failed:", error)
+                self.restore()
+                return
             self.frame = bytes(frame)
         self.last_update = now
 
@@ -288,16 +296,43 @@ class ContributionMatrix:
         self.available = False
 
 
+def ndef_uri_payload(url):
+    # NFC Forum URI prefixes shorten the record
+    for code, prefix in ((2, "https://www."), (4, "https://"), (1, "http://www."), (3, "http://")):
+        if url.startswith(prefix):
+            return bytes((code,)) + url[len(prefix):].encode()
+    return bytes(1) + url.encode()
+
+
+def ndef_record(tnf, kind, payload, first, last):
+    flags = tnf | (0x80 if first else 0) | (0x40 if last else 0)
+    if len(payload) < 256:
+        return bytes((flags | 0x10, len(kind), len(payload))) + kind + payload
+    return bytes((flags, len(kind))) + len(payload).to_bytes(4, "big") + kind + payload
+
+
+def ndef_message(records):
+    last = len(records) - 1
+    return b"".join(
+        ndef_record(tnf, kind, payload, index == 0, index == last)
+        for index, (tnf, kind, payload) in enumerate(records)
+    )
+
+
+def nfc_records():
+    return [(0x01, b"U", ndef_uri_payload(NFC_LINK))]
+
+
 class NFCLink:
+    """Keeps an NDEF message on the ST25DV tag, written so a phone never reads half of it."""
+
     ADDRESS = 0x53
     WRITE_BLOCK_SIZE = 4
     WRITE_CYCLE_MS = 6
 
     def __init__(self, bus=None):
         self.bus = bus
-        self.pending = None
-        self.offset = 0
-        self.cursor = 0
+        self.steps = []
         self.next_write = 0
         self.state = "unavailable"
         try:
@@ -311,84 +346,72 @@ class NFCLink:
             if cc[0] not in (0xE1, 0xE2) or cc[1] & 0xFC != 0x40:
                 print("Badge NFC: tag has no valid Type 5 capability container")
                 return
-
-            self.offset = 8 if cc[2] == 0 else 4
-            header = self.bus.readfrom_mem(
-                self.ADDRESS, self.offset, 4, addrsize=16
-            )
-            if header[0] != 0x03:
-                print("Badge NFC: tag has no NDEF message TLV")
-                return
-
-            ndef_length = header[1]
-            if ndef_length == 0xFF:
-                ndef_length = (header[2] << 8) | header[3]
-                message_offset = self.offset + 4
+            if cc[2]:
+                offset, capacity = 4, cc[2] * 8
             else:
-                message_offset = self.offset + 2
+                offset, capacity = 8, ((cc[6] << 8) | cc[7]) * 8
 
-            payload = b"\x04" + NFC_LINK[8:].encode()
-            record = b"\xd1\x01" + bytes((len(payload),)) + b"U" + payload
-            self.pending = bytes((0x03, len(record))) + record + b"\xfe"
-            if ndef_length == len(record):
-                current = self.bus.readfrom_mem(
-                    self.ADDRESS, message_offset, ndef_length, addrsize=16
-                )
-                if current == record:
-                    self.pending = None
-                    self.state = "ready"
-                    print("Badge NFC: site link already programmed")
-                    return
-
-            if len(self.pending) > 0xFF:
-                print("Badge NFC: site link is too large for a short NDEF record")
-                self.pending = None
+            message = ndef_message(nfc_records())
+            if len(message) < 0xFF:
+                header = bytes((0x03, len(message)))
+            else:
+                header = bytes((0x03, 0xFF, len(message) >> 8, len(message) & 0xFF))
+            body = message + b"\xfe"
+            if offset + len(header) + len(body) > capacity:
+                print("Badge NFC: message too large for the tag (%d bytes)" % len(message))
                 return
 
+            current = self.bus.readfrom_mem(
+                self.ADDRESS, offset, len(header) + len(body), addrsize=16
+            )
+            if current == header + body:
+                self.state = "ready"
+                print("Badge NFC: tag already up to date")
+                return
+
+            # Empty the message first, write and verify the body, then publish
+            # the real length last: a phone reading meanwhile sees no message
+            # rather than a broken one, and a stop halfway leaves the tag empty.
+            body_at = offset + len(header)
+            self.steps = [("write", offset, b"\x03\x00")]
+            self.steps += [("write", at, data) for at, data in self.blocks(body_at, body)]
+            self.steps.append(("verify", body_at, body))
+            self.steps += [("write", at, data) for at, data in self.blocks(offset, header)]
+            self.steps.append(("verify", offset, header))
             self.state = "writing"
-            print("Badge NFC: programming site link")
+            print("Badge NFC: programming the tag")
         except (ImportError, OSError, TypeError) as error:
             print("Badge NFC unavailable:", error)
-            self.pending = None
+            self.steps = []
+
+    @classmethod
+    def blocks(cls, address, data):
+        # Writes never cross a 4-byte EEPROM block
+        index = 0
+        while index < len(data):
+            room = cls.WRITE_BLOCK_SIZE - (address + index) % cls.WRITE_BLOCK_SIZE
+            yield address + index, data[index:index + room]
+            index += room
 
     def update(self, now):
-        if self.state != "writing" or self.pending is None or now < self.next_write:
+        if self.state != "writing" or now < self.next_write:
+            return
+        if not self.steps:
+            self.state = "ready"
+            print("Badge NFC: tag programmed")
             return
 
-        if self.cursor < len(self.pending):
-            end = min(self.cursor + self.WRITE_BLOCK_SIZE, len(self.pending))
-            chunk = self.pending[self.cursor:end]
-            try:
-                self.bus.writeto_mem(
-                    self.ADDRESS,
-                    self.offset + self.cursor,
-                    chunk,
-                    addrsize=16,
-                )
-            except (OSError, TypeError) as error:
-                self.state = "failed"
-                print("Badge NFC write failed:", error)
-                return
-            self.cursor = end
-            self.next_write = now + self.WRITE_CYCLE_MS
-            return
-
+        action, address, data = self.steps.pop(0)
         try:
-            written = self.bus.readfrom_mem(
-                self.ADDRESS, self.offset, len(self.pending), addrsize=16
-            )
+            if action == "write":
+                self.bus.writeto_mem(self.ADDRESS, address, data, addrsize=16)
+                self.next_write = now + self.WRITE_CYCLE_MS
+            elif self.bus.readfrom_mem(self.ADDRESS, address, len(data), addrsize=16) != data:
+                self.state = "failed"
+                print("Badge NFC verification failed: readback mismatch")
         except (OSError, TypeError) as error:
             self.state = "failed"
-            print("Badge NFC verification failed:", error)
-            return
-
-        if written != self.pending:
-            self.state = "failed"
-            print("Badge NFC verification failed: readback mismatch")
-            return
-
-        self.state = "ready"
-        print("Badge NFC: site link programmed")
+            print("Badge NFC write failed:", error)
 
 
 class User:

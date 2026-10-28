@@ -170,6 +170,8 @@ class MatrixDisplay:
             print("Radar matrix: IS31FL3741 at 0x30, 13x9 RGB")
         except (ImportError, OSError) as error:
             print("Radar matrix unavailable:", error)
+            # Undo whatever part of the setup went through
+            self.close()
 
     def select_page(self, page):
         self.bus.writeto_mem(self.ADDRESS, 0xFE, b"\xC5")
@@ -252,18 +254,31 @@ class MatrixDisplay:
             self.plot(frame, x, y, red, green, blue)
 
         if frame != self.last_frame:
-            self.write_page(0, frame[:180])
-            self.write_page(1, frame[180:])
+            try:
+                self.write_page(0, frame[:180])
+                self.write_page(1, frame[180:])
+            except OSError as error:
+                # The matrix is optional: drop it, keep scanning
+                print("Radar matrix write failed:", error)
+                self.close()
+                return
             self.last_frame = bytes(frame)
         self.last_update = now
 
     def close(self):
-        if not self.available:
+        # Best effort: restores whatever was saved, even after a partial setup
+        if self.bus is None or self.original_config is None:
+            self.available = False
             return
-        for page in (0, 1, 2, 3):
-            self.write_page(page, self.original_pages[page])
-        self.write_register(4, 0x01, self.original_current)
-        self.write_register(4, 0x00, self.original_config)
+        try:
+            for page in (0, 1, 2, 3):
+                if page in self.original_pages:
+                    self.write_page(page, self.original_pages[page])
+            if self.original_current is not None:
+                self.write_register(4, 0x01, self.original_current)
+            self.write_register(4, 0x00, self.original_config)
+        except OSError as error:
+            print("Radar matrix restore failed:", error)
         self.available = False
 
 
