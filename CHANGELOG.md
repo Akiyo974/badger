@@ -5,6 +5,8 @@ Notable changes to this repo. Format based on [Keep a Changelog](https://keepach
 ## Unreleased
 
 ### Added
+- Hardware add-ons on the Qw/ST port, all optional: a 13×9 RGB LED matrix (IS31FL3741) shows the contribution graph in Badge and a mini radar in Radar; an NFC tag (ST25DV) is programmed with the website link by Badge; a haptic driver (DRV2605) makes Radar vibrate when a badge shows up.
+- Menu: apps without a built-in icon can ship an `icon.png`, which Radar now does. Badge and Radar also have their own `README.md`.
 - **Badger Remote** (`wear/`): Wear OS watch app that presses the badge's buttons over Bluetooth LE (tap, hold, crown for ↑ / ↓), with `system/remote.py` on the badge side (`WATCH_REMOTE` in `secrets.py`).
 - GitHub Actions: CI (syntax of `system/`, contacts test, watch app build, tests and lint) and signed watch app releases on `wear-v*` tags.
 - `tools/screenshot.ps1`: screenshots of the apps taken on the badge over the serial console (PNG ×2), listed in `docs/screenshots/captures.json`.
