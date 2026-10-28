@@ -1,11 +1,11 @@
-# Copier ce fichier en system/secrets.py sur le badge (lecteur USB) et le remplir.
-# Le badge ne gère qu'un seul Wi-Fi, en 2,4 GHz uniquement.
-WIFI_SSID = "mon-wifi"
-WIFI_PASSWORD = "mon-mot-de-passe"
+# Copy this file to system/secrets.py on the badge (USB drive) and fill it in.
+# The badge supports a single Wi-Fi network, 2.4 GHz only.
+WIFI_SSID = "my-wifi"
+WIFI_PASSWORD = "my-password"
 GITHUB_USERNAME = "Akiyo974"
 CONTACT_NAME = "Christen Dijoux"
-CONTACT_LINKEDIN = "christen-dijoux"  # pseudo ou lien complet
-CONTACT_WEBSITE = "christendijoux.com"  # ajouté par ce repo ; ignoré par les badges d'origine
-RADAR_STATUS = "Ask me about MicroPython"  # app Radar ; nom + statut limités à 25 octets en tout
+CONTACT_LINKEDIN = "christen-dijoux"  # username or full link
+CONTACT_WEBSITE = "christendijoux.com"  # added by this repo; ignored by stock badges
+RADAR_STATUS = "Ask me about MicroPython"  # Radar app; name + status limited to 25 bytes in total
 REGION = "us"  # Options are us, cuba, eu, moldova, lebanon, egypt, chile, australia, nz
 TIMEZONE = -7  # Offset from GMT as number of hours, i.e. 0, 1, -7 etc.
