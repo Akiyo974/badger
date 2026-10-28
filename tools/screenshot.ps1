@@ -71,24 +71,30 @@ function Open-Badge([string]$SerialPort) {
     return $serial
 }
 
-# Envoie une ligne et attend le prochain invite « >>> » de la console. La console
-# revient aussi à l'invite après une erreur : on la détecte pour ne pas
-# enregistrer un écran ancien ou incomplet.
-function Invoke-Line($serial, [string]$Line, [int]$TimeoutSeconds = 30) {
+# Exécute du code MicroPython sur le badge et renvoie ce qu'il a affiché. Le code
+# part en un seul exec() encodé en base64 : une seule commande pour la console,
+# quel que soit le nombre de lignes. Il se termine par un marqueur unique, si
+# bien qu'on attend la fin de CETTE commande et pas n'importe quelle invite.
+# Une erreur MicroPython fait échouer la capture (pas de PNG ancien ou incomplet).
+$script:CommandId = 0
+function Invoke-Code($serial, [string]$Code, [int]$TimeoutSeconds = 30) {
+    $script:CommandId++
+    $marker = "@@done-$script:CommandId@@"
+    $encoded = [Convert]::ToBase64String([Text.Encoding]::UTF8.GetBytes($Code))
     $null = $serial.ReadExisting()
-    $serial.Write("$Line`r")
+    $serial.Write("exec(__import__('binascii').a2b_base64('$encoded').decode(), globals()); print('$marker')`r")
     $output = ''
     $deadline = (Get-Date).AddSeconds($TimeoutSeconds)
     while ((Get-Date) -lt $deadline) {
         Start-Sleep -Milliseconds 20
         $output += $serial.ReadExisting()
-        if ($output -match '(?s)\r?\n>>> $') {
-            $failure = [regex]::Match($output, '(?s)Traceback \(most recent call last\):.*?(?=\r?\n>>> $)')
-            if ($failure.Success) { throw "Erreur MicroPython :`n$($failure.Value)" }
-            return $output
-        }
+        # Le marqueur seul sur sa ligne (l'écho de la commande le contient entre guillemets)
+        $done = [regex]::Match($output, "(?ms)^$([regex]::Escape($marker))\r?$")
+        if ($done.Success) { return $output.Substring(0, $done.Index) }
+        $failure = [regex]::Match($output, '(?s)Traceback \(most recent call last\):.*?(?=\r?\n>>> $)')
+        if ($failure.Success) { throw "Erreur MicroPython :`n$($failure.Value)" }
     }
-    throw "Pas de réponse du badge pour : $Line`n$output"
+    throw "Pas de réponse du badge.`n$output"
 }
 
 # CRC-32 standard (le même que binascii.crc32 côté badge), calculé en entiers
@@ -109,56 +115,85 @@ function Get-Crc32([byte[]]$Bytes) {
 function Get-Frame($serial, [string]$AppName, [double]$RunSeconds, [string]$SetupCode) {
     $serial.Write([char]3); Start-Sleep -Milliseconds 400
     $serial.Write([char]3); Start-Sleep -Milliseconds 400
-    $null = Invoke-Line $serial ''
+    $null = Invoke-Code $serial 'pass'
 
     $path = "/system/apps/$AppName"
     $ms = [int]($RunSeconds * 1000)
     # Le code de -Setup passe en base64 pour éviter tout souci de guillemets
     $setup64 = [Convert]::ToBase64String([Text.Encoding]::UTF8.GetBytes($SetupCode))
-    $null = Invoke-Line $serial "import os, sys, time, binascii, gc; os.chdir('$path'); sys.path.insert(0, '$path'); SETUP = binascii.a2b_base64('$setup64').decode()"
     # run() est remplacé : il exécute -Setup, fait tourner l'app quelques secondes
-    # (badge.update() fait avancer badge.ticks) puis l'arrête. Ça marche aussi
-    # pour les apps qui ont leur propre boucle et appellent run() plusieurs fois.
-    # Les apps qui ont leur propre boucle (Snake, Mona Pet…) appellent
-    # badge.update() elles-mêmes : un badge « enveloppé » les arrête aussi.
-    $runner = @(
-        "class StopCapture(Exception): pass",
-        "",
-        "def run_setup():",
-        "    global SETUP",
-        "    if SETUP: exec(SETUP, globals()); SETUP = ''",
-        "",
-        # L'état vit dans des globales : MicroPython ne permet pas self.__dict__
-        # dans __setattr__, et toutes les écritures doivent aller au vrai badge
-        # (ex. badge.default_clear = None dans Life).
-        "REAL_BADGE = badge; DEADLINE = time.ticks_add(time.ticks_ms(), ${ms})",
-        "",
-        "class CaptureBadge:",
-        "    def __getattr__(self, name): return getattr(REAL_BADGE, name)",
-        "    def __setattr__(self, name, value): setattr(REAL_BADGE, name, value)",
-        "    def update(self, *args):",
-        "        run_setup(); result = REAL_BADGE.update(*args)",
-        "        if time.ticks_diff(time.ticks_ms(), DEADLINE) >= 0: raise StopCapture()",
-        "        return result",
-        "",
-        "def capture_run(f):",
-        "    run_setup()",
-        "    t = time.ticks_ms()",
-        "    while time.ticks_diff(time.ticks_ms(), t) < ${ms}: badge.update(); f(); display.update()",
-        "    raise StopCapture()",
-        "",
-        "",
-        "g = dict(globals()); g['run'] = capture_run; g['badge'] = CaptureBadge(); g['__name__'] = 'capture'"
-    ) -join "`r"
-    $null = Invoke-Line $serial $runner
+    # (badge.update() fait avancer badge.ticks) puis l'arrête. Les apps qui ont
+    # leur propre boucle (Snake, Mona Pet…) appellent badge.update() elles-mêmes :
+    # un badge « enveloppé » les arrête aussi. Son état vit dans des globales :
+    # MicroPython ne permet pas self.__dict__ dans __setattr__, et toutes les
+    # écritures doivent aller au vrai badge (ex. badge.default_clear dans Life).
+    $runner = @"
+import os, sys, time, binascii, gc
+os.chdir('$path')
+sys.path.insert(0, '$path')
+SETUP = binascii.a2b_base64('$setup64').decode()
+
+class StopCapture(Exception):
+    pass
+
+def run_setup():
+    global SETUP
+    if SETUP:
+        code, SETUP = SETUP, ''
+        exec(code, globals())
+
+REAL_BADGE = badge
+DEADLINE = time.ticks_add(time.ticks_ms(), $ms)
+
+class CaptureBadge:
+    def __getattr__(self, name):
+        return getattr(REAL_BADGE, name)
+
+    def __setattr__(self, name, value):
+        setattr(REAL_BADGE, name, value)
+
+    def update(self, *args):
+        run_setup()
+        result = REAL_BADGE.update(*args)
+        if time.ticks_diff(time.ticks_ms(), DEADLINE) >= 0:
+            raise StopCapture()
+        return result
+
+def capture_run(f):
+    run_setup()
+    while time.ticks_diff(time.ticks_ms(), DEADLINE) < 0:
+        REAL_BADGE.update()
+        f()
+        display.update()
+    raise StopCapture()
+
+g = dict(globals())
+g['run'] = capture_run
+g['badge'] = CaptureBadge()
+g['__name__'] = 'capture'
+"@
+    $null = Invoke-Code $serial $runner
     # Comme le menu avant de lancer une app : basse résolution par défaut,
     # les apps en haute résolution la demandent elles-mêmes
-    $null = Invoke-Line $serial "badge.mode(LORES | VSYNC)"
-    $null = Invoke-Line $serial "try: exec(open('$path/__init__.py').read(), g)`rexcept StopCapture: pass`r" ([int]$RunSeconds + 60)
+    $launch = @"
+badge.mode(LORES | VSYNC)
+DEADLINE = time.ticks_add(time.ticks_ms(), $ms)
+try:
+    exec(open('$path/__init__.py').read(), g)
+except StopCapture:
+    pass
+"@
+    $null = Invoke-Code $serial $launch ([int]$RunSeconds + 60)
 
-    # Taille réelle de l'écran : 320×240 en haute résolution, 160×120 en basse
-    $dims = [regex]::Match((Invoke-Line $serial "print('DIM', screen.width, screen.height, screen.stride)"), 'DIM (\d+) (\d+) (\d+)')
-    if (-not $dims.Success) { throw "Taille de l'écran introuvable." }
+    # Taille réelle de l'écran : seuls les deux modes RGB565 du badge sont
+    # acceptés, pour qu'un chiffre abîmé ne donne pas une image tronquée.
+    $known = @{ '320x240' = 640; '160x120' = 320 }
+    for ($attempt = 0; $attempt -lt 3; $attempt++) {
+        $dims = [regex]::Match((Invoke-Code $serial "print('DIM', screen.width, screen.height, screen.stride)"), '(?m)^DIM (\d+) (\d+) (\d+)\r?$')
+        if ($dims.Success -and $known["$($dims.Groups[1].Value)x$($dims.Groups[2].Value)"] -eq [int]$dims.Groups[3].Value) { break }
+        $dims = $null
+    }
+    if (-not $dims) { throw "Taille de l'écran illisible ou inattendue." }
     $script:Width = [int]$dims.Groups[1].Value
     $script:Height = [int]$dims.Groups[2].Value
     $script:RowBytes = [int]$dims.Groups[3].Value
@@ -168,15 +203,21 @@ function Get-Frame($serial, [string]$AppName, [double]$RunSeconds, [string]$Setu
     # chaque morceau absent ou abîmé est redemandé.
     $total = $Height * $RowBytes
     $count = [Math]::Ceiling($total / $ChunkBytes)
-    $null = Invoke-Line $serial "r = bytes(screen.raw)[:$total]; gc.collect()`r"
-    $null = Invoke-Line $serial "def chunk(n): data = r[n * ${ChunkBytes}:(n + 1) * ${ChunkBytes}]; print('#%d:%08x:%s' % (n, binascii.crc32(b'%d:' % n + data), binascii.b2a_base64(data).decode().strip()))`r`r"
+    $chunker = @"
+r = bytes(screen.raw)[:$total]
+gc.collect()
+
+def chunk(n):
+    data = r[n * ${ChunkBytes}:(n + 1) * ${ChunkBytes}]
+    print('#%d:%08x:%s' % (n, binascii.crc32(b'%d:' % n + data), binascii.b2a_base64(data).decode().strip()))
+"@
+    $null = Invoke-Code $serial $chunker
     $chunks = @{}
-    $dump = Invoke-Line $serial "for n in range($count): chunk(n)`r`r" 60
-    Read-Chunks $dump $chunks
+    Read-Chunks (Invoke-Code $serial "for n in range($count): chunk(n)" 60) $chunks
     for ($attempt = 0; $attempt -lt 5; $attempt++) {
         $missing = @(0..($count - 1) | Where-Object { -not $chunks.ContainsKey($_) })
         if ($missing.Count -eq 0) { break }
-        foreach ($n in $missing) { Read-Chunks (Invoke-Line $serial "chunk($n)") $chunks }
+        foreach ($n in $missing) { Read-Chunks (Invoke-Code $serial "chunk($n)") $chunks }
     }
     $missing = @(0..($count - 1) | Where-Object { -not $chunks.ContainsKey($_) })
     if ($missing.Count -gt 0) { throw "Image incomplète : morceaux $($missing -join ', ') illisibles." }
