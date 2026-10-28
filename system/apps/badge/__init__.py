@@ -3,6 +3,7 @@ import gc
 import json
 import math
 import random
+import time
 
 import fetch
 import machine
@@ -36,11 +37,27 @@ NUDGE_RECT = (176, 70, 136, 150)
 CONTRIB_URL = "https://github.com/{user}.contribs"
 USER_AVATAR = "https://wsrv.nl/?url=https://github.com/{user}.png&w=150&output=png"
 DETAILS_URL = "https://api.github.com/users/{user}"
+EVENTS_URL = "https://api.github.com/users/{user}/events/public?per_page=10"
 
 CACHE_DIR = "/state"
 USER_FILE = f"{CACHE_DIR}/badge_user.json"
 CONTRIB_FILE = f"{CACHE_DIR}/badge_contribs.json"
 AVATAR_FILE = f"{CACHE_DIR}/badge_avatar.png"
+EVENTS_FILE = f"{CACHE_DIR}/badge_events.json"
+
+ACTIVITY_SIZE = 12
+ACTIVITY_Y = 55
+MONTHS = ("Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec")
+
+# Up/down cycle through these after the stats page; images are 180px PNGs
+QR_DIR = "/system/apps/badge"
+QR_SIZE = 180
+QR_TOP = 10
+QR_PAGES = (
+    ("qr_site.png", "christendijoux.com"),
+    ("qr_linkedin.png", "linkedin.com/in/christen-dijoux"),
+    ("qr_github.png", "github.com/Akiyo974"),
+)
 
 HEADERS = {"User-Agent": "GitHub Universe Badge 2026"}
 
@@ -296,11 +313,140 @@ class User:
         screen.pen = phosphor
         center_text(placeholder_if_none(self.name), 36, NAME_SIZE)
 
+        line = activity.line()
+        if line:
+            screen.pen = faded
+            center_text(line, ACTIVITY_Y, ACTIVITY_SIZE)
+
         self.draw_stat("followers", self.followers, 176, 66)
         self.draw_stat("contribs", self.contribs, 176, 124)
         self.draw_stat("repos", self.repos, 176, 182)
 
         self.draw_avatar()
+
+
+class Activity:
+    """Latest public push, refreshed once per launch, cached for offline use."""
+
+    def __init__(self, handle):
+        self.handle = handle
+        self.label = None
+        self.repo = None
+        self.created = None
+        self._request = None
+        self._done = not handle
+        self._clock_offset = None
+        self.load()
+
+    def load(self):
+        try:
+            with open(EVENTS_FILE, "r") as f:
+                events = json.load(f)
+        except (OSError, ValueError):
+            return
+        fallback = None
+        for event in events:
+            if event.get("type") == "PushEvent":
+                fallback = event
+                break
+            if fallback is None:
+                fallback = event
+        if fallback is not None:
+            self.label = "Last push" if fallback["type"] == "PushEvent" else "Last activity"
+            self.repo = fallback["repo"]["name"].split("/")[-1]
+            self.created = fallback["created_at"]
+        del events
+        gc.collect()
+
+    def step(self):
+        if self._done:
+            return
+        if self._request is None:
+            if missing_details.missing("WIFI_SSID"):
+                self._done = True
+                return
+            self._request = fetch.url(EVENTS_URL.format(user=self.handle), headers=HEADERS).to(EVENTS_FILE + ".tmp")
+        if self._request:
+            self._done = True
+            try:
+                os.remove(EVENTS_FILE)
+            except OSError:
+                pass
+            os.rename(EVENTS_FILE + ".tmp", EVENTS_FILE)
+            self.load()
+            self.sync_clock()
+        elif self._request.error:
+            print(f"Badge: activity {self._request.error}")
+            self._done = True
+
+    def sync_clock(self):
+        # Only measure the offset from NTP; the RTC itself is left alone
+        try:
+            import ntptime
+            self._clock_offset = ntptime.time() - time.time()
+        except Exception as e:  # noqa: BLE001
+            print(f"Badge: ntp {e}")
+
+    def age(self):
+        if self.created is None or self._clock_offset is None:
+            return None
+        c = self.created
+        then = time.mktime((int(c[0:4]), int(c[5:7]), int(c[8:10]), int(c[11:13]), int(c[14:16]), int(c[17:19]), 0, 0))
+        seconds = time.time() + self._clock_offset - then
+        if seconds < 60:
+            return "just now"
+        if seconds < 3600:
+            return f"{seconds // 60}m ago"
+        if seconds < 86400:
+            return f"{seconds // 3600}h ago"
+        return f"{seconds // 86400}d ago"
+
+    def line(self):
+        if self.repo is None:
+            return None
+        when = self.age()
+        if when is None:
+            c = self.created
+            when = f"{MONTHS[int(c[5:7]) - 1]} {int(c[8:10])}"
+        return f"{self.label}: {self.repo} - {when}"
+
+
+class QRPages:
+    def __init__(self):
+        self.page = 0
+        self.images = [None] * len(QR_PAGES)
+
+    def handle_buttons(self):
+        count = len(QR_PAGES) + 1
+        if badge.pressed(BUTTON_DOWN):
+            self.page = (self.page + 1) % count
+        if badge.pressed(BUTTON_UP):
+            self.page = (self.page - 1) % count
+
+    @property
+    def showing(self):
+        return self.page > 0
+
+    def draw(self):
+        index = self.page - 1
+        file, caption = QR_PAGES[index]
+        if self.images[index] is None:
+            self.images[index] = image.load(f"{QR_DIR}/{file}")
+
+        user.draw_graph()
+        screen.pen = color.rgb(0, 0, 0, 170)
+        screen.rectangle(0, 0, screen.width, screen.height)
+
+        left = (screen.width - QR_SIZE) // 2
+        screen.pen = white
+        screen.shape(shape.rounded_rectangle(left - 6, QR_TOP - 6, QR_SIZE + 12, QR_SIZE + 12, 8))
+        screen.blit(self.images[index], rect(left, QR_TOP, QR_SIZE, QR_SIZE))
+
+        screen.font = mona_sans
+        screen.pen = phosphor
+        center_text(caption, QR_TOP + QR_SIZE + 12, NAME_SIZE)
+        screen.pen = faded
+        center_text(f"{self.page} / {len(QR_PAGES)}", QR_TOP + QR_SIZE + 32, LABEL_SIZE)
 
 
 def center_text(text, y, size):
@@ -328,6 +474,8 @@ handle = setting("GITHUB_USERNAME")
 contact_name = setting("CONTACT_NAME")
 linkedin = linkedin_label(setting("CONTACT_LINKEDIN"))
 user = User(handle)
+activity = Activity(handle)
+qr_pages = QRPages()
 badge_id = bytes(machine.unique_id())[:badgelink.ID_LEN]
 
 
@@ -373,6 +521,14 @@ def update():
         user.update(True)
 
     status = user.fetch_step() if handle else None
+    if user.next_download() is None:
+        activity.step()
+
+    qr_pages.handle_buttons()
+    if qr_pages.showing:
+        qr_pages.draw()
+        return
+
     if user.loaded:
         user.draw(status)
     else:
