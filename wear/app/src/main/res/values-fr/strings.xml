@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="status_searching">Recherche du badge…</string>
+    <string name="status_connecting">Connexion…</string>
+    <string name="status_off">Bluetooth désactivé</string>
+    <string name="status_no_permission">Autorisation Bluetooth requise</string>
+    <string name="status_error">Badge perdu, nouvel essai…</string>
+    <string name="grant">Autoriser</string>
+    <string name="forget">Toucher pour changer de badge</string>
+    <string name="button_up">Haut</string>
+    <string name="button_down">Bas</string>
+    <string name="button_left">Gauche</string>
+    <string name="button_right">Droite</string>
+    <string name="button_select">Valider</string>
+    <string name="button_back">Retour</string>
+    <string name="button_home">Accueil</string>
+</resources>

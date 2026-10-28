@@ -5,6 +5,8 @@ Notable changes to this repo. Format based on [Keep a Changelog](https://keepach
 ## Unreleased
 
 ### Added
+- **Badger Remote** (`wear/`): Wear OS watch app that presses the badge's buttons over Bluetooth LE (tap, hold, crown for ↑ / ↓), with `system/remote.py` on the badge side (`WATCH_REMOTE` in `secrets.py`).
+- GitHub Actions: CI (syntax of `system/`, contacts test, watch app build, tests and lint) and signed watch app releases on `wear-v*` tags.
 - `tools/screenshot.ps1`: screenshots of the apps taken on the badge over the serial console (PNG ×2), listed in `docs/screenshots/captures.json`.
 - README: gallery of 16 screenshots (changed apps and stock apps).
 - **Radar** app: nearby badges placed by distance (Bluetooth signal strength), with name, identicon, current app and status. List view with Select, case lights driven by proximity, personal status `RADAR_STATUS`.
@@ -23,6 +25,7 @@ Notable changes to this repo. Format based on [Keep a Changelog](https://keepach
 - `.gitignore`: ignores the local `.local/` folder (drafts and backups).
 
 ### Fixed
+- `deploy.ps1` failed on files at the root of `system/` (`main.py`…): it tried to create the drive root as a folder.
 - `deploy.ps1 -DryRun` reboots the badge back to normal mode when it had to switch it to USB drive mode.
 - `export_contacts.ps1` only targets the Universe '26 badge and asks for `-Port` when several are plugged in, like the other tools.
 - Contacts app: the third link line (website) overflowed the card; the card is taller and the illustration below it moved down.

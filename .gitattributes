@@ -5,3 +5,5 @@
 *.af binary
 *.p3d binary
 *.gif binary
+*.jar binary
+*.bat text eol=crlf

@@ -9,3 +9,4 @@ CONTACT_WEBSITE = "christendijoux.com"  # added by this repo; ignored by stock b
 RADAR_STATUS = "Ask me about MicroPython"  # Radar app; name + status limited to 25 bytes in total
 REGION = "us"  # Options are us, cuba, eu, moldova, lebanon, egypt, chile, australia, nz
 TIMEZONE = -7  # Offset from GMT as number of hours, i.e. 0, 1, -7 etc.
+WATCH_REMOTE = True  # Badger Remote watch app (Bluetooth); False turns it off

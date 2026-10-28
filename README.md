@@ -39,6 +39,7 @@ The badges on the Radar screenshots are simulated (I only have one badge).
 |---|---|
 | `system/` | Exact copy of the badge's USB drive (`/system` on the device): `main.py`, the boot animation, apps and assets |
 | `tools/` | PC scripts: deploy, screenshots, contacts export, QR codes |
+| `wear/` | **Badger Remote**, the Wear OS watch app that presses the badge's buttons (Kotlin, Compose for Wear OS) |
 | `docs/screenshots/` | README screenshots and their list (`captures.json`) |
 | `secrets.example.py` | Settings template; the real `secrets.py` is never committed |
 | `CHANGELOG.md` | Change history |
@@ -90,6 +91,36 @@ To try a pull request: `git checkout <branch>` then `./tools/deploy.ps1`.
 - **Select** switches between the radar and the list, **↑ / ↓** scrolls the list. The case lights glow brighter as a badge gets closer.
 - Only badges are shown, never phones or other Bluetooth devices.
 
+## Watch remote (Wear OS)
+
+**Badger Remote** (`wear/`) turns a Wear OS watch (Galaxy Watch 4 or newer) into the badge's buttons: ↑ ↓ ← →, Select, Back and Home, in every app, menu included.
+
+- **Tap** a button for a short press; **keep your finger on it** to hold it (e.g. zooming in ISS). The **crown** scrolls like ↑ / ↓.
+- The top line shows the badge's name (`Badger` + the end of its id). The watch remembers that badge; tap the name to pick another one.
+- **How it works**: `system/remote.py`, started by `main.py`, advertises a Bluetooth LE service with one writable characteristic. Each write is 2 bytes, an action (0 tap, 1 down, 2 up) then a button (0 ↑, 1 ↓, 2 ←, 3 →, 4 Select, 5 Back, 6 Home). The presses are merged into `badge.poll()`, so apps see them as real presses. A held button is released after 1.5 s without news from the watch.
+- **Not available** in Contacts, Pong, Merge Conflict and Radar: they need the badge's Bluetooth. The watch reconnects on its own once you leave them (the badge reboots after every app).
+- **No pairing**: any phone or watch running the app nearby can press your buttons while the remote is on. `WATCH_REMOTE = False` in `secrets.py` turns it off.
+
+### Installing on the watch
+
+1. Download the APK: the **badger-remote-debug** artifact of the latest [CI run](https://github.com/Akiyo974/badger/actions/workflows/ci.yml) (a zip containing `app-debug.apk`), or a `wear-v*` release.
+2. On the watch: **Settings → Developer options**, turn on **ADB debugging** and **Wireless debugging** (the watch and the PC must be on the same Wi-Fi). Developer options appear after tapping **Settings → About watch → Software information → Software version** 7 times.
+3. In **Wireless debugging**, tap **Pair new device**: the watch shows a pairing code and an `IP:port`. On the PC:
+
+   ```powershell
+   adb pair 192.168.1.42:37000      # IP:port of the pairing screen, then type the code
+   adb connect 192.168.1.42:41000   # IP:port shown at the top of Wireless debugging (not the same port)
+   adb install -r app-debug.apk
+   ```
+
+4. Open **Badger Remote** on the watch and allow **Nearby devices**. Switch the badge on: the name appears at the top and the buttons light up.
+
+Each CI run signs its debug APK with a different key: if `adb install` answers `INSTALL_FAILED_UPDATE_INCOMPATIBLE`, run `adb uninstall com.christendijoux.badgerremote` first. Signed releases (`wear-v*` tags) keep the same key and update in place.
+
+### Building it yourself
+
+From `wear/`, with JDK 17 and the Android SDK: `./gradlew assembleDebug`, then `adb install -r app/build/outputs/apk/debug/app-debug.apk`.
+
 ## Screenshots
 
 ```powershell
@@ -116,6 +147,8 @@ py tests/test_contacts_compat.py
 ```
 
 Simulates card swaps between the stock Contacts app (read from the first commit) and the version in this repo, to check that swapping with an unmodified badge still works.
+
+GitHub Actions (`.github/workflows/ci.yml`) runs this test, checks the syntax of `system/`, and builds, tests and lints the watch app on every pull request. Pushing a `wear-v*` tag publishes a signed APK (`wear-release.yml`, needs the `SIGNING_KEYSTORE_BASE64`, `SIGNING_PASSWORD` and `SIGNING_KEY_ALIAS` secrets).
 
 ## Settings
 
