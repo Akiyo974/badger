@@ -40,6 +40,22 @@ Pour tester une pull request : `git checkout <branche>` puis `./tools/deploy.ps1
 2. Copier le contenu de `system/` sur le lecteur **BADGER**.
 3. Éjecter le lecteur, puis redémarrer le badge.
 
+## Apps ajoutées ou modifiées
+
+| App | Ce qui change |
+|---|---|
+| **Badge** | Pages QR codes (↑ / ↓) et ligne « Last push » sous le nom |
+| **Contacts** | Liens reçus vérifiés, champ site web, suppression, export vers le PC |
+| **Radar** (nouvelle) | Les badges autour de toi, placés selon leur distance, avec leur nom et leur statut |
+
+### Radar
+
+- **Distance seulement** : le Bluetooth donne la force du signal, pas la direction. Plus un badge est près du centre, plus il est proche ; son angle est juste une place fixe tirée de son identifiant.
+- **Badges visibles** : tous les badges qui ont Radar ouvert, et les badges d'origine pendant qu'ils sont dans Contacts, Pong ou Merge Conflict (leur Bluetooth ne s'annonce qu'à ce moment-là).
+- **Ton statut** : `RADAR_STATUS` dans `secrets.py`, partagé avec les autres badges Radar (nom + statut : 25 octets au total).
+- **Select** passe de la vue radar à la liste, **↑ / ↓** fait défiler la liste. Les LED du boîtier brillent plus fort quand un badge s'approche.
+- Seuls les badges sont affichés, jamais les téléphones ou autres appareils Bluetooth.
+
 ## Exporter les contacts
 
 ```powershell

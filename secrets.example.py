@@ -6,5 +6,6 @@ GITHUB_USERNAME = "Akiyo974"
 CONTACT_NAME = "Christen Dijoux"
 CONTACT_LINKEDIN = "christen-dijoux"  # pseudo ou lien complet
 CONTACT_WEBSITE = "christendijoux.com"  # ajouté par ce repo ; ignoré par les badges d'origine
+RADAR_STATUS = "Ask me about MicroPython"  # app Radar ; nom + statut limités à 25 octets en tout
 REGION = "us"  # Options are us, cuba, eu, moldova, lebanon, egypt, chile, australia, nz
 TIMEZONE = -7  # Offset from GMT as number of hours, i.e. 0, 1, -7 etc.
