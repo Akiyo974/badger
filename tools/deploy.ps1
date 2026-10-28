@@ -34,27 +34,33 @@ param(
 
 $ErrorActionPreference = 'Stop'
 
-$BadgeVid = 'VID_2E8A'
+# Identifiant USB du badge Universe '26 (Raspberry Pi = 2E8A, badge = 1101)
+$BadgeUsbId = 'VID_2E8A&PID_1101'
 $DriveLabel = 'BADGER'
 $MountTimeoutSeconds = 30
-$Source = (Resolve-Path (Join-Path $PSScriptRoot '..\system')).Path
+$Source = (Resolve-Path (Join-Path $PSScriptRoot '..\system')).Path.TrimEnd('\')
 
-function Find-BadgePort {
-    $device = Get-PnpDevice -PresentOnly -Class Ports -ErrorAction SilentlyContinue |
-        Where-Object { $_.InstanceId -match $BadgeVid } |
-        Select-Object -First 1
-    if ($device -and $device.FriendlyName -match '\((COM\d+)\)') {
-        return $Matches[1]
-    }
+# Ports série des badges branchés, avec le numéro de série USB qui relie
+# chaque port à son lecteur.
+function Get-BadgePorts {
+    Get-PnpDevice -PresentOnly -Class Ports -ErrorAction SilentlyContinue |
+        Where-Object { $_.InstanceId -like "USB\$BadgeUsbId*" -and $_.FriendlyName -match '\((COM\d+)\)' } |
+        ForEach-Object {
+            $parent = (Get-PnpDeviceProperty -InstanceId $_.InstanceId -KeyName DEVPKEY_Device_Parent -ErrorAction SilentlyContinue).Data
+            [pscustomobject]@{ Port = $Matches[1]; Serial = if ($parent) { ($parent -split '\\')[-1] } else { '' } }
+        }
 }
 
-function Find-BadgeDrive {
-    $volume = Get-Volume -ErrorAction SilentlyContinue |
-        Where-Object { $_.FileSystemLabel -eq $DriveLabel -and $_.DriveLetter } |
-        Select-Object -First 1
-    if ($volume -and (Test-Path "$($volume.DriveLetter):\main.py")) {
-        return "$($volume.DriveLetter):"
-    }
+function Find-BadgeDrive([string]$Serial) {
+    $drives = @(Get-Volume -ErrorAction SilentlyContinue |
+        Where-Object { $_.FileSystemLabel -eq $DriveLabel -and $_.DriveLetter -and (Test-Path "$($_.DriveLetter):\main.py") } |
+        Where-Object {
+            if (-not $Serial) { return $true }
+            $disk = Get-Partition -DriveLetter $_.DriveLetter -ErrorAction SilentlyContinue | Get-Disk -ErrorAction SilentlyContinue
+            $disk -and $disk.Path -match [regex]::Escape($Serial)
+        })
+    if ($drives.Count -gt 1) { throw "Plusieurs lecteurs $DriveLabel trouvés : débranche les autres badges ou précise -Port." }
+    if ($drives.Count -eq 1) { return "$($drives[0].DriveLetter):" }
 }
 
 # Interrompt l'app en cours (Ctrl-C) et exécute une ligne dans la console MicroPython.
@@ -73,9 +79,26 @@ function Send-Repl([string]$SerialPort, [string]$Code) {
     }
 }
 
-if (-not $Port) { $Port = Find-BadgePort }
+# Un -Port donné à la main n'est jamais remplacé. Sinon, il faut un seul badge
+# branché : on ne choisit pas au hasard entre plusieurs appareils.
+$ports = @(Get-BadgePorts)
+if ($Port) {
+    $serial = ($ports | Where-Object Port -eq $Port | Select-Object -First 1).Serial
+}
+elseif ($ports.Count -gt 1) {
+    throw "Plusieurs badges branchés ($(($ports.Port) -join ', ')) : précise lequel avec -Port."
+}
+elseif ($ports.Count -eq 1) {
+    $Port = $ports[0].Port
+    $serial = $ports[0].Serial
+}
+# Sans numéro de série, impossible de savoir quel lecteur va avec ce port :
+# on pourrait copier sur un badge et en redémarrer un autre.
+if ($Port -and -not $serial) {
+    throw "Impossible d'identifier le badge sur $Port (numéro de série USB introuvable). Vérifie le port ou débranche les autres appareils."
+}
 
-$drive = Find-BadgeDrive
+$drive = Find-BadgeDrive $serial
 if (-not $drive) {
     if (-not $Port) { throw "Badge introuvable : branche-le en USB et allume-le." }
     Write-Host "Passage du badge en mode clé USB ($Port)..."
@@ -83,21 +106,22 @@ if (-not $drive) {
     $deadline = (Get-Date).AddSeconds($MountTimeoutSeconds)
     while (-not $drive -and (Get-Date) -lt $deadline) {
         Start-Sleep -Seconds 1
-        $drive = Find-BadgeDrive
+        $drive = Find-BadgeDrive $serial
     }
     if (-not $drive) { throw "Le lecteur $DriveLabel n'est pas apparu après $MountTimeoutSeconds s." }
-    $Port = Find-BadgePort
 }
 Write-Host "Badge trouvé : lecteur $drive, port $Port"
 
+# -Only est normalisé (., .., barres) et doit rester à l'intérieur de system/
 $from = $Source
-$to = "$drive\"
 if ($Only) {
-    $relative = $Only.Trim('/\') -replace '/', '\'
-    $from = Join-Path $Source $relative
-    $to = Join-Path $to $relative
+    $from = [IO.Path]::GetFullPath((Join-Path $Source ($Only -replace '/', '\'))).TrimEnd('\')
+    if ($from -ne $Source -and -not $from.StartsWith("$Source\", [StringComparison]::OrdinalIgnoreCase)) {
+        throw "-Only doit désigner un dossier de system/ : $Only"
+    }
     if (-not (Test-Path $from -PathType Container)) { throw "Dossier introuvable dans system/ : $Only" }
 }
+$to = Join-Path "$drive\" $from.Substring($Source.Length).TrimStart('\')
 
 # On compare le contenu (et pas la date, que git change à chaque checkout) pour ne
 # copier que ce qui a vraiment changé. On ne supprime jamais rien sur le badge.
@@ -130,8 +154,14 @@ if ($DryRun) {
 }
 if ($changed) { Write-Host "$($changed.Count) fichier(s) copiés." }
 
-# Vide le cache d'écriture de Windows avant de redémarrer le badge
-try { Write-VolumeCache -DriveLetter $drive[0] } catch { Start-Sleep -Seconds 2 }
+# Vide le cache d'écriture de Windows avant de redémarrer le badge. Si ça échoue,
+# redémarrer pourrait corrompre les fichiers : on s'arrête sans redémarrer.
+try {
+    Write-VolumeCache -DriveLetter $drive[0] -ErrorAction Stop
+}
+catch {
+    throw "Impossible de finir l'écriture sur $drive ($($_.Exception.Message)). Éjecte le lecteur $DriveLabel depuis l'Explorateur, puis redémarre le badge."
+}
 
 if ($NoReboot) {
     Write-Host "Copie terminée. Le badge reste en mode clé USB."
