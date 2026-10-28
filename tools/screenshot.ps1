@@ -71,7 +71,9 @@ function Open-Badge([string]$SerialPort) {
     return $serial
 }
 
-# Envoie une ligne et attend le prochain invite « >>> » de la console.
+# Envoie une ligne et attend le prochain invite « >>> » de la console. La console
+# revient aussi à l'invite après une erreur : on la détecte pour ne pas
+# enregistrer un écran ancien ou incomplet.
 function Invoke-Line($serial, [string]$Line, [int]$TimeoutSeconds = 30) {
     $null = $serial.ReadExisting()
     $serial.Write("$Line`r")
@@ -80,9 +82,28 @@ function Invoke-Line($serial, [string]$Line, [int]$TimeoutSeconds = 30) {
     while ((Get-Date) -lt $deadline) {
         Start-Sleep -Milliseconds 20
         $output += $serial.ReadExisting()
-        if ($output -match '(?s)\r?\n>>> $') { return $output }
+        if ($output -match '(?s)\r?\n>>> $') {
+            $failure = [regex]::Match($output, '(?s)Traceback \(most recent call last\):.*?(?=\r?\n>>> $)')
+            if ($failure.Success) { throw "Erreur MicroPython :`n$($failure.Value)" }
+            return $output
+        }
     }
     throw "Pas de réponse du badge pour : $Line`n$output"
+}
+
+# CRC-32 standard (le même que binascii.crc32 côté badge), calculé en entiers
+# 64 bits : PowerShell lit 0xEDB88320 comme un entier 32 bits négatif.
+$Crc32Poly = [long]3988292384
+$Crc32Mask = [long]4294967295
+$Crc32Table = [long[]](0..255 | ForEach-Object {
+    $c = [long]$_
+    for ($k = 0; $k -lt 8; $k++) { $c = if ($c -band 1) { $Crc32Poly -bxor ($c -shr 1) } else { $c -shr 1 } }
+    $c
+})
+function Get-Crc32([byte[]]$Bytes) {
+    $crc = $Crc32Mask
+    foreach ($b in $Bytes) { $crc = $Crc32Table[($crc -bxor $b) -band 0xFF] -bxor ($crc -shr 8) }
+    return $crc -bxor $Crc32Mask
 }
 
 function Get-Frame($serial, [string]$AppName, [double]$RunSeconds, [string]$SetupCode) {
@@ -107,12 +128,17 @@ function Get-Frame($serial, [string]$AppName, [double]$RunSeconds, [string]$Setu
         "    global SETUP",
         "    if SETUP: exec(SETUP, globals()); SETUP = ''",
         "",
+        # L'état vit dans des globales : MicroPython ne permet pas self.__dict__
+        # dans __setattr__, et toutes les écritures doivent aller au vrai badge
+        # (ex. badge.default_clear = None dans Life).
+        "REAL_BADGE = badge; DEADLINE = time.ticks_add(time.ticks_ms(), ${ms})",
+        "",
         "class CaptureBadge:",
-        "    def __init__(self, real): self.real = real; self.deadline = time.ticks_add(time.ticks_ms(), ${ms})",
-        "    def __getattr__(self, name): return getattr(self.real, name)",
+        "    def __getattr__(self, name): return getattr(REAL_BADGE, name)",
+        "    def __setattr__(self, name, value): setattr(REAL_BADGE, name, value)",
         "    def update(self, *args):",
-        "        run_setup(); result = self.real.update(*args)",
-        "        if time.ticks_diff(time.ticks_ms(), self.deadline) >= 0: raise StopCapture()",
+        "        run_setup(); result = REAL_BADGE.update(*args)",
+        "        if time.ticks_diff(time.ticks_ms(), DEADLINE) >= 0: raise StopCapture()",
         "        return result",
         "",
         "def capture_run(f):",
@@ -122,7 +148,7 @@ function Get-Frame($serial, [string]$AppName, [double]$RunSeconds, [string]$Setu
         "    raise StopCapture()",
         "",
         "",
-        "g = dict(globals()); g['run'] = capture_run; g['badge'] = CaptureBadge(badge); g['__name__'] = 'capture'"
+        "g = dict(globals()); g['run'] = capture_run; g['badge'] = CaptureBadge(); g['__name__'] = 'capture'"
     ) -join "`r"
     $null = Invoke-Line $serial $runner
     # Comme le menu avant de lancer une app : basse résolution par défaut,
@@ -137,22 +163,23 @@ function Get-Frame($serial, [string]$AppName, [double]$RunSeconds, [string]$Setu
     $script:Height = [int]$dims.Groups[2].Value
     $script:RowBytes = [int]$dims.Groups[3].Value
 
-    # L'image part en morceaux numérotés « #n:base64 ». La console du badge perd
-    # parfois des octets quand elle va vite : chaque morceau abîmé est redemandé.
+    # L'image part en morceaux « #n:crc:base64 ». La console du badge perd parfois
+    # des octets quand elle va vite : le CRC couvre le numéro et les données, et
+    # chaque morceau absent ou abîmé est redemandé.
     $total = $Height * $RowBytes
     $count = [Math]::Ceiling($total / $ChunkBytes)
     $null = Invoke-Line $serial "r = bytes(screen.raw)[:$total]; gc.collect()`r"
-    $null = Invoke-Line $serial "def chunk(n): print('#%d:%s' % (n, binascii.b2a_base64(r[n * ${ChunkBytes}:(n + 1) * ${ChunkBytes}]).decode().strip()))`r`r"
+    $null = Invoke-Line $serial "def chunk(n): data = r[n * ${ChunkBytes}:(n + 1) * ${ChunkBytes}]; print('#%d:%08x:%s' % (n, binascii.crc32(b'%d:' % n + data), binascii.b2a_base64(data).decode().strip()))`r`r"
     $chunks = @{}
     $dump = Invoke-Line $serial "for n in range($count): chunk(n)`r`r" 60
     Read-Chunks $dump $chunks
     for ($attempt = 0; $attempt -lt 5; $attempt++) {
         $missing = @(0..($count - 1) | Where-Object { -not $chunks.ContainsKey($_) })
-        if (-not $missing) { break }
+        if ($missing.Count -eq 0) { break }
         foreach ($n in $missing) { Read-Chunks (Invoke-Line $serial "chunk($n)") $chunks }
     }
     $missing = @(0..($count - 1) | Where-Object { -not $chunks.ContainsKey($_) })
-    if ($missing) { throw "Image incomplète : morceaux $($missing -join ', ') illisibles." }
+    if ($missing.Count -gt 0) { throw "Image incomplète : morceaux $($missing -join ', ') illisibles." }
 
     $bytes = New-Object byte[] $total
     foreach ($n in $chunks.Keys) { [Array]::Copy($chunks[$n], 0, $bytes, $n * $ChunkBytes, $chunks[$n].Length) }
@@ -161,11 +188,14 @@ function Get-Frame($serial, [string]$AppName, [double]$RunSeconds, [string]$Setu
 
 function Read-Chunks([string]$Text, [hashtable]$Chunks) {
     $total = $Height * $RowBytes
-    foreach ($match in [regex]::Matches($Text, '(?m)^#(\d+):([A-Za-z0-9+/=]+)\r?$')) {
+    foreach ($match in [regex]::Matches($Text, '(?m)^#(\d+):([0-9a-f]{8}):([A-Za-z0-9+/=]+)\r?$')) {
         $n = [int]$match.Groups[1].Value
         $expected = [Math]::Min($ChunkBytes, $total - $n * $ChunkBytes)
-        try { $data = [Convert]::FromBase64String($match.Groups[2].Value) } catch { continue }
-        if ($data.Length -eq $expected) { $Chunks[$n] = $data }
+        if ($expected -le 0) { continue }
+        try { $data = [Convert]::FromBase64String($match.Groups[3].Value) } catch { continue }
+        if ($data.Length -ne $expected) { continue }
+        $signed = [Text.Encoding]::ASCII.GetBytes("${n}:") + $data
+        if ((Get-Crc32 $signed) -eq [Convert]::ToInt64($match.Groups[2].Value, 16)) { $Chunks[$n] = $data }
     }
 }
 
