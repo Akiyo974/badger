@@ -72,6 +72,9 @@ TILE_STEP = 37
 GRAPH_TOP = (240 - GRAPH_DAYS * TILE_STEP) // 2
 PARALLAX_SHIFT = 8
 AVATAR_SIZE = 150
+MATRIX_UPDATE_MS = 250
+MATRIX_LEVELS = (0, 24, 55, 105, 175)
+NFC_LINK = "https://christendijoux.com"
 
 try:
     os.mkdir(CACHE_DIR)
@@ -149,6 +152,273 @@ class Download:
         if self.request is None:
             return None
         return self.request.error
+
+
+class ContributionMatrix:
+    ADDRESS = 0x30
+    ROW_MAP = (8, 5, 4, 3, 2, 1, 0, 7, 6)
+    GLOBAL_CURRENT = 0x40
+
+    def __init__(self):
+        self.bus = None
+        self.available = False
+        self.frame = None
+        self.last_update = 0
+        self.original_pages = {}
+        self.original_config = None
+        self.original_current = None
+        try:
+            self.bus = machine.I2C()
+            if self.ADDRESS not in self.bus.scan():
+                return
+            chip_id = self.bus.readfrom_mem(self.ADDRESS, 0xFC, 1)[0]
+            if chip_id != 0x60:
+                print("Badge matrix: unexpected device ID 0x%02x" % chip_id)
+                return
+
+            self.original_config = self.read_register(4, 0x00)
+            self.original_current = self.read_register(4, 0x01)
+            for page, count in ((0, 180), (1, 171), (2, 180), (3, 171)):
+                self.original_pages[page] = self.read_page(page, count)
+
+            self.write_page(2, bytes((0xFF,)) * 180)
+            self.write_page(3, bytes((0xFF,)) * 171)
+            self.write_page(0, bytes(180))
+            self.write_page(1, bytes(171))
+            self.write_register(4, 0x01, self.GLOBAL_CURRENT)
+            self.write_register(4, 0x00, self.original_config | 0x01)
+            self.frame = bytes(351)
+            self.available = True
+            print("Badge matrix: IS31FL3741 at 0x30, contribution graph ready")
+        except (ImportError, OSError) as error:
+            print("Badge matrix unavailable:", error)
+            self.restore()
+
+    def select_page(self, page):
+        self.bus.writeto_mem(self.ADDRESS, 0xFE, b"\xC5")
+        self.bus.writeto_mem(self.ADDRESS, 0xFD, bytes((page,)))
+
+    def read_register(self, page, register):
+        self.select_page(page)
+        return self.bus.readfrom_mem(self.ADDRESS, register, 1)[0]
+
+    def write_register(self, page, register, value):
+        self.select_page(page)
+        self.bus.writeto_mem(self.ADDRESS, register, bytes((value,)))
+
+    def read_page(self, page, count):
+        self.select_page(page)
+        values = bytearray()
+        for start in range(0, count, 30):
+            length = min(30, count - start)
+            values.extend(self.bus.readfrom_mem(self.ADDRESS, start, length))
+        return bytes(values)
+
+    def write_page(self, page, values):
+        self.select_page(page)
+        for start in range(0, len(values), 30):
+            chunk = values[start:start + 30]
+            self.bus.writeto(self.ADDRESS, bytes((start,)) + chunk)
+
+    @classmethod
+    def channel_addresses(cls, x, y):
+        row = cls.ROW_MAP[y]
+        led = x + row * 10 if x < 10 else x + 80 + row * 3
+        offset = led * 3
+        if x & 1 or x == 12:
+            return offset + 2, offset, offset + 1
+        return offset, offset + 1, offset + 2
+
+    @classmethod
+    def plot(cls, frame, x, y, red, green, blue):
+        if 0 <= x < 13 and 0 <= y < 9:
+            for address, value in zip(
+                cls.channel_addresses(x, y), (red, green, blue)
+            ):
+                if value > frame[address]:
+                    frame[address] = value
+
+    def render(self, user, now):
+        if not self.available or now - self.last_update < MATRIX_UPDATE_MS:
+            return
+
+        frame = bytearray(351)
+        if user.contribution_data is None:
+            if user.failed:
+                self.plot(frame, 6, 0, 120, 0, 0)
+            elif user.missing or not user.handle:
+                # Amber: Wi-Fi or GitHub username missing (no handle means
+                # fetch_step() never runs, so user.missing stays empty)
+                self.plot(frame, 6, 0, 100, 45, 0)
+            else:
+                x = int(now / 250) % 13
+                self.plot(frame, x, 0, 0, 80, 120)
+        else:
+            first_week = max(0, GRAPH_WEEKS - 13)
+            for x in range(13):
+                week = first_week + x
+                weekly_total = 0
+                for day in range(GRAPH_DAYS):
+                    level = user.contribution_data[day][week]
+                    weekly_total += level
+                    self.plot(
+                        frame, x, day + 1,
+                        0, MATRIX_LEVELS[min(4, max(0, level))], 0,
+                    )
+                weekly_level = min(4, weekly_total // 7)
+                self.plot(frame, x, 8, 0, MATRIX_LEVELS[weekly_level], 0)
+            # Status dot over the graph: the avatar can still fail or wait for
+            # settings after the contributions have loaded
+            if user.failed:
+                self.plot(frame, 6, 0, 120, 0, 0)
+            elif user.missing:
+                self.plot(frame, 6, 0, 100, 45, 0)
+            else:
+                self.plot(frame, 6, 0, 0, 0, 100)
+
+        if frame != self.frame:
+            try:
+                self.write_page(0, frame[:180])
+                self.write_page(1, frame[180:])
+            except OSError as error:
+                # The matrix is optional: drop it, keep the app running
+                print("Badge matrix write failed:", error)
+                self.restore()
+                return
+            self.frame = bytes(frame)
+        self.last_update = now
+
+    def restore(self):
+        if self.bus is None or self.original_config is None:
+            return
+        try:
+            for page in (0, 1, 2, 3):
+                if page in self.original_pages:
+                    self.write_page(page, self.original_pages[page])
+            if self.original_current is not None:
+                self.write_register(4, 0x01, self.original_current)
+            self.write_register(4, 0x00, self.original_config)
+        except OSError as error:
+            print("Badge matrix restore failed:", error)
+        self.available = False
+
+
+def ndef_uri_payload(url):
+    # NFC Forum URI prefixes shorten the record
+    for code, prefix in ((2, "https://www."), (4, "https://"), (1, "http://www."), (3, "http://")):
+        if url.startswith(prefix):
+            return bytes((code,)) + url[len(prefix):].encode()
+    return bytes(1) + url.encode()
+
+
+def ndef_record(tnf, kind, payload, first, last):
+    flags = tnf | (0x80 if first else 0) | (0x40 if last else 0)
+    if len(payload) < 256:
+        return bytes((flags | 0x10, len(kind), len(payload))) + kind + payload
+    return bytes((flags, len(kind))) + len(payload).to_bytes(4, "big") + kind + payload
+
+
+def ndef_message(records):
+    last = len(records) - 1
+    return b"".join(
+        ndef_record(tnf, kind, payload, index == 0, index == last)
+        for index, (tnf, kind, payload) in enumerate(records)
+    )
+
+
+def nfc_records():
+    return [(0x01, b"U", ndef_uri_payload(NFC_LINK))]
+
+
+class NFCLink:
+    """Keeps an NDEF message on the ST25DV tag, written so a phone never reads half of it."""
+
+    ADDRESS = 0x53
+    WRITE_BLOCK_SIZE = 4
+    WRITE_CYCLE_MS = 6
+
+    def __init__(self, bus=None):
+        self.bus = bus
+        self.steps = []
+        self.next_write = 0
+        self.state = "unavailable"
+        try:
+            if self.bus is None:
+                self.bus = machine.I2C()
+            if self.ADDRESS not in self.bus.scan():
+                print("Badge NFC: ST25DV user memory not found")
+                return
+
+            cc = self.bus.readfrom_mem(self.ADDRESS, 0, 8, addrsize=16)
+            if cc[0] not in (0xE1, 0xE2) or cc[1] & 0xFC != 0x40:
+                print("Badge NFC: tag has no valid Type 5 capability container")
+                return
+            if cc[2]:
+                offset, capacity = 4, cc[2] * 8
+            else:
+                offset, capacity = 8, ((cc[6] << 8) | cc[7]) * 8
+
+            message = ndef_message(nfc_records())
+            if len(message) < 0xFF:
+                header = bytes((0x03, len(message)))
+            else:
+                header = bytes((0x03, 0xFF, len(message) >> 8, len(message) & 0xFF))
+            body = message + b"\xfe"
+            if offset + len(header) + len(body) > capacity:
+                print("Badge NFC: message too large for the tag (%d bytes)" % len(message))
+                return
+
+            current = self.bus.readfrom_mem(
+                self.ADDRESS, offset, len(header) + len(body), addrsize=16
+            )
+            if current == header + body:
+                self.state = "ready"
+                print("Badge NFC: tag already up to date")
+                return
+
+            # Empty the message first, write and verify the body, then publish
+            # the real length last: a phone reading meanwhile sees no message
+            # rather than a broken one, and a stop halfway leaves the tag empty.
+            body_at = offset + len(header)
+            self.steps = [("write", offset, b"\x03\x00")]
+            self.steps += [("write", at, data) for at, data in self.blocks(body_at, body)]
+            self.steps.append(("verify", body_at, body))
+            self.steps += [("write", at, data) for at, data in self.blocks(offset, header)]
+            self.steps.append(("verify", offset, header))
+            self.state = "writing"
+            print("Badge NFC: programming the tag")
+        except (ImportError, OSError, TypeError) as error:
+            print("Badge NFC unavailable:", error)
+            self.steps = []
+
+    @classmethod
+    def blocks(cls, address, data):
+        # Writes never cross a 4-byte EEPROM block
+        index = 0
+        while index < len(data):
+            room = cls.WRITE_BLOCK_SIZE - (address + index) % cls.WRITE_BLOCK_SIZE
+            yield address + index, data[index:index + room]
+            index += room
+
+    def update(self, now):
+        if self.state != "writing" or now < self.next_write:
+            return
+        if not self.steps:
+            self.state = "ready"
+            print("Badge NFC: tag programmed")
+            return
+
+        action, address, data = self.steps.pop(0)
+        try:
+            if action == "write":
+                self.bus.writeto_mem(self.ADDRESS, address, data, addrsize=16)
+                self.next_write = now + self.WRITE_CYCLE_MS
+            elif self.bus.readfrom_mem(self.ADDRESS, address, len(data), addrsize=16) != data:
+                self.state = "failed"
+                print("Badge NFC verification failed: readback mismatch")
+        except (OSError, TypeError) as error:
+            self.state = "failed"
+            print("Badge NFC write failed:", error)
 
 
 class User:
@@ -482,6 +752,8 @@ user = User(handle)
 activity = Activity(handle)
 qr_pages = QRPages()
 badge_id = bytes(machine.unique_id())[:badgelink.ID_LEN]
+matrix = ContributionMatrix()
+nfc_link = NFCLink(matrix.bus)
 
 
 def draw_simple(status):
@@ -517,6 +789,9 @@ def update():
     screen.pen = black
     screen.clear()
 
+    matrix.render(user, badge.ticks)
+    nfc_link.update(badge.ticks)
+
     if not handle and not contact_name and not linkedin:
         missing_details.show([], user.draw_graph, ("your name, GitHub username,", "and LinkedIn stub"))
         return
@@ -538,6 +813,10 @@ def update():
         user.draw(status)
     else:
         draw_simple(status)
+
+
+def on_exit():
+    matrix.restore()
 
 
 run(update)

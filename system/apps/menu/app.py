@@ -42,6 +42,7 @@ ICON_SIZE = 48 * DESIGN_SCALE
 BORDER = 2
 BACKGROUND_SHIFT = 6
 ICON_SHIFT = 3
+ICON_FILE = "icon.png"
 TILE_FILTER = image.BILINEAR
 SCROLL_MS = 90
 
@@ -131,6 +132,13 @@ class Animation:
         return self.shapes[index]
 
 
+def load_picture(path):
+    try:
+        return image.load(f"{path}/{ICON_FILE}")
+    except (OSError, ValueError):
+        return None
+
+
 def load_animation(slug):
     try:
         file = open(f"{ANIMATION_DIR}/{slug}.bin", "rb")
@@ -192,6 +200,7 @@ class App(Tile):
         self.pattern = PATTERNS[(ordinal * 3) % len(PATTERNS)]
         self.icon_key = slug if slug in ICONS else "default"
         self.icon = build_icon(ICONS[self.icon_key])
+        self.picture = None if slug in ICONS else load_picture(path)
         self.animation = None
         self.was_selected = False
         self.selected_at = 0
@@ -244,6 +253,13 @@ class App(Tile):
                 screen.pen = self.tones[tone]
                 screen.shape(element)
             screen.antialias = antialias
+
+        if self.picture is not None:
+            icon_size = ICON_SIZE * scale
+            icon_x = centre_x + tilt.x * ICON_SHIFT - icon_size / 2
+            icon_y = centre_y + tilt.y * ICON_SHIFT - icon_size / 2
+            screen.blit(self.picture, rect(0, 0, self.picture.width, self.picture.height), rect(icon_x, icon_y, icon_size, icon_size), TILE_FILTER)
+            return
 
         icon = self.current_icon(selected)
         icon.transform = mat3().translate(

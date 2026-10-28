@@ -79,9 +79,10 @@ To try a pull request: `git checkout <branch>` then `./tools/deploy.ps1`.
 
 | App | What changes |
 |---|---|
-| **Badge** | QR code pages (↑ / ↓) and a "Last push" line under the name |
+| **Badge** | QR code pages (↑ / ↓), a "Last push" line under the name, contribution graph on an LED matrix, NFC tag with my website |
 | **Contacts** | Received links are checked, website field, delete a contact, export to the PC |
-| **Radar** (new) | The badges around you, placed by distance, with their name and status |
+| **Radar** (new) | The badges around you, placed by distance, with their name and status; mirrored on an LED matrix, vibration when a badge shows up |
+| **Menu** | Shows an app's `icon.png` when it has no built-in icon (Radar ships one; Badge keeps its built-in icon) |
 
 ### Radar
 
@@ -90,6 +91,20 @@ To try a pull request: `git checkout <branch>` then `./tools/deploy.ps1`.
 - **Your status**: `RADAR_STATUS` in `secrets.py`, shared with other Radar badges (name + status: 25 bytes in total).
 - **Select** switches between the radar and the list, **↑ / ↓** scrolls the list. The case lights glow brighter as a badge gets closer.
 - Only badges are shown, never phones or other Bluetooth devices.
+
+## Hardware add-ons (Qw/ST port)
+
+The badge has a Qw/ST (Qwiic / STEMMA QT) I²C connector. Badge and Radar look for these boards when they start; each one is optional and can be plugged in or out between launches. Without them, the apps work as before.
+
+| Board | I²C address | Used by | What it does |
+|---|---|---|---|
+| 13×9 RGB LED matrix (IS31FL3741) | `0x30` | Badge, Radar | **Badge**: the last 13 weeks of the contribution graph in green, plus the weekly total on the bottom row; a blue dot sweeps the top row while loading, amber means missing settings, red a connection error. **Radar**: a small radar with the sweep and the nearby badges, coloured by app (blue Radar, yellow Contacts, orange Pong). |
+| NFC tag (Adafruit ST25DV) | `0x53` (+ `0x57`) | Badge | Writes `https://christendijoux.com` to the tag when Badge starts, so a phone held near the antenna opens the site. The link stays on the passive tag after leaving the app. Any data already on the tag is replaced. |
+| Haptic driver (DRV2605) + ERM motor | `0x5A` | Radar | A short vibration when a badge is first detected, and again if it leaves and comes back. |
+
+- The matrix runs at a limited global current (`0x40`), and its previous registers are restored when the app exits.
+- Each app checks the chip id before using a board, and prints what it found in the serial console (e.g. `Radar matrix: IS31FL3741 at 0x30, 13x9 RGB`).
+- To see what is plugged in: `import machine; print([hex(a) for a in machine.I2C().scan()])` in the console (`0x2d` is the badge's own hardware).
 
 ## Watch remote (Wear OS)
 
