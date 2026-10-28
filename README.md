@@ -19,6 +19,10 @@ Screenshots taken straight from the badge with `tools/screenshot.ps1`.
 | **Contacts** | **Radar** | **Radar: list** |
 | ![Contacts](docs/screenshots/contacts.png) | ![Radar](docs/screenshots/radar.png) | ![Radar list](docs/screenshots/radar-list.png) |
 
+| Radar: Hot / Cold game | Radar: encounter history |
+|---|---|
+| ![Hot / Cold](docs/screenshots/radar-game.png) | ![Encounters](docs/screenshots/radar-history.png) |
+
 The badges on the Radar screenshots are simulated (I only have one badge).
 
 ### Stock apps
@@ -81,16 +85,19 @@ To try a pull request: `git checkout <branch>` then `./tools/deploy.ps1`.
 |---|---|
 | **Badge** | QR code pages (↑ / ↓), a "Last push" line under the name, contribution graph on an LED matrix, NFC contact card and a reaction when a phone scans it |
 | **Contacts** | Received links are checked, website field, delete a contact, export to the PC |
-| **Radar** (new) | The badges around you, placed by distance, with their name and status; mirrored on an LED matrix, vibration when a badge shows up |
+| **Radar** (new) | Nearby badges with signal-based proximity, fading, encounter history and an opt-in Hot / Cold game; optional matrix and haptic feedback |
 | **Menu** | Shows an app's `icon.png` when it has no built-in icon (Radar ships one; Badge keeps its built-in icon) |
 
 ### Radar
 
-- **Distance only**: Bluetooth gives a signal strength, not a direction. The closer a badge is to the centre, the nearer it is; its angle is just a fixed spot derived from its id.
+- **Proximity, not distance**: labelled rings show **Very near / Near / Far**, based on smoothed Bluetooth signal strength, never metres. Angles are fixed spots derived from badge IDs, not directions.
 - **Visible badges**: every badge running Radar, and stock badges while they are in Contacts, Pong or Merge Conflict (their Bluetooth only advertises then).
 - **Your status**: `RADAR_STATUS` in `secrets.py`, shared with other Radar badges (name + status: 25 bytes in total).
-- **Select** switches between the radar and the list, **↑ / ↓** scrolls the list. The case lights glow brighter as a badge gets closer.
+- **Select** switches between the radar and the list; **↑ / ↓** chooses a badge. Badges fade after 4 seconds without a signal and disappear after 12 seconds.
+- **Hot / Cold game**: from the list, **Right** starts a game for the selected badge, with a gauge, case lights and optional vibration. **Select** manually confirms **Found!**; **Left** quits. Normal radar remains the default.
+- **Encounter history**: **Right** on the radar opens the 200 most recent distinct badges, saved across restarts in `/state/radar_history.json`, with their names, status and visit counts. Detections are not contact exchanges.
 - Only badges are shown, never phones or other Bluetooth devices.
+- Repeated announcements are coalesced and unrelated traffic is filtered before the detection queue. See [Radar's controls and behavior](system/apps/radar/README.md).
 
 ## Hardware add-ons (Qw/ST port)
 
@@ -164,11 +171,14 @@ Reads the cards swapped with the **Contacts** app (in `/state`, outside the USB 
 
 ```powershell
 py tests/test_contacts_compat.py
+py tests/test_radar.py
 ```
 
 Simulates card swaps between the stock Contacts app (read from the first commit) and the version in this repo, to check that swapping with an unmodified badge still works.
 
-GitHub Actions (`.github/workflows/ci.yml`) runs this test, checks the syntax of `system/`, and builds, tests and lints the watch app on every pull request. Pushing a `wear-v*` tag publishes a signed APK (`wear-release.yml`, needs the `SIGNING_KEYSTORE_BASE64`, `SIGNING_PASSWORD` and `SIGNING_KEY_ALIAS` secrets).
+The Radar tests simulate BLE traffic, proximity/fading, the opt-in game and persistent encounter history without requiring hardware.
+
+GitHub Actions (`.github/workflows/ci.yml`) runs these tests, checks the syntax of `system/`, and builds, tests and lints the watch app on every pull request. Pushing a `wear-v*` tag publishes a signed APK (`wear-release.yml`, needs the `SIGNING_KEYSTORE_BASE64`, `SIGNING_PASSWORD` and `SIGNING_KEY_ALIAS` secrets).
 
 ## Settings
 
