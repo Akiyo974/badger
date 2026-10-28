@@ -1,47 +1,47 @@
 ﻿<#
 .SYNOPSIS
-    Déploie le dossier system/ du repo sur le badge, puis le redémarre.
+    Deploys the repo's system/ folder to the badge, then reboots it.
 
 .DESCRIPTION
-    Trouve le badge branché en USB (port série et lecteur BADGER). S'il n'est pas
-    en mode clé USB, il l'y met tout seul. Copie ensuite uniquement les fichiers
-    modifiés, sans jamais toucher à secrets.py ni supprimer de fichier sur le badge,
-    puis redémarre le badge en mode normal.
+    Finds the badge plugged in over USB (serial port and BADGER drive). If it is
+    not in USB drive mode, switches it there. Then copies only the files that
+    changed, never touching secrets.py nor deleting anything on the badge, and
+    reboots the badge into normal mode.
 
 .EXAMPLE
     ./tools/deploy.ps1
-    Déploie tout system/ et redémarre le badge.
+    Deploys all of system/ and reboots the badge.
 
 .EXAMPLE
     ./tools/deploy.ps1 -Only apps/badge
-    Ne copie que l'app Badge.
+    Copies only the Badge app.
 
 .EXAMPLE
     ./tools/deploy.ps1 -DryRun
-    Affiche ce qui serait copié, sans rien écrire.
+    Shows what would be copied, without writing anything.
 #>
 [CmdletBinding()]
 param(
-    # Port série du badge (ex. COM4). Détecté automatiquement si vide.
+    # Badge serial port (e.g. COM4). Detected automatically when empty.
     [string]$Port,
-    # Sous-dossier de system/ à copier seul (ex. apps/badge).
+    # Single folder of system/ to copy (e.g. apps/badge).
     [string]$Only,
-    # Simulation : liste les fichiers sans les copier.
+    # Dry run: list the files without copying them.
     [switch]$DryRun,
-    # Laisse le badge en mode clé USB après la copie.
+    # Leave the badge in USB drive mode after copying.
     [switch]$NoReboot
 )
 
 $ErrorActionPreference = 'Stop'
 
-# Identifiant USB du badge Universe '26 (Raspberry Pi = 2E8A, badge = 1101)
+# USB id of the Universe '26 badge (Raspberry Pi = 2E8A, badge = 1101)
 $BadgeUsbId = 'VID_2E8A&PID_1101'
 $DriveLabel = 'BADGER'
 $MountTimeoutSeconds = 30
 $Source = (Resolve-Path (Join-Path $PSScriptRoot '..\system')).Path.TrimEnd('\')
 
-# Ports série des badges branchés, avec le numéro de série USB qui relie
-# chaque port à son lecteur.
+# Serial ports of the plugged-in badges, with the USB serial number that ties
+# each port to its drive.
 function Get-BadgePorts {
     Get-PnpDevice -PresentOnly -Class Ports -ErrorAction SilentlyContinue |
         Where-Object { $_.InstanceId -like "USB\$BadgeUsbId*" -and $_.FriendlyName -match '\((COM\d+)\)' } |
@@ -59,11 +59,11 @@ function Find-BadgeDrive([string]$Serial) {
             $disk = Get-Partition -DriveLetter $_.DriveLetter -ErrorAction SilentlyContinue | Get-Disk -ErrorAction SilentlyContinue
             $disk -and $disk.Path -match [regex]::Escape($Serial)
         })
-    if ($drives.Count -gt 1) { throw "Plusieurs lecteurs $DriveLabel trouvés : débranche les autres badges ou précise -Port." }
+    if ($drives.Count -gt 1) { throw "Several $DriveLabel drives found: unplug the other badges or pass -Port." }
     if ($drives.Count -eq 1) { return "$($drives[0].DriveLetter):" }
 }
 
-# Interrompt l'app en cours (Ctrl-C) et exécute une ligne dans la console MicroPython.
+# Interrupts the running app (Ctrl-C) and runs one line in the MicroPython console.
 function Send-Repl([string]$SerialPort, [string]$Code) {
     $serial = New-Object System.IO.Ports.SerialPort $SerialPort, 115200
     $serial.DtrEnable = $true
@@ -74,57 +74,58 @@ function Send-Repl([string]$SerialPort, [string]$Code) {
         $serial.Write("$Code`r"); Start-Sleep -Milliseconds 500
     }
     finally {
-        # Le badge redémarre souvent avant la fermeture du port
+        # The badge often reboots before the port is closed
         try { $serial.Close() } catch { }
     }
 }
 
-# Un -Port donné à la main n'est jamais remplacé. Sinon, il faut un seul badge
-# branché : on ne choisit pas au hasard entre plusieurs appareils.
+# A -Port given by hand is never replaced. Otherwise exactly one badge must be
+# plugged in: we never pick at random between several devices.
 $ports = @(Get-BadgePorts)
 if ($Port) {
     $serial = ($ports | Where-Object Port -eq $Port | Select-Object -First 1).Serial
 }
 elseif ($ports.Count -gt 1) {
-    throw "Plusieurs badges branchés ($(($ports.Port) -join ', ')) : précise lequel avec -Port."
+    throw "Several badges plugged in ($(($ports.Port) -join ', ')): choose one with -Port."
 }
 elseif ($ports.Count -eq 1) {
     $Port = $ports[0].Port
     $serial = $ports[0].Serial
 }
-# Sans numéro de série, impossible de savoir quel lecteur va avec ce port :
-# on pourrait copier sur un badge et en redémarrer un autre.
+# Without a serial number there is no way to know which drive belongs to this
+# port: we could copy to one badge and reboot another.
 if ($Port -and -not $serial) {
-    throw "Impossible d'identifier le badge sur $Port (numéro de série USB introuvable). Vérifie le port ou débranche les autres appareils."
+    throw "Cannot identify the badge on $Port (USB serial number not found). Check the port or unplug other devices."
 }
 
 $drive = Find-BadgeDrive $serial
+$switched = -not $drive
 if (-not $drive) {
-    if (-not $Port) { throw "Badge introuvable : branche-le en USB et allume-le." }
-    Write-Host "Passage du badge en mode clé USB ($Port)..."
+    if (-not $Port) { throw "Badge not found: plug it in over USB and switch it on." }
+    Write-Host "Switching the badge to USB drive mode ($Port)..."
     Send-Repl $Port 'import powman; powman.reset_into_msc()'
     $deadline = (Get-Date).AddSeconds($MountTimeoutSeconds)
     while (-not $drive -and (Get-Date) -lt $deadline) {
         Start-Sleep -Seconds 1
         $drive = Find-BadgeDrive $serial
     }
-    if (-not $drive) { throw "Le lecteur $DriveLabel n'est pas apparu après $MountTimeoutSeconds s." }
+    if (-not $drive) { throw "The $DriveLabel drive did not show up after $MountTimeoutSeconds s." }
 }
-Write-Host "Badge trouvé : lecteur $drive, port $Port"
+Write-Host "Badge found: drive $drive, port $Port"
 
-# -Only est normalisé (., .., barres) et doit rester à l'intérieur de system/
+# -Only is normalised (., .., slashes) and must stay inside system/
 $from = $Source
 if ($Only) {
     $from = [IO.Path]::GetFullPath((Join-Path $Source ($Only -replace '/', '\'))).TrimEnd('\')
     if ($from -ne $Source -and -not $from.StartsWith("$Source\", [StringComparison]::OrdinalIgnoreCase)) {
-        throw "-Only doit désigner un dossier de system/ : $Only"
+        throw "-Only must point to a folder of system/: $Only"
     }
-    if (-not (Test-Path $from -PathType Container)) { throw "Dossier introuvable dans system/ : $Only" }
+    if (-not (Test-Path $from -PathType Container)) { throw "Folder not found in system/: $Only" }
 }
 $to = Join-Path "$drive\" $from.Substring($Source.Length).TrimStart('\')
 
-# On compare le contenu (et pas la date, que git change à chaque checkout) pour ne
-# copier que ce qui a vraiment changé. On ne supprime jamais rien sur le badge.
+# Compare content (not dates, which git changes on every checkout) to copy only
+# what really changed. Nothing is ever deleted on the badge.
 $skipDirs = '\\(System Volume Information|\.ruff_cache|__pycache__)\\'
 $changed = @()
 Get-ChildItem $from -Recurse -File | ForEach-Object {
@@ -138,7 +139,7 @@ Get-ChildItem $from -Recurse -File | ForEach-Object {
 }
 
 if (-not $changed) {
-    Write-Host "Rien à copier : le badge est déjà à jour."
+    Write-Host "Nothing to copy: the badge is already up to date."
 }
 foreach ($file in $changed) {
     Write-Host "  $($file.Path)"
@@ -149,27 +150,29 @@ foreach ($file in $changed) {
 }
 
 if ($DryRun) {
-    Write-Host "Simulation : $($changed.Count) fichier(s) seraient copiés, rien n'a été écrit."
+    Write-Host "Dry run: $($changed.Count) file(s) would be copied, nothing was written."
+    # Put the badge back the way we found it
+    if ($switched -and -not $NoReboot) { Send-Repl $Port 'import machine; machine.reset()' }
     return
 }
-if ($changed) { Write-Host "$($changed.Count) fichier(s) copiés." }
+if ($changed) { Write-Host "$($changed.Count) file(s) copied." }
 
-# Vide le cache d'écriture de Windows avant de redémarrer le badge. Si ça échoue,
-# redémarrer pourrait corrompre les fichiers : on s'arrête sans redémarrer.
+# Flush Windows' write cache before rebooting the badge. If that fails,
+# rebooting could corrupt files: stop without rebooting.
 try {
     Write-VolumeCache -DriveLetter $drive[0] -ErrorAction Stop
 }
 catch {
-    throw "Impossible de finir l'écriture sur $drive ($($_.Exception.Message)). Éjecte le lecteur $DriveLabel depuis l'Explorateur, puis redémarre le badge."
+    throw "Could not finish writing to $drive ($($_.Exception.Message)). Eject the $DriveLabel drive from Explorer, then restart the badge."
 }
 
 if ($NoReboot) {
-    Write-Host "Copie terminée. Le badge reste en mode clé USB."
+    Write-Host "Copy done. The badge stays in USB drive mode."
 }
 elseif ($Port) {
     Send-Repl $Port 'import machine; machine.reset()'
-    Write-Host "Copie terminée. Le badge redémarre."
+    Write-Host "Copy done. The badge is rebooting."
 }
 else {
-    Write-Warning "Copie terminée, mais port série introuvable : redémarre le badge à la main."
+    Write-Warning "Copy done, but no serial port found: restart the badge by hand."
 }

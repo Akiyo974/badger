@@ -1,3 +1,7 @@
+"""Generates the QR code PNGs of the Badge app.
+
+Usage: py tools/make_qr.py system/apps/badge
+"""
 import sys
 
 import qrcode
@@ -18,7 +22,7 @@ for name, url in TARGETS.items():
     qr.add_data(url)
     qr.make(fit=True)
     small = qr.make_image(fill_color="black", back_color="white").convert("RGB")
-    # Agrandissement en pixels entiers pour garder des modules nets
+    # Scale by whole pixels to keep the modules sharp
     scale = SIZE // small.width
     sharp = small.resize((small.width * scale, small.height * scale), Image.NEAREST)
     canvas = Image.new("RGB", (SIZE, SIZE), "white")

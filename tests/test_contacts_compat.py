@@ -1,6 +1,6 @@
-"""Simule des échanges de cartes entre l'app Contacts d'origine et la version modifiée.
+"""Simulates card swaps between the stock Contacts app and the modified one.
 
-Lancer depuis la racine du repo : py tests/test_contacts_compat.py
+Run from the repo root: py tests/test_contacts_compat.py
 """
 import os
 import subprocess
@@ -8,7 +8,7 @@ import sys
 from unittest.mock import MagicMock
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-STOCK_COMMIT = "6912f14"  # version d'origine du badge
+STOCK_COMMIT = "6912f14"  # stock badge version
 SOURCES = {"new": f"{ROOT}/system/apps/contacts/__init__.py"}
 
 for name in ("hints", "missing_details", "pairing", "badgeware", "secrets"):
@@ -76,30 +76,30 @@ def check(label, got, expected):
 
 for mtu in (20, 244):
     da, db, ca, cb = swap("stock", other, "new", mine, mtu)
-    check(f"[mtu {mtu}] origine -> modifiée : les deux terminent", (da, db), (True, True))
-    check(f"[mtu {mtu}] origine reçoit ma carte (site ignoré)", sorted(ca), ["github", "linkedin", "name"])
-    check(f"[mtu {mtu}] modifiée enregistre la carte d'origine", cb["github"], "ada")
+    check(f"[mtu {mtu}] stock -> modified: both sides finish", (da, db), (True, True))
+    check(f"[mtu {mtu}] stock badge receives my card (website ignored)", sorted(ca), ["github", "linkedin", "name"])
+    check(f"[mtu {mtu}] modified badge saves the stock card", cb["github"], "ada")
 
     da, db, ca, cb = swap("new", mine, "stock", other, mtu)
-    check(f"[mtu {mtu}] modifiée -> origine : les deux terminent", (da, db), (True, True))
+    check(f"[mtu {mtu}] modified -> stock: both sides finish", (da, db), (True, True))
 
     da, db, ca, cb = swap("new", mine, "new", mine, mtu)
-    check(f"[mtu {mtu}] modifiée <-> modifiée : site transmis", (da, db, ca["website"]), (True, True, "https://christendijoux.com/"))
+    check(f"[mtu {mtu}] modified <-> modified: website sent", (da, db, ca["website"]), (True, True, "https://christendijoux.com/"))
 
 da, db, ca, cb = swap("stock", phish, "new", mine)
-check("carte piégée : l'autre badge termine quand même", (da, db), (True, True))
-check("carte piégée : rien d'enregistré chez moi", cb, None)
+check("malicious card: the other badge still finishes", (da, db), (True, True))
+check("malicious card: nothing saved on my side", cb, None)
 
 da, db, ca, cb = swap("stock", mixed, "new", mine)
-check("lien LinkedIn piégé retiré, GitHub gardé", (cb["github"], cb["linkedin"]), ("bob-dev", ""))
+check("malicious LinkedIn link dropped, GitHub kept", (cb["github"], cb["linkedin"]), ("bob-dev", ""))
 
 v = new_ns
-check("pseudos GitHub", [v["valid_github"](x) for x in ("Akiyo974", "a-b", "-a", "a--b", "a" * 40, "bad name")],
+check("GitHub usernames", [v["valid_github"](x) for x in ("Akiyo974", "a-b", "-a", "a--b", "a" * 40, "bad name")],
       [True, True, False, False, False, False])
-check("liens LinkedIn", [v["valid_linkedin"](x) for x in (
+check("LinkedIn links", [v["valid_linkedin"](x) for x in (
     "https://www.linkedin.com/in/x", "https://ca.linkedin.com/in/x", "https://linkedin.com.evil.io/in/x",
     "https://evil.io/linkedin.com/in/x", "http://www.linkedin.com/in/x", "https://user@linkedin.com/x")],
       [True, True, False, False, False, False])
 
-print(f"\n{sum(results)}/{len(results)} vérifications réussies")
+print(f"\n{sum(results)}/{len(results)} checks passed")
 sys.exit(0 if all(results) else 1)

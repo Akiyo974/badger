@@ -1,12 +1,12 @@
-# Réglages personnels (Wi-Fi, etc.) : ne jamais commiter
+# Personal settings (Wi-Fi, etc.): never commit
 secrets.py
 !secrets.example.py
 
-# Fichiers créés par Windows ou le badge
+# Files created by Windows or the badge
 System Volume Information/
 *.tmp
 .ruff_cache/
 __pycache__/
 
-# Brouillons et sauvegardes locales
+# Local drafts and backups
 .local/

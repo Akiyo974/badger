@@ -1,37 +1,39 @@
 ﻿<#
 .SYNOPSIS
-    Exporte les contacts échangés avec l'app Contacts vers le PC (CSV + vCard).
+    Exports the cards swapped with the Contacts app to the PC (CSV + vCard).
 
 .DESCRIPTION
-    Lit /state/contacts.json par la console série du badge (le fichier n'est pas
-    sur le lecteur USB), puis écrit contacts.csv et contacts.vcf. Le fichier vCard
-    s'importe directement dans un téléphone, Outlook ou Google Contacts.
-    Le badge est redémarré à la fin.
+    Reads /state/contacts.json over the badge's serial console (the file is not
+    on the USB drive), then writes contacts.csv and contacts.vcf. The vCard file
+    imports straight into a phone, Outlook or Google Contacts.
+    The badge is rebooted at the end.
 
 .EXAMPLE
     ./tools/export_contacts.ps1
-    Écrit contacts.csv et contacts.vcf dans le dossier courant.
+    Writes contacts.csv and contacts.vcf to the current folder.
 
 .EXAMPLE
     ./tools/export_contacts.ps1 -OutDir ~/Desktop
 #>
 [CmdletBinding()]
 param(
-    # Dossier où écrire les fichiers.
+    # Folder to write the files to.
     [string]$OutDir = '.',
-    # Port série du badge (ex. COM4). Détecté automatiquement si vide.
+    # Badge serial port (e.g. COM4). Detected automatically when empty.
     [string]$Port
 )
 
 $ErrorActionPreference = 'Stop'
 
 if (-not $Port) {
-    $device = Get-PnpDevice -PresentOnly -Class Ports -ErrorAction SilentlyContinue |
-        Where-Object { $_.InstanceId -match 'VID_2E8A' } |
-        Select-Object -First 1
-    if ($device -and $device.FriendlyName -match '\((COM\d+)\)') { $Port = $Matches[1] }
+    # Only the Universe '26 badge, and only when exactly one is plugged in
+    $ports = @(Get-PnpDevice -PresentOnly -Class Ports -ErrorAction SilentlyContinue |
+        Where-Object { $_.InstanceId -like 'USB\VID_2E8A&PID_1101*' -and $_.FriendlyName -match '\((COM\d+)\)' } |
+        ForEach-Object { $Matches[1] })
+    if ($ports.Count -gt 1) { throw "Several badges plugged in ($($ports -join ', ')): choose one with -Port." }
+    if ($ports.Count -eq 1) { $Port = $ports[0] }
 }
-if (-not $Port) { throw "Badge introuvable : branche-le en USB et allume-le." }
+if (-not $Port) { throw "Badge not found: plug it in over USB and switch it on." }
 
 $serial = New-Object System.IO.Ports.SerialPort $Port, 115200
 $serial.DtrEnable = $true
@@ -55,13 +57,13 @@ finally {
     try { $serial.Close() } catch { }
 }
 
-# La première ligne est l'écho de la commande : on prend le dernier bloc <<< … >>>
+# The first line is the echoed command: take the last <<< … >>> block
 $found = [regex]::Matches($output, '<<<(.*)>>>')
-if ($found.Count -eq 0) { throw "Impossible de lire /state/contacts.json sur le badge." }
+if ($found.Count -eq 0) { throw "Could not read /state/contacts.json on the badge." }
 $cards = @(($found[$found.Count - 1].Groups[1].Value | ConvertFrom-Json).cards)
 
 if (-not $cards) {
-    Write-Host "Aucun contact sur le badge."
+    Write-Host "No contacts on the badge."
     return
 }
 
@@ -73,10 +75,10 @@ function Get-Field($card, $name) {
 $rows = foreach ($card in $cards) {
     $github = Get-Field $card 'github'
     [pscustomobject]@{
-        Nom      = Get-Field $card 'name'
+        Name     = Get-Field $card 'name'
         GitHub   = if ($github) { "https://github.com/$github" } else { '' }
         LinkedIn = Get-Field $card 'linkedin'
-        Site     = Get-Field $card 'website'
+        Website  = Get-Field $card 'website'
         Badge    = Get-Field $card 'badge'
     }
 }
@@ -88,16 +90,16 @@ $vcfPath = Join-Path $OutDir 'contacts.vcf'
 $rows | Export-Csv -Path $csvPath -NoTypeInformation -Encoding UTF8
 
 $vcards = foreach ($row in $rows) {
-    $lines = @('BEGIN:VCARD', 'VERSION:3.0', "FN:$($row.Nom)", "N:$($row.Nom);;;;")
-    foreach ($url in @($row.GitHub, $row.LinkedIn, $row.Site)) {
+    $lines = @('BEGIN:VCARD', 'VERSION:3.0', "FN:$($row.Name)", "N:$($row.Name);;;;")
+    foreach ($url in @($row.GitHub, $row.LinkedIn, $row.Website)) {
         if ($url) { $lines += "URL:$url" }
     }
-    $lines += 'NOTE:Échangé avec le badge GitHub Universe ''26'
+    $lines += 'NOTE:Swapped with the GitHub Universe ''26 badge'
     $lines += 'END:VCARD'
     $lines -join "`r`n"
 }
 [IO.File]::WriteAllText((Join-Path (Resolve-Path $OutDir) 'contacts.vcf'), ($vcards -join "`r`n") + "`r`n", (New-Object Text.UTF8Encoding $false))
 
-Write-Host "$($rows.Count) contact(s) exportés :"
+Write-Host "$($rows.Count) contact(s) exported:"
 Write-Host "  $csvPath"
 Write-Host "  $vcfPath"

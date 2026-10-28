@@ -59,10 +59,13 @@ ROW_PITCH = ROW_HEIGHT + ROW_GAP
 LIST_TOP = 8
 VISIBLE_ROWS = 3
 QR_SIZE = 138
-CARD_HEIGHT = 70
+# Tall enough for three link lines (GitHub, LinkedIn, website)
+CARD_HEIGHT = 80
+CARD_LINE_TOP = 30
+CARD_LINE_PITCH = 15
 
 PAIRING_X = 74
-PAIRING_Y = 138
+PAIRING_Y = 146
 PAIRING_UNIT = 6
 COLUMN_X = 232
 COLUMN_WIDTH = 160
@@ -555,7 +558,7 @@ class Contacts:
         screen.pen = dim_white
         lines = [label + ": " + link_handle(label, url, self.card) for label, url in card_links(self.card)]
         for index, line in enumerate(lines or ["no links yet"]):
-            write(fit(line, WIDTH - 90, BODY_SIZE), MARGIN + 72, top + 32 + index * 17, BODY_SIZE)
+            write(fit(line, WIDTH - 90, BODY_SIZE), MARGIN + 72, top + CARD_LINE_TOP + index * CARD_LINE_PITCH, BODY_SIZE)
 
     def draw_home(self, now):
         self.draw_my_card(LIST_TOP)

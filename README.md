@@ -1,27 +1,27 @@
 # badger
 
-Mes modifications du badge **GitHub Universe '26** (Badger 2350 : RP2350, écran 320×240, MonaOS 4.0, MicroPython).
+My mods for the **GitHub Universe '26** badge (Badger 2350: RP2350, 320×240 colour screen, MonaOS 4.0, MicroPython).
 
 <p align="center">
-  <img src="docs/screenshots/menu.png" width="320" alt="Menu MonaOS">
-  <img src="docs/screenshots/badge.png" width="320" alt="App Badge : stats GitHub">
+  <img src="docs/screenshots/menu.png" width="320" alt="MonaOS menu">
+  <img src="docs/screenshots/badge.png" width="320" alt="Badge app: GitHub stats">
 </p>
 
-## Galerie
+## Gallery
 
-Captures prises directement sur le badge avec `tools/screenshot.ps1`.
+Screenshots taken straight from the badge with `tools/screenshot.ps1`.
 
-### Apps modifiées dans ce repo
+### Apps changed in this repo
 
-| Badge | Badge : QR codes | Contacts |
+| Badge | Badge: QR codes | Contacts |
 |---|---|---|
-| ![Badge](docs/screenshots/badge.png) | ![QR du site](docs/screenshots/badge-qr.png) | ![Contacts](docs/screenshots/contacts.png) |
-| **Radar** | **Radar : liste** | |
-| ![Radar](docs/screenshots/radar.png) | ![Liste du Radar](docs/screenshots/radar-list.png) | |
+| ![Badge](docs/screenshots/badge.png) | ![Website QR code](docs/screenshots/badge-qr.png) | ![Contacts](docs/screenshots/contacts.png) |
+| **Radar** | **Radar: list** | |
+| ![Radar](docs/screenshots/radar.png) | ![Radar list](docs/screenshots/radar-list.png) | |
 
-Les badges du Radar sur ces captures sont simulés (je n'ai qu'un badge).
+The badges on the Radar screenshots are simulated (I only have one badge).
 
-### Apps d'origine
+### Stock apps
 
 | Menu | Snake | Pong |
 |---|---|---|
@@ -33,79 +33,81 @@ Les badges du Radar sur ces captures sont simulés (je n'ai qu'un badge).
 | **Life** | **ISS** | |
 | ![Life](docs/screenshots/life.png) | ![ISS](docs/screenshots/iss.png) | |
 
-## Contenu
+## What's inside
 
-| Dossier | Rôle |
+| Folder | Purpose |
 |---|---|
-| `system/` | Copie exacte du lecteur USB du badge (`/system` sur l'appareil) : `main.py`, l'animation de démarrage, les apps et les assets |
-| `tools/` | Scripts à lancer sur le PC : déploiement, captures d'écran, export des contacts, QR codes |
-| `docs/screenshots/` | Captures du README et leur liste (`captures.json`) |
-| `secrets.example.py` | Modèle des réglages ; le vrai `secrets.py` n'est jamais commité |
-| `CHANGELOG.md` | Historique des changements |
+| `system/` | Exact copy of the badge's USB drive (`/system` on the device): `main.py`, the boot animation, apps and assets |
+| `tools/` | PC scripts: deploy, screenshots, contacts export, QR codes |
+| `docs/screenshots/` | README screenshots and their list (`captures.json`) |
+| `secrets.example.py` | Settings template; the real `secrets.py` is never committed |
+| `CHANGELOG.md` | Change history |
 
-## Déployer sur le badge
+The stock badge software in `system/` (MonaOS and its apps) belongs to its authors and is included here so the changes can be read and deployed. Fonts are under the SIL Open Font License (`system/assets/fonts/licences/OFL.txt`).
 
-Branche le badge en USB, puis depuis la racine du repo :
+## Deploying to the badge
+
+Plug the badge in over USB, then from the repo root:
 
 ```powershell
 ./tools/deploy.ps1
 ```
 
-Le script :
-1. trouve le badge (port série et lecteur **BADGER**) et le passe tout seul en mode clé USB si besoin ;
-2. copie uniquement les fichiers dont le **contenu** a changé (la date ne compte pas, git la modifie à chaque checkout) ;
-3. ne touche jamais à `secrets.py` et ne supprime rien sur le badge ;
-4. redémarre le badge en mode normal.
+The script:
+1. finds the badge (serial port and **BADGER** drive) and switches it to USB drive mode if needed;
+2. copies only the files whose **content** changed (dates don't count, git changes them on every checkout);
+3. never touches `secrets.py` and never deletes anything on the badge;
+4. reboots the badge into normal mode.
 
-| Option | Effet |
+| Option | Effect |
 |---|---|
-| `-DryRun` | Liste les fichiers qui seraient copiés, sans rien écrire |
-| `-Only apps/badge` | Ne déploie qu'un sous-dossier de `system/` |
-| `-NoReboot` | Laisse le badge en mode clé USB après la copie |
-| `-Port COM4` | Force le port série si la détection échoue |
+| `-DryRun` | Lists the files that would be copied, without writing anything |
+| `-Only apps/badge` | Deploys only one folder of `system/` |
+| `-NoReboot` | Leaves the badge in USB drive mode after copying |
+| `-Port COM4` | Forces the serial port if detection fails |
 
-Pour tester une pull request : `git checkout <branche>` puis `./tools/deploy.ps1`.
+To try a pull request: `git checkout <branch>` then `./tools/deploy.ps1`.
 
-### À la main
+### By hand
 
-1. Mettre le badge en mode clé USB (app **Mass Storage**, ou deux appuis rapides sur RESET).
-2. Copier le contenu de `system/` sur le lecteur **BADGER**.
-3. Éjecter le lecteur, puis redémarrer le badge.
+1. Put the badge in USB drive mode (**Mass Storage** app, or double-tap RESET).
+2. Copy the contents of `system/` to the **BADGER** drive.
+3. Eject the drive, then restart the badge.
 
-## Apps ajoutées ou modifiées
+## Apps added or changed
 
-| App | Ce qui change |
+| App | What changes |
 |---|---|
-| **Badge** | Pages QR codes (↑ / ↓) et ligne « Last push » sous le nom |
-| **Contacts** | Liens reçus vérifiés, champ site web, suppression, export vers le PC |
-| **Radar** (nouvelle) | Les badges autour de toi, placés selon leur distance, avec leur nom et leur statut |
+| **Badge** | QR code pages (↑ / ↓) and a "Last push" line under the name |
+| **Contacts** | Received links are checked, website field, delete a contact, export to the PC |
+| **Radar** (new) | The badges around you, placed by distance, with their name and status |
 
 ### Radar
 
-- **Distance seulement** : le Bluetooth donne la force du signal, pas la direction. Plus un badge est près du centre, plus il est proche ; son angle est juste une place fixe tirée de son identifiant.
-- **Badges visibles** : tous les badges qui ont Radar ouvert, et les badges d'origine pendant qu'ils sont dans Contacts, Pong ou Merge Conflict (leur Bluetooth ne s'annonce qu'à ce moment-là).
-- **Ton statut** : `RADAR_STATUS` dans `secrets.py`, partagé avec les autres badges Radar (nom + statut : 25 octets au total).
-- **Select** passe de la vue radar à la liste, **↑ / ↓** fait défiler la liste. Les LED du boîtier brillent plus fort quand un badge s'approche.
-- Seuls les badges sont affichés, jamais les téléphones ou autres appareils Bluetooth.
+- **Distance only**: Bluetooth gives a signal strength, not a direction. The closer a badge is to the centre, the nearer it is; its angle is just a fixed spot derived from its id.
+- **Visible badges**: every badge running Radar, and stock badges while they are in Contacts, Pong or Merge Conflict (their Bluetooth only advertises then).
+- **Your status**: `RADAR_STATUS` in `secrets.py`, shared with other Radar badges (name + status: 25 bytes in total).
+- **Select** switches between the radar and the list, **↑ / ↓** scrolls the list. The case lights glow brighter as a badge gets closer.
+- Only badges are shown, never phones or other Bluetooth devices.
 
-## Captures d'écran
+## Screenshots
 
 ```powershell
-./tools/screenshot.ps1                      # refait toutes les captures de docs/screenshots/
-./tools/screenshot.ps1 -App snake -Seconds 5 # une seule app
+./tools/screenshot.ps1                       # retakes every screenshot in docs/screenshots/
+./tools/screenshot.ps1 -App snake -Seconds 5 # a single app
 ```
 
-Le script lance l'app par la console série, la laisse tourner quelques secondes, récupère l'image de l'écran (RGB565, 320×240 ou 160×120) et l'enregistre en PNG agrandi ×2. La liste des captures et leur réglage (`setup`, par exemple ouvrir une page ou simuler des badges) est dans `docs/screenshots/captures.json`. Il faut compter environ 25 s par capture.
+The script starts the app over the serial console, lets it run for a few seconds, reads the screen buffer (RGB565, 320×240 or 160×120) and saves it as a PNG scaled ×2. The list of screenshots and their settings (`setup`, e.g. to open a page or simulate badges) lives in `docs/screenshots/captures.json`. Allow about 25 s per screenshot.
 
-Après une modification d'app : `./tools/deploy.ps1`, puis `./tools/screenshot.ps1`.
+After changing an app: `./tools/deploy.ps1`, then `./tools/screenshot.ps1`.
 
-## Exporter les contacts
+## Exporting contacts
 
 ```powershell
 ./tools/export_contacts.ps1 -OutDir ~/Desktop
 ```
 
-Lit les cartes échangées avec l'app **Contacts** (dans `/state`, hors du lecteur USB) et écrit `contacts.csv` et `contacts.vcf`, à importer dans un téléphone, Outlook ou Google Contacts.
+Reads the cards swapped with the **Contacts** app (in `/state`, outside the USB drive) and writes `contacts.csv` and `contacts.vcf`, ready to import into a phone, Outlook or Google Contacts.
 
 ## Tests
 
@@ -113,20 +115,20 @@ Lit les cartes échangées avec l'app **Contacts** (dans `/state`, hors du lecte
 py tests/test_contacts_compat.py
 ```
 
-Simule des échanges de cartes entre l'app Contacts d'origine (lue depuis le premier commit) et la version de ce repo, pour vérifier qu'on peut toujours échanger avec un badge non modifié.
+Simulates card swaps between the stock Contacts app (read from the first commit) and the version in this repo, to check that swapping with an unmodified badge still works.
 
-## Réglages
+## Settings
 
-Utiliser l'app **Settings** du badge, ou copier `secrets.example.py` en `secrets.py` sur le lecteur et le remplir.
+Use the badge's **Settings** app, or copy `secrets.example.py` to `secrets.py` on the drive and fill it in.
 
-## Façon de travailler
+## How I work
 
-- `main` reste déployable à tout moment.
-- Chaque amélioration passe par une branche (`feat/…`, `fix/…`) et une pull request, testée sur le badge avec `deploy.ps1` avant le merge.
-- Chaque PR ajoute sa ligne dans `CHANGELOG.md`, sous « Non publié ».
+- `main` is always deployable.
+- Every change goes through a branch (`feat/…`, `fix/…`) and a pull request, tested on the badge with `deploy.ps1` and reviewed by Copilot before merging.
+- Every PR adds its line to `CHANGELOG.md`, under "Unreleased".
 
-## Bon à savoir
+## Good to know
 
-- `/system` est en lecture seule pour le badge : on le modifie uniquement par le lecteur USB.
-- Les caches et sauvegardes (stats GitHub, succès, contacts…) vivent dans `/state`, hors du lecteur USB.
-- Console MicroPython sur le port série du badge (115200 bauds), par exemple avec Thonny.
+- `/system` is read-only for the badge itself: it is only changed through the USB drive.
+- Caches and saves (GitHub stats, achievements, contacts…) live in `/state`, outside the USB drive.
+- MicroPython console on the badge's serial port (115200 baud), e.g. with Thonny.
