@@ -22,6 +22,12 @@ OFFER_MS = 15000
 SWAP_MS = 8000
 DONE_MS = 2500
 
+CARD_FIELDS = ("name", "github", "linkedin", "website")
+MAX_CARDS = 200
+GITHUB_MAX = 39
+GITHUB_CHARS = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-"
+URL_FORBIDDEN = " \t\r\n\"'<>\\"
+
 PALETTE = [
     (88, 58, 247),
     (22, 143, 251),
@@ -86,6 +92,40 @@ def github_url(username):
     return "https://github.com/" + username if username else ""
 
 
+def website_url(value):
+    value = value.strip()
+    if not value:
+        return ""
+    return value if "://" in value else "https://" + value
+
+
+def valid_github(username):
+    return (
+        0 < len(username) <= GITHUB_MAX
+        and all(char in GITHUB_CHARS for char in username)
+        and not username.startswith("-")
+        and not username.endswith("-")
+        and "--" not in username
+    )
+
+
+def url_host(url):
+    if not url.startswith("https://") or any(char in url for char in URL_FORBIDDEN):
+        return ""
+    host = url[8:].split("/")[0].split("?")[0].split("#")[0].lower()
+    return "" if "@" in host or ":" in host else host
+
+
+def valid_linkedin(url):
+    host = url_host(url)
+    return host == "linkedin.com" or host.endswith(".linkedin.com")
+
+
+def valid_website(url):
+    host = url_host(url)
+    return "." in host and not host.startswith(".") and not host.endswith(".")
+
+
 def badge_user_name():
     try:
         with open(BADGE_USER_FILE) as f:
@@ -96,22 +136,40 @@ def badge_user_name():
 
 
 def my_card(fallback_name):
-    return {
+    card = {
         "name": secret("CONTACT_NAME") or badge_user_name() or fallback_name,
         "github": secret("GITHUB_USERNAME"),
         "linkedin": linkedin_url(secret("CONTACT_LINKEDIN")),
     }
+    # Unmodified badges ignore unknown keys, so the extra field is safe to send
+    website = website_url(secret("CONTACT_WEBSITE"))
+    if website:
+        card["website"] = website
+    return card
 
 
 def clean_card(value):
+    # Same acceptance rule as the stock app, so a swap with an unmodified badge
+    # still completes on both sides; safe_card() then drops dubious links.
     if not isinstance(value, dict):
         return None
-    card = {key: str(value.get(key, "")).strip()[:120] for key in ("name", "github", "linkedin")}
+    card = {key: str(value.get(key, "")).strip()[:120] for key in CARD_FIELDS}
     if card["linkedin"] and not card["linkedin"].startswith("https://"):
         card["linkedin"] = ""
     if not card["name"] or not (card["github"] or card["linkedin"]):
         return None
     return card
+
+
+def safe_card(card):
+    card = dict(card)
+    if not valid_github(card["github"]):
+        card["github"] = ""
+    if not valid_linkedin(card["linkedin"]):
+        card["linkedin"] = ""
+    if not valid_website(card["website"]):
+        card["website"] = ""
+    return card if card_links(card) else None
 
 
 def card_links(card):
@@ -120,12 +178,16 @@ def card_links(card):
         links.append(("GitHub", github_url(card["github"])))
     if card.get("linkedin"):
         links.append(("LinkedIn", card["linkedin"]))
+    if card.get("website"):
+        links.append(("Website", card["website"]))
     return links
 
 
 def link_handle(label, url, card):
     if label == "GitHub":
         return card["github"]
+    if label == "Website":
+        return url.split("://")[-1].rstrip("/")
     handle = url.split("linkedin.com/")[-1].strip("/")
     return handle[3:] if handle.startswith("in/") else handle
 
@@ -217,16 +279,26 @@ class Book:
         self.cards = []
         for entry in saved["cards"] if isinstance(saved["cards"], list) else []:
             card = clean_card(entry)
+            card = safe_card(card) if card is not None else None
             if card is not None:
                 card["badge"] = str(entry.get("badge", ""))
                 self.cards.append(card)
+        del self.cards[MAX_CARDS:]
+
+    def save(self):
+        State.save(STATE_KEY, {"cards": self.cards})
 
     def add(self, card, badge_id):
         card = dict(card)
         card["badge"] = badgelink.badge_id_hex(badge_id)
         self.cards = [existing for existing in self.cards if existing["badge"] != card["badge"]]
         self.cards.insert(0, card)
-        State.save(STATE_KEY, {"cards": self.cards})
+        del self.cards[MAX_CARDS:]
+        self.save()
+
+    def remove(self, index):
+        del self.cards[index]
+        self.save()
 
 
 class Swap:
@@ -278,6 +350,7 @@ class Contacts:
     DONE = 3
     LIST = 4
     DETAIL = 5
+    CONFIRM = 6
 
     def __init__(self):
         self.link = badgelink.Link(GAME)
@@ -352,6 +425,8 @@ class Contacts:
             self.list_frame(now)
         elif self.mode == self.DETAIL:
             self.detail_frame(now)
+        elif self.mode == self.CONFIRM:
+            self.confirm_frame(now)
         self.link.update()
 
         lights = self.proximity.lights(now) if self.mode == self.HOME else None
@@ -399,8 +474,14 @@ class Contacts:
             self.part(now, "swap failed, try again")
 
     def finish(self, now):
-        self.saved = self.swap.card
-        self.book.add(self.saved, self.swap.partner_id)
+        # The partner already got our ack, so their side succeeds either way
+        card = safe_card(self.swap.card)
+        partner_id = self.swap.partner_id
+        if card is None:
+            self.part(now, "their card had no valid links")
+            return
+        self.saved = card
+        self.book.add(card, partner_id)
         self.part(now)
         self.set_mode(self.DONE, now)
 
@@ -425,10 +506,26 @@ class Contacts:
         if badge.pressed(BUTTON_LEFT) or badge.pressed(BUTTON_BACK):
             self.set_mode(self.LIST, now)
             return
+        if badge.pressed(BUTTON_DOWN):
+            self.set_mode(self.CONFIRM, now)
+            return
         url = links[self.link_index][1]
         if url != self.qr_url:
             self.qr = image.qr(url, image.QR_LOW, 2)
             self.qr_url = url
+
+    def confirm_frame(self, now):
+        if badge.pressed(BUTTON_SELECT):
+            self.book.remove(self.cursor)
+            self.qr_url = None
+            if not self.book.cards:
+                self.set_mode(self.HOME, now)
+                return
+            self.cursor = min(self.cursor, len(self.book.cards) - 1)
+            self.top_row = max(0, min(self.top_row, self.cursor))
+            self.set_mode(self.LIST, now)
+        elif badge.pressed(BUTTON_LEFT) or badge.pressed(BUTTON_BACK):
+            self.set_mode(self.DETAIL, now)
 
     def draw(self, now):
         screen.pen = black
@@ -445,6 +542,8 @@ class Contacts:
             self.draw_list()
         elif self.mode == self.DETAIL:
             self.draw_detail()
+        elif self.mode == self.CONFIRM:
+            self.draw_confirm()
 
     def draw_my_card(self, top):
         draw_tile(MARGIN, top, WIDTH - MARGIN * 2, CARD_HEIGHT, PALETTE[0], False)
@@ -553,9 +652,14 @@ class Contacts:
         centred(card["name"], 154, title_font, white)
         centred(url.split("://")[-1], 180, body_font, dim_white, BODY_SIZE)
         if len(links) > 1:
-            draw_hints(("next", (BUTTON_RIGHT,)), ("back", (BUTTON_LEFT,)))
+            draw_hints(("next", (BUTTON_RIGHT,)), ("delete", (BUTTON_DOWN,)), ("back", (BUTTON_LEFT,)))
         else:
-            draw_hints(("back", (BUTTON_LEFT,)))
+            draw_hints(("delete", (BUTTON_DOWN,)), ("back", (BUTTON_LEFT,)))
+
+    def draw_confirm(self):
+        centred("delete contact?", 72, body_font, dim_white, BODY_SIZE)
+        centred(self.book.cards[self.cursor]["name"], 94, title_font, white)
+        draw_hints(("delete", (BUTTON_SELECT,)), ("keep", (BUTTON_LEFT,)))
 
 
 app = Contacts()
