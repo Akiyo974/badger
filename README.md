@@ -95,6 +95,11 @@ To try a pull request: `git checkout <branch>` then `./tools/deploy.ps1`.
 
 **Badger Remote** (`wear/`) turns a Wear OS watch (Galaxy Watch 4 or newer) into the badge's buttons: ↑ ↓ ← →, Select, Back and Home, in every app, menu included.
 
+<p align="center">
+  <a href="docs/media/badger-remote.mp4"><img src="docs/media/badger-remote.gif" width="480" alt="Badger Remote: the Galaxy Watch D-pad moves through the badge menu, then opens the Badge app"></a>
+</p>
+<p align="center"><sub>Click for the video (MP4).</sub></p>
+
 - **Tap** a button for a short press; **keep your finger on it** to hold it (e.g. zooming in ISS). The **crown** scrolls like ↑ / ↓.
 - The top line shows the badge's name (`Badger` + the end of its id). The watch remembers that badge; tap the name to pick another one.
 - **How it works**: `system/remote.py`, started by `main.py`, advertises a Bluetooth LE service with one writable characteristic. Each write is 2 bytes, an action (0 tap, 1 down, 2 up) then a button (0 ↑, 1 ↓, 2 ←, 3 →, 4 Select, 5 Back, 6 Home). The presses are merged into `badge.poll()`, so apps see them as real presses. A held button is released after 1.5 s without news from the watch.
