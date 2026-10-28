@@ -38,6 +38,7 @@ import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.drawscope.rotate
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
+import androidx.compose.ui.input.pointer.PointerInputChange
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.input.rotary.onRotaryScrollEvent
 import androidx.compose.ui.platform.LocalHapticFeedback
@@ -145,8 +146,9 @@ private fun Status(state: LinkState, size: Dp, onForget: () -> Unit, onAskPermis
     }
     val action: (() -> Unit)? = when (state) {
         LinkState.NoPermission -> onAskPermission
-        is LinkState.Connected -> onForget
-        else -> null
+        LinkState.BluetoothOff -> null
+        // Also while searching: the remembered badge may be gone for good
+        else -> onForget
     }
     val label = when (state) {
         LinkState.NoPermission -> stringResource(R.string.status_no_permission)
@@ -220,12 +222,18 @@ private fun RemoteButton(
                                 delay(Protocol.HOLD_REPEAT_MS)
                             }
                         }
-                        val up = waitForUpOrCancellation()
-                        repeat.cancel()
-                        pressed = false
-                        when {
-                            held -> send(Action.UP, button)
-                            up != null -> send(Action.TAP, button)
+                        // finally: the gesture is cancelled when the link drops mid-press,
+                        // and the repeater must not outlive it
+                        var up: PointerInputChange? = null
+                        try {
+                            up = waitForUpOrCancellation()
+                        } finally {
+                            repeat.cancel()
+                            pressed = false
+                            when {
+                                held -> send(Action.UP, button)
+                                up != null -> send(Action.TAP, button)
+                            }
                         }
                     }
                 },

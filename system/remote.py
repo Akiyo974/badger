@@ -58,6 +58,7 @@ class Remote:
         self.queue = []
         self.held = {}      # button -> release deadline (ticks_ms)
         self.tapped = []    # buttons to release on the next poll
+        self.previous = [(), ()]  # combined held buttons at the last poll, per Controls
         self.retry_at = 0
         self.handler = self.irq  # one bound method, so the radio can tell it is ours
         self.name = NAME_PREFIX + badge.uid[-4:].upper()
@@ -109,26 +110,29 @@ class Remote:
 
     # Buttons --------------------------------------------------------------
 
-    def _merge(self, now):
-        pressed = []
-        released = list(self.tapped)
-        self.tapped = []
-        for button in released:
+    def _update_remote(self, now):
+        """Applies the queued commands to self.held, the buttons the watch holds."""
+        # A tap is held for one poll, then let go
+        touched = list(self.tapped)
+        for button in self.tapped:
             self.held.pop(button, None)
+        self.tapped = []
 
+        # One change per button and poll: later commands for it wait, so quick
+        # taps (the crown sends several at once) stay separate presses
         while self.queue:
-            command = self.queue.pop(0)
+            command = self.queue[0]
             if len(command) < 2 or command[1] >= len(BUTTONS):
+                self.queue.pop(0)
                 continue
             action, button = command[0], BUTTONS[command[1]]
+            if button in touched:
+                break
+            self.queue.pop(0)
+            touched.append(button)
             if action == ACTION_UP:
-                if button in self.held:
-                    self.held.pop(button)
-                    released.append(button)
-                continue
-            if button not in self.held:
-                pressed.append(button)
-            if action == ACTION_TAP:
+                self.held.pop(button, None)
+            elif action == ACTION_TAP:
                 self.held[button] = now
                 self.tapped.append(button)
             elif action == ACTION_DOWN:
@@ -137,29 +141,37 @@ class Remote:
         for button, deadline in list(self.held.items()):
             if button not in self.tapped and time.ticks_diff(now, deadline) >= 0:
                 self.held.pop(button)
-                released.append(button)
 
-        if not (pressed or released or self.held):
-            return
-        held = tuple(self.held)
-        changed = tuple(pressed) + tuple(released)
+    def _merge(self):
+        """Merges the watch's buttons with the real ones.
+
+        Edges come from the combined state, so a button held on the badge and
+        on the watch at once is pressed once and released only when both let go.
+        """
+        remote = list(self.held)
         # badge.buttons are the physical buttons, badge.all adds the touch pad
-        for controls in (badge.buttons, badge.all):
-            controls._pressed = _union(controls._pressed, pressed)
-            controls._released = _union(controls._released, released)
-            controls._changed = _union(controls._changed, changed)
-            controls._held = _union(controls._held, held)
+        for index, controls in enumerate((badge.buttons, badge.all)):
+            before = self.previous[index]
+            real = controls._held
+            if not remote and all(button in real for button in before):
+                self.previous[index] = tuple(real)
+                continue
+            held = tuple(real) + tuple(button for button in remote if button not in real)
+            pressed = [button for button in held if button not in before]
+            pressed += [button for button in controls._pressed if button not in before and button not in pressed]
+            released = [button for button in before if button not in held]
+            released += [button for button in controls._released if button not in held and button not in released]
+            controls._held = held
+            controls._pressed = tuple(pressed)
+            controls._released = tuple(released)
+            controls._changed = tuple(pressed) + tuple(released)
+            self.previous[index] = held
 
     def poll(self):
         now = time.ticks_ms()
         self._claim_radio(now)
-        self._merge(now)
-
-
-def _union(real, extra):
-    if not extra:
-        return real
-    return tuple(real) + tuple(button for button in extra if button not in real)
+        self._update_remote(now)
+        self._merge()
 
 
 remote = None
