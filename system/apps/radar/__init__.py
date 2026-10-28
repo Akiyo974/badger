@@ -174,11 +174,14 @@ class Radar:
         flags = b"\x02\x01\x06"
         body = RADAR_MAGIC + bytes((RADAR_VERSION,)) + self.my_id
         adv = flags + bytes((len(body) + 1, 0xFF)) + body
-        text = utf8_cut(self.my_name, 12) + b"|" + self.my_status.encode()
+        # "|" separates name and status, so it can't appear in the name
+        name = self.my_name.replace("|", "/")
+        text = utf8_cut(name, 12) + b"|" + self.my_status.encode()
         text = utf8_cut(text.decode(), TEXT_LIMIT)
         rsp_body = RADAR_TEXT + text
         rsp = bytes((len(rsp_body) + 1, 0xFF)) + rsp_body
-        self.ble.gap_advertise(ADV_INTERVAL_US, adv_data=adv, resp_data=rsp)
+        # Not connectable: a connection would stop advertising and hide the badge
+        self.ble.gap_advertise(ADV_INTERVAL_US, adv_data=adv, resp_data=rsp, connectable=False)
 
     def irq(self, event, data):
         # Keep the interrupt short: copy and queue, parse in update()
