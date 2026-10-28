@@ -284,7 +284,8 @@ class MatrixDisplay:
 
 class HapticFeedback:
     ADDRESS = 0x5A
-    DEVICE_ID = 0xE0
+    # Device id in STATUS bits 7:5: 0x60 for the DRV2605, 0xE0 for the DRV2605L
+    DEVICE_IDS = (0x60, 0xE0)
     LIBRARY_ERM = 0x01
     EFFECT_STRONG_CLICK_60 = 0x02
     MIN_INTERVAL_MS = 350
@@ -301,7 +302,7 @@ class HapticFeedback:
             if self.ADDRESS not in self.bus.scan():
                 return
             status = self.bus.readfrom_mem(self.ADDRESS, 0x00, 1)[0]
-            if status & 0xE0 != self.DEVICE_ID:
+            if status & 0xE0 not in self.DEVICE_IDS:
                 print("Radar haptics: unexpected DRV2605 ID 0x%02x" % status)
                 return
             self.bus.writeto_mem(self.ADDRESS, 0x01, b"\x00")

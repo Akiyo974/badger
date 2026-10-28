@@ -267,7 +267,14 @@ class ContributionMatrix:
                     )
                 weekly_level = min(4, weekly_total // 7)
                 self.plot(frame, x, 8, 0, MATRIX_LEVELS[weekly_level], 0)
-            self.plot(frame, 6, 0, 0, 0, 100)
+            # Status dot over the graph: the avatar can still fail or wait for
+            # settings after the contributions have loaded
+            if user.failed:
+                self.plot(frame, 6, 0, 120, 0, 0)
+            elif user.missing:
+                self.plot(frame, 6, 0, 100, 45, 0)
+            else:
+                self.plot(frame, 6, 0, 0, 0, 100)
 
         if frame != self.frame:
             try:
