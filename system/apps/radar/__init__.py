@@ -38,6 +38,8 @@ RADAR_TEXT = COMPANY + b"RS"
 RADAR_VERSION = 1
 TEXT_LIMIT = 25
 
+IRQ_CENTRAL_CONNECT = 1
+IRQ_CENTRAL_DISCONNECT = 2
 IRQ_SCAN_RESULT = 5
 ADV_SCAN_RSP = 4
 SCAN_INTERVAL_US = 60000
@@ -162,6 +164,8 @@ class Radar:
         self.peers = {}
         self.addresses = {}
         self.queue = []
+        self.connections = []
+        self.readvertise = False
         self.list_view = False
         self.top_row = 0
         self.ble = bluetooth.BLE()
@@ -180,14 +184,30 @@ class Radar:
         text = utf8_cut(text.decode(), TEXT_LIMIT)
         rsp_body = RADAR_TEXT + text
         rsp = bytes((len(rsp_body) + 1, 0xFF)) + rsp_body
-        # Not connectable: a connection would stop advertising and hide the badge
-        self.ble.gap_advertise(ADV_INTERVAL_US, adv_data=adv, resp_data=rsp, connectable=False)
+        # Connectable on purpose: on this firmware a non-connectable advert is
+        # also non-scannable, which would hide the name and status above.
+        # Connections are dropped in update() and advertising restarted.
+        self.ble.gap_advertise(ADV_INTERVAL_US, adv_data=adv, resp_data=rsp)
 
     def irq(self, event, data):
-        # Keep the interrupt short: copy and queue, parse in update()
+        # Keep the interrupt short: copy and queue, act in update()
         if event == IRQ_SCAN_RESULT and len(self.queue) < QUEUE_LIMIT:
             _, addr, adv_type, rssi, adv = data
             self.queue.append((bytes(addr), adv_type, rssi, bytes(adv)))
+        elif event == IRQ_CENTRAL_CONNECT:
+            self.connections.append(data[0])
+        elif event == IRQ_CENTRAL_DISCONNECT:
+            self.readvertise = True
+
+    def keep_advertising(self):
+        while self.connections:
+            try:
+                self.ble.gap_disconnect(self.connections.pop(0))
+            except OSError:
+                pass
+        if self.readvertise:
+            self.readvertise = False
+            self.advertise()
 
     def close(self):
         try:
@@ -251,6 +271,7 @@ class Radar:
         return sorted((peer for peer in self.peers.values() if peer.rssi is not None), key=lambda peer: -peer.rssi)
 
     def update(self, now):
+        self.keep_advertising()
         while self.queue:
             self.handle(*self.queue.pop(0), now)
         gone = {key for key, peer in self.peers.items() if now - peer.seen > FORGET_MS}
