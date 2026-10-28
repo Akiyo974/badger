@@ -230,9 +230,14 @@ class Radar:
             peer = self.peers[badge_id] = Peer(badge_id, now)
         if adv_type != ADV_SCAN_RSP:
             peer.heard(rssi, now)
+        # An identity advert says which app the badge runs now: drop what the
+        # other format left behind (a text-only scan response changes nothing)
         if radar:
             peer.radar = True
+            peer.game = ""
         if game is not None:
+            peer.radar = False
+            peer.status = ""
             peer.game = game
         if name:
             peer.name = name
@@ -245,18 +250,24 @@ class Radar:
     def update(self, now):
         while self.queue:
             self.handle(*self.queue.pop(0), now)
-        for badge_id in [key for key, peer in self.peers.items() if now - peer.seen > FORGET_MS]:
-            del self.peers[badge_id]
+        gone = {key for key, peer in self.peers.items() if now - peer.seen > FORGET_MS}
+        if gone:
+            for badge_id in gone:
+                del self.peers[badge_id]
+            self.addresses = {addr: badge_id for addr, badge_id in self.addresses.items() if badge_id not in gone}
 
         peers = self.nearby()
+        last_top = max(0, len(peers) - VISIBLE_ROWS)
         if badge.pressed(BUTTON_SELECT):
             self.list_view = not self.list_view
             self.top_row = 0
         if self.list_view and peers:
             if badge.pressed(BUTTON_DOWN):
-                self.top_row = min(self.top_row + 1, max(0, len(peers) - VISIBLE_ROWS))
+                self.top_row += 1
             if badge.pressed(BUTTON_UP):
-                self.top_row = max(0, self.top_row - 1)
+                self.top_row -= 1
+        # Badges leave the list on their own, so clamp every frame
+        self.top_row = max(0, min(self.top_row, last_top))
 
         # Case lights glow brighter as the closest badge gets nearer
         if peers:
