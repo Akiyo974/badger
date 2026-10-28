@@ -21,7 +21,7 @@ Les changements notables de ce repo. Format inspiré de [Keep a Changelog](https
 ### Corrigé
 - App Badge : la ligne « Last push » n'affiche plus l'activité d'un autre compte après un changement de `GITHUB_USERNAME`, et s'efface quand GitHub ne renvoie plus aucun événement.
 - `deploy.ps1` : s'arrête sans redémarrer le badge si Windows n'arrive pas à finir l'écriture, au lieu d'attendre 2 s et de risquer des fichiers corrompus.
-- `deploy.ps1` : ne cible que le badge (`VID_2E8A&PID_1101`), relie le port série à son lecteur par le numéro de série USB, et demande `-Port` si plusieurs badges sont branchés.
+- `deploy.ps1` : ne cible que le badge (`VID_2E8A&PID_1101`), relie le port série à son lecteur par le numéro de série USB, et demande `-Port` si plusieurs badges sont branchés. Le déploiement s'arrête si le port choisi ne peut pas être relié à son lecteur.
 - `deploy.ps1` : un `-Port` donné à la main n'est plus remplacé après le passage en mode clé USB.
 - `deploy.ps1` : `-Only` est normalisé (`.`, `..`, barres) et doit rester dans `system/` ; avant, `-Only .` copiait `main.py` sous le nom `ain.py`.
 

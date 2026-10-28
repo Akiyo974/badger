@@ -92,6 +92,11 @@ elseif ($ports.Count -eq 1) {
     $Port = $ports[0].Port
     $serial = $ports[0].Serial
 }
+# Sans numéro de série, impossible de savoir quel lecteur va avec ce port :
+# on pourrait copier sur un badge et en redémarrer un autre.
+if ($Port -and -not $serial) {
+    throw "Impossible d'identifier le badge sur $Port (numéro de série USB introuvable). Vérifie le port ou débranche les autres appareils."
+}
 
 $drive = Find-BadgeDrive $serial
 if (-not $drive) {
