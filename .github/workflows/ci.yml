@@ -20,7 +20,10 @@ jobs:
     timeout-minutes: 5
 
     steps:
+      # Full history: the contacts test reads the stock app from the first commit
       - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
 
       - uses: actions/setup-python@v6
         with:
