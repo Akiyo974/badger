@@ -5,6 +5,9 @@ Notable changes to this repo. Format based on [Keep a Changelog](https://keepach
 ## Unreleased
 
 ### Added
+- Radar: opt-in **Hot / Cold** game for a selected badge, with a signal gauge, warmer/colder feedback, target-only lights and haptics, and manual **Found!** confirmation.
+- Radar: persistent history of the 200 most recent distinct badges in `/state/radar_history.json`, with names, status and visit counts; open it with Right from the radar.
+- Radar behavior tests in CI, covering BLE traffic, stock compatibility, proximity, fading, history and game controls.
 - Badge app: the NFC tag holds a **contact card** (vCard with name, title, company and labelled Website / LinkedIn / GitHub links), followed by the website link; `CONTACT_TITLE`, `CONTACT_COMPANY` and `NFC_CARD` in `secrets.py`.
 - Badge app: **reaction when a phone scans the tag**, detected through the ST25DV's RF field status: Mona with hearts and "thanks for the scan!" on screen, a pulsing heart on the LED matrix, a buzz from the DRV2605 and a scan counter.
 - Hardware add-ons on the Qw/ST port, all optional: a 13×9 RGB LED matrix (IS31FL3741) shows the contribution graph in Badge and a mini radar in Radar; an NFC tag (ST25DV) is programmed with the website link by Badge; a haptic driver (DRV2605) makes Radar vibrate when a badge shows up.
@@ -24,11 +27,14 @@ Notable changes to this repo. Format based on [Keep a Changelog](https://keepach
 - `CHANGELOG.md`.
 
 ### Changed
+- Radar: **Very near / Near / Far** replace metre estimates; labelled rings explicitly represent signal strength, not direction. Badges fade from 4 to 12 seconds without a signal, including matrix and case-light feedback.
+- Radar detection: filter unrelated packets before queuing, coalesce repeat announcements, prioritise identities under load, preserve address types, and smooth RSSI with a median, time-based filter and hysteresis.
 - The repo is now in English (README, changelog, tools and tests).
 - README: deploying, settings and pull-request workflow sections.
 - `.gitignore`: ignores the local `.local/` folder (drafts and backups).
 
 ### Fixed
+- Radar: nearby icons no longer cover the centre marker; game selection follows badge identity when proximity rankings change. Arrival vibrations no longer build an unbounded backlog.
 - `deploy.ps1` failed on files at the root of `system/` (`main.py`…): it tried to create the drive root as a folder.
 - `deploy.ps1 -DryRun` reboots the badge back to normal mode when it had to switch it to USB drive mode.
 - `export_contacts.ps1` only targets the Universe '26 badge and asks for `-Port` when several are plugged in, like the other tools.
