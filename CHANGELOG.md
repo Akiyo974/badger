@@ -5,6 +5,7 @@ Les changements notables de ce repo. Format inspiré de [Keep a Changelog](https
 ## Non publié
 
 ### Ajouté
+- App **Radar** : les badges proches, placés selon leur distance (force du signal Bluetooth), avec nom, identicon, app en cours et statut. Vue liste avec Select, LED du boîtier selon la proximité, statut personnel `RADAR_STATUS`.
 - App Contacts : champ « site web » sur la carte (`CONTACT_WEBSITE`), affiché en QR. Les badges d'origine l'ignorent, l'échange marche toujours avec eux.
 - App Contacts : suppression d'un contact (↓ sur sa fiche, puis confirmation).
 - `tools/export_contacts.ps1` : exporte les contacts du badge en `contacts.csv` et `contacts.vcf`.
