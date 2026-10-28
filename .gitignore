@@ -1,0 +1,9 @@
+# Réglages personnels (Wi-Fi, etc.) : ne jamais commiter
+secrets.py
+!secrets.example.py
+
+# Fichiers créés par Windows ou le badge
+System Volume Information/
+*.tmp
+.ruff_cache/
+__pycache__/
