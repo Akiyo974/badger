@@ -5,7 +5,7 @@ Notable changes to this repo. Format based on [Keep a Changelog](https://keepach
 ## Unreleased
 
 ### Added
-- **Steps from the watch**: Badger Remote reads the day's steps from Health Services (total and per hour, recorded in the background) and sends them to the badge on a second characteristic; `remote.py` keeps the last ones in `/state/watch_steps`. The badge's own step counter is not used.
+- **Steps from the watch**: Badger Remote reads the day's steps from Health Services (total and per hour, recorded in the background) and sends them to the badge on a second characteristic; `remote.py` keeps the last ones in `/state/watch_steps`. The badge can count steps with its own LSM6DS3 too, but it is not used: worn around the neck, it does not count reliably.
 - **Pedometer** app: the day's steps from the watch, GitHub Universe day, hourly squares, distance, goal (`STEPS_GOAL`) and sync time.
 - Mona Pet: steps from the watch feed Mona (500 steps = 1 meal) and lift her mood; Down now shows her walk instead of the stats.
 - `tests/test_watch_steps.py`: the steps format shared with the watch, the Pedometer and Mona's meals.

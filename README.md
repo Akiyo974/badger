@@ -87,7 +87,7 @@ To try a pull request: `git checkout <branch>` then `./tools/deploy.ps1`.
 | **Badge** | QR code pages (↑ / ↓), a "Last push" line under the name, contribution graph on an LED matrix, NFC contact card and a reaction when a phone scans it |
 | **Contacts** | Received links are checked, website field, delete a contact, export to the PC |
 | **Radar** (new) | Nearby badges with signal-based proximity, fading, encounter history and an opt-in Hot / Cold game; optional matrix and haptic feedback |
-| **Pedometer** (new) | The day's steps from the watch, hour by hour, distance and a 6 000-step goal |
+| **Pedometer** (new) | The day's steps from the watch, hour by hour, distance and a 6,000-step goal |
 | **Mona Pet** | Steps from the watch feed Mona (500 steps = 1 meal) and lift her mood; Down shows her walk |
 | **Menu** | Shows an app's `icon.png` when it has no built-in icon (Radar ships one; Badge keeps its built-in icon) |
 
@@ -128,7 +128,7 @@ Event codes come from the firmware's `lsm6ds3` driver (`EVENT_*` constants) and 
 | `16` | Significant motion | Shaking |
 | `32` | *(no constant in the driver)* | Turning the badge upside down, at the same moment `upside_down()` became `True` |
 
-The driver can also count steps (`get_step_count()` on the `lsm6ds3.LSM6DS3` object), but no app uses it.
+The driver can also count steps (`get_step_count()` on the `lsm6ds3.LSM6DS3` object), so the badge could be a pedometer on its own. I don't use it: I wear the badge around my neck, where it swings with every movement and does not count steps reliably. The Pedometer app and Mona Pet use the steps from the watch instead (see [Steps from the watch](#steps-from-the-watch)).
 
 ```python
 # Inside an app's update(), with run(update) calling badge.update() each frame
@@ -176,12 +176,12 @@ The badge has a Qw/ST (Qwiic / STEMMA QT) I²C connector. Badge and Radar look f
 
 ### Steps from the watch
 
-The badge hangs around the neck, so its own step counter (`get_step_count()` of the LSM6DS3) is not used: the steps come from the watch.
+The badge can count steps by itself: its LSM6DS3 motion sensor has a built-in step counter (`get_step_count()`, see [Built-in sensors](#built-in-sensors)). I don't use it because I wear the badge around my neck, where it swings and does not count steps reliably; the steps come from the watch on my wrist instead.
 
 - **On the watch**: Badger Remote asks once for **Physical activity**. Health Services then hands it the day's total and the steps of each interval, in the background, even while the app is closed; it adds them up per hour from the moment it starts listening. Under the buttons, the app shows the day's steps, with ✓ once the badge has them.
 - **Sync**: each time Badger Remote opens and connects (and when new steps come in while it is open), it writes them to a second characteristic (`6e1d1002-…`): version 1, the watch's date and time, the day's total, then the steps per hour (`STEPS_HEADER` in `system/remote.py`; the hours are left out if the link is too small).
 - **On the badge**: `remote.py` saves the last steps received in `/state/watch_steps` with the watch's date and sync time. They stay there across reboots until the next sync.
-- **Pedometer**: big number of the day's steps, "GitHub Universe '26 · Day 1 / 2" (from the watch's date, Universe being on October 28–29, 2026), one square per hour recorded by the watch (the brighter, the more steps), distance (0.75 m per step), progress to the goal (`STEPS_GOAL` in `secrets.py`, 6 000 by default) and the sync time. Without an hourly history, it shows "synced 14:32 from Galaxy Watch" instead of the squares.
+- **Pedometer**: big number of the day's steps, "GitHub Universe '26 · Day 1" or "Day 2" (from the watch's date, Universe being on October 28–29, 2026; other days show the date, e.g. "Oct 30"), one square per hour recorded by the watch (the brighter, the more steps), distance (0.75 m per step), progress to the goal (`STEPS_GOAL` in `secrets.py`, 6,000 by default) and the sync time. Without an hourly history, it shows "synced 14:32 from Galaxy Watch" instead of the squares.
 - **Mona Pet**: every 500 steps of the day is a meal (+15 food, +5 fun), given when Mona Pet opens or the watch syncs; each meal is given once, even to a new Mona. **Down** shows her walk: steps today, food / fun / clean, meals of the day and her mood, which rises with the steps (sleepy, perking up, happy, very happy, over the moon).
 - The badge has no clock of its own: "today" means the day the watch synced.
 - **First day**: on the Galaxy Watch, Health Services only counts the day's steps from the moment an app starts listening (checked on a Galaxy Watch: 32 steps for Health Services against 10 247 in Samsung Health on the evening of the install). From the next midnight on, the total covers the whole day, as long as the app stays installed. Samsung Health does not share its own count with other apps on the watch.
