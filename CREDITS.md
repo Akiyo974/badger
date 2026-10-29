@@ -3,7 +3,6 @@
 ## People
 
 - **Christen Dijoux** ([@Akiyo974](https://github.com/Akiyo974)): Badge Studio, the site, the custom apps, Badger Remote
-- [@octobooth-17](https://github.com/octobooth-17): Radar detection and the Hot / Cold game
 - Everyone in the [contributors list](https://github.com/Akiyo974/badger/graphs/contributors). Your name goes here with your first merged app.
 
 ## Built on
