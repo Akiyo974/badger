@@ -15,4 +15,8 @@
     <string name="button_select">Select</string>
     <string name="button_back">Back</string>
     <string name="button_home">Home</string>
+    <plurals name="steps_today">
+        <item quantity="one">%s step</item>
+        <item quantity="other">%s steps</item>
+    </plurals>
 </resources>

@@ -17,6 +17,7 @@ import android.content.Context
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.ParcelUuid
+import java.util.UUID
 import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
@@ -54,11 +55,15 @@ class BadgeLink(private val context: Context, private val scope: CoroutineScope)
     private val _state = MutableStateFlow<LinkState>(LinkState.Searching)
     val state: StateFlow<LinkState> = _state.asStateFlow()
 
+    private class Write(val target: UUID, val bytes: ByteArray, val type: Int)
+
     // Only the latest presses matter if the link falls behind
-    private val commands = Channel<ByteArray>(capacity = 16, onBufferOverflow = BufferOverflow.DROP_OLDEST)
+    private val commands = Channel<Write>(capacity = 16, onBufferOverflow = BufferOverflow.DROP_OLDEST)
 
     private var gatt: BluetoothGatt? = null
     private var characteristic: BluetoothGattCharacteristic? = null
+    private var stepsCharacteristic: BluetoothGattCharacteristic? = null
+    @Volatile private var mtu = Protocol.DEFAULT_MTU
     @Volatile private var writeDone: CompletableDeferred<Unit>? = null
     private var running = false
     private var scanning = false
@@ -73,7 +78,7 @@ class BadgeLink(private val context: Context, private val scope: CoroutineScope)
     fun start() {
         if (running) return
         running = true
-        writer = scope.launch { for (bytes in commands) write(bytes) }
+        writer = scope.launch { for (command in commands) write(command) }
         connect()
     }
 
@@ -94,7 +99,19 @@ class BadgeLink(private val context: Context, private val scope: CoroutineScope)
     }
 
     fun send(action: Action, button: BadgeButton) {
-        if (_state.value is LinkState.Connected) commands.trySend(Protocol.encode(action, button))
+        if (_state.value is LinkState.Connected) {
+            commands.trySend(Write(Protocol.COMMAND, Protocol.encode(action, button), WRITE_NO_RESPONSE))
+        }
+    }
+
+    /**
+     * Sends the steps built by [encode] for the payload size the link allows.
+     * False if not connected, or if the badge predates the steps.
+     */
+    fun sendSteps(encode: (maxBytes: Int) -> ByteArray): Boolean {
+        if (_state.value !is LinkState.Connected || stepsCharacteristic == null) return false
+        val bytes = encode(mtu - ATT_HEADER)
+        return commands.trySend(Write(Protocol.STEPS, bytes, BluetoothGattCharacteristic.WRITE_TYPE_DEFAULT)).isSuccess
     }
 
     private fun connect() {
@@ -189,16 +206,25 @@ class BadgeLink(private val context: Context, private val scope: CoroutineScope)
     private val gattCallback = object : BluetoothGattCallback() {
         override fun onConnectionStateChange(g: BluetoothGatt, status: Int, newState: Int) {
             if (newState == BluetoothProfile.STATE_CONNECTED) {
+                mtu = Protocol.DEFAULT_MTU
                 g.requestConnectionPriority(BluetoothGatt.CONNECTION_PRIORITY_HIGH)
-                g.discoverServices()
+                // Room for the hourly steps first, then the services
+                if (!g.requestMtu(Protocol.PREFERRED_MTU)) g.discoverServices()
             } else if (newState == BluetoothProfile.STATE_DISCONNECTED) {
                 scope.launch { onLost(g) }
             }
         }
 
+        override fun onMtuChanged(g: BluetoothGatt, newMtu: Int, status: Int) {
+            if (status == BluetoothGatt.GATT_SUCCESS) mtu = newMtu
+            g.discoverServices()
+        }
+
         override fun onServicesDiscovered(g: BluetoothGatt, status: Int) {
-            val found = g.getService(Protocol.SERVICE)?.getCharacteristic(Protocol.COMMAND)
-            scope.launch { onReady(g, found) }
+            val service = g.getService(Protocol.SERVICE)
+            val found = service?.getCharacteristic(Protocol.COMMAND)
+            val steps = service?.getCharacteristic(Protocol.STEPS)
+            scope.launch { onReady(g, found, steps) }
         }
 
         override fun onCharacteristicWrite(g: BluetoothGatt, c: BluetoothGattCharacteristic, status: Int) {
@@ -206,13 +232,14 @@ class BadgeLink(private val context: Context, private val scope: CoroutineScope)
         }
     }
 
-    private fun onReady(g: BluetoothGatt, found: BluetoothGattCharacteristic?) {
+    private fun onReady(g: BluetoothGatt, found: BluetoothGattCharacteristic?, steps: BluetoothGattCharacteristic?) {
         if (gatt !== g) return
         if (found == null) {
             g.disconnect()
             return
         }
         characteristic = found
+        stepsCharacteristic = steps
         prefs.edit().putString(KEY_ADDRESS, g.device.address).apply()
         val name = (_state.value as? LinkState.Connecting)?.name ?: g.device.address
         _state.value = LinkState.Connected(name)
@@ -223,6 +250,7 @@ class BadgeLink(private val context: Context, private val scope: CoroutineScope)
         if (gatt !== g) return
         gatt = null
         characteristic = null
+        stepsCharacteristic = null
         writeDone?.complete(Unit)
         if (!running) return
         _state.value = LinkState.Lost
@@ -236,16 +264,18 @@ class BadgeLink(private val context: Context, private val scope: CoroutineScope)
         }
         gatt = null
         characteristic = null
+        stepsCharacteristic = null
         writeDone?.complete(Unit)
     }
 
     /** One write at a time: Android rejects a write sent before the previous one finished. */
-    private suspend fun write(bytes: ByteArray) {
+    private suspend fun write(command: Write) {
         val g = gatt ?: return
-        val c = characteristic ?: return
+        val c = (if (command.target == Protocol.STEPS) stepsCharacteristic else characteristic) ?: return
+        val bytes = command.bytes
+        val type = command.type
         val done = CompletableDeferred<Unit>()
         writeDone = done
-        val type = BluetoothGattCharacteristic.WRITE_TYPE_NO_RESPONSE
         val started = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             g.writeCharacteristic(c, bytes, type) == BluetoothStatusCodes.SUCCESS
         } else {
@@ -266,6 +296,8 @@ class BadgeLink(private val context: Context, private val scope: CoroutineScope)
         private const val RETRY_LOST_MS = 1_000L
         private const val WRITE_TIMEOUT_MS = 1_000L
         private const val CONNECT_TIMEOUT_MS = 10_000L
+        private const val ATT_HEADER = 3
+        private const val WRITE_NO_RESPONSE = BluetoothGattCharacteristic.WRITE_TYPE_NO_RESPONSE
 
         fun requiredPermissions(): Array<String> =
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {

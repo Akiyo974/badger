@@ -13,3 +13,4 @@ RADAR_STATUS = "Ask me about MicroPython"  # Radar app; name + status limited to
 REGION = "us"  # Options are us, cuba, eu, moldova, lebanon, egypt, chile, australia, nz
 TIMEZONE = -7  # Offset from GMT as number of hours, i.e. 0, 1, -7 etc.
 WATCH_REMOTE = True  # Badger Remote watch app (Bluetooth); False turns it off
+STEPS_GOAL = 6000  # Pedometer app: daily goal for the steps sent by the watch
