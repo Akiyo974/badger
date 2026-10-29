@@ -584,6 +584,7 @@ function rawUrl(source, path) {
 async function renderStore() {
   const box = $("#apps-store");
   const source = SOURCES.find((s) => s.id === $("#apps-source").value) || SOURCES[0];
+  sourceOptions.last = source.id;
   // Only the latest call draws: an older catalogue may arrive last
   const turn = (renderStore.turn = (renderStore.turn || 0) + 1);
   let list;
@@ -1688,8 +1689,9 @@ function wire() {
     await badge.write("import powman; powman.reset_into_msc()\r");
     toast("The badge restarts as a USB drive named BADGER.", 5000);
   };
-  $("#apps-source").innerHTML = SOURCES.map((s) => `<option value="${s.id}">${escapeHtml(s.label)}</option>`).join("");
-  $("#apps-source").onchange = renderStore;
+  try { SOURCES.push(...JSON.parse(localStorage.getItem("studio-sources") || "[]")); } catch (_) {}
+  sourceOptions(SOURCES[0].id);
+  $("#apps-source").onchange = () => ($("#apps-source").value === "add" ? addSource() : renderStore());
   $("#apps-search").oninput = renderStore;
   $("#apps-filter").onchange = renderStore;
   $("#apps-refresh").onclick = () => {
@@ -1715,6 +1717,35 @@ function wire() {
   $("#console-ctrlc").onclick = () => badge.write("\x03");
   $("#console-clear").onclick = () => (consoleOut.textContent = "");
   renderStore().then(openFromLink);
+}
+
+function sourceOptions(selected) {
+  const select = $("#apps-source");
+  select.innerHTML = SOURCES.map((s) => `<option value="${escapeHtml(s.id)}">${escapeHtml(s.label)}</option>`).join("")
+    + `<option value="add">Another repository…</option>`;
+  select.value = selected;
+}
+
+// Any repository can be a source: a fork to try an app before its pull
+// request, or someone else's apps. Kept in this browser only.
+function addSource() {
+  const previous = sourceOptions.last || SOURCES[0].id;
+  const answer = prompt("GitHub repository with badge apps:\nowner/repo, owner/repo@branch, or owner/repo@branch:folder/of/apps\n(the folder is system/apps by default)", "");
+  const match = (answer || "").trim().match(/^([\w.-]+\/[\w.-]+)(?:@([\w./-]+?))?(?::([\w./-]+))?$/);
+  if (!match) {
+    if (answer) toast("Not a repository: use owner/repo, owner/repo@branch or owner/repo@branch:folder.", 6000);
+    sourceOptions(previous);
+    return;
+  }
+  const [, repo, branch = "main", base = "system/apps"] = match;
+  const id = `repo:${repo}@${branch}:${base}`;
+  if (!SOURCES.some((s) => s.id === id)) {
+    const label = repo + (branch !== "main" ? "@" + branch : "") + (base !== "system/apps" ? ":" + base : "");
+    SOURCES.push({ id, label, repo, branch, base: base.replace(/\/+$/, "") });
+    try { localStorage.setItem("studio-sources", JSON.stringify(SOURCES.filter((s) => s.id.startsWith("repo:")))); } catch (_) {}
+  }
+  sourceOptions(id);
+  renderStore();
 }
 
 // The landing page links to studio/#app=<source>/<slug>

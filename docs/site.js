@@ -8,7 +8,6 @@ const SOURCES = [
   { id: "akiyo", label: "Akiyo974", repo: "Akiyo974/badger", branch: "main", base: "system/apps" },
 ];
 const SKIP_APPS = new Set(["menu", "startup", "system", "mass_storage", "settings"]);
-const MADE_HERE = new Set(["radar", "pedometer", "duck_maze"]);
 const MODDED = new Set(["badge", "contacts", "mona_pet"]);
 // Screenshots taken on the badge (docs/screenshots)
 const SHOTS = {
@@ -88,8 +87,9 @@ async function load() {
     const slugs = [...new Set([...byOfficial.keys(), ...byMine.keys()])];
     apps = slugs.map((slug) => {
       const o = byOfficial.get(slug), m = byMine.get(slug);
-      // system/ also holds the stock apps as shipped: only these were changed here
-      const kind = MADE_HERE.has(slug) ? "new" : MODDED.has(slug) ? "modded" : "official";
+      // An app of this repo that the official one does not have was made here.
+      // system/ also holds the stock apps as shipped: only MODDED were changed
+      const kind = !o ? "new" : MODDED.has(slug) ? "modded" : "official";
       const app = (kind !== "official" && m) || o || m;
       return { slug, kind, app, source: app === m ? SOURCES[1] : SOURCES[0] };
     });

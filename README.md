@@ -1,6 +1,11 @@
 # badger
 
-My mods for the **GitHub Universe '26** badge (Badger 2350: RP2350, 320×240 colour screen, MonaOS 4.0, MicroPython).
+My mods for the **GitHub Universe '26** badge (Badger 2350: RP2350, 320×240 colour screen, MonaOS 4.0, MicroPython), and **[Badge Studio](https://akiyo974.github.io/badger/)**, an app store for the badge that runs in the browser. Contributions welcome: [make your first app in 10 minutes](CONTRIBUTING.md#make-your-first-app-in-10-minutes).
+
+[![CI](https://github.com/Akiyo974/badger/actions/workflows/ci.yml/badge.svg)](https://github.com/Akiyo974/badger/actions/workflows/ci.yml)
+[![Badge Studio](https://img.shields.io/badge/Badge_Studio-open-d3fa37?labelColor=0d1117)](https://akiyo974.github.io/badger/studio/)
+[![License: MIT](https://img.shields.io/badge/license-MIT-39d353?labelColor=0d1117)](LICENSE)
+[![Good first issues](https://img.shields.io/github/issues/Akiyo974/badger/good%20first%20issue?label=good%20first%20issues&color=26a641&labelColor=0d1117)](https://github.com/Akiyo974/badger/labels/good%20first%20issue)
 
 <p align="center">
   <img src="docs/screenshots/menu.png" width="320" alt="MonaOS menu">
@@ -44,8 +49,9 @@ The badges on the Radar screenshots are simulated (I only have one badge), and s
 | Folder | Purpose |
 |---|---|
 | `system/` | Exact copy of the badge's USB drive (`/system` on the device): `main.py`, the boot animation, apps and assets |
-| `tools/` | PC scripts: deploy, screenshots, contacts export, QR codes |
-| `tests/` | Simulated tests run in CI: Contacts compatibility with stock badges, Radar behaviour |
+| `tools/` | PC scripts: deploy, screenshots, new app, contacts export, art and promo images |
+| `templates/app/` | Starting point of a new app, copied by `tools/new_app.py` |
+| `tests/` | Tests run in CI: app checks, Contacts compatibility with stock badges, Radar behaviour, Duck Maze levels, watch steps |
 | `wear/` | **Badger Remote**, the Wear OS watch app that presses the badge's buttons (Kotlin, Compose for Wear OS) |
 | `docs/` | GitHub Pages site and **Badge Studio** (`docs/studio/`), README screenshots and their list (`docs/screenshots/captures.json`) |
 | `secrets.example.py` | Settings template; the real `secrets.py` is never committed |
@@ -272,6 +278,7 @@ py tests/test_contacts_compat.py
 py tests/test_radar.py
 py tests/test_watch_steps.py
 py tests/test_duck_maze.py
+py tests/test_apps.py
 ```
 
 Simulates card swaps between the stock Contacts app (read from the first commit) and the version in this repo, to check that swapping with an unmodified badge still works.
@@ -282,17 +289,23 @@ The watch steps tests feed the bytes the watch app builds to `remote.py`, then c
 
 The Duck Maze tests check every level: size, closed border, one start and one merge, difficulty that only grows, and a path to every duck and to the merge that never crosses a bug hole.
 
+The app checks look at every folder of `system/apps`: an `__init__.py`, a README and a 24×24 icon for the apps added to the badge, no path into another app's folder (Badge Studio could not install it), and the template of `tools/new_app.py`.
+
 GitHub Actions (`.github/workflows/ci.yml`) runs these tests, checks the syntax of `system/`, and builds, tests and lints the watch app on every pull request. Pushing a `wear-v*` tag publishes a signed APK (`wear-release.yml`, needs the `SIGNING_KEYSTORE_BASE64`, `SIGNING_PASSWORD` and `SIGNING_KEY_ALIAS` secrets).
 
 ## Settings
 
 Use the badge's **Settings** app, or copy `secrets.example.py` to `secrets.py` on the drive and fill it in.
 
-## How I work
+## Contributing
+
+New apps, fixes and ideas are welcome, with or without a badge. [CONTRIBUTING.md](CONTRIBUTING.md) explains how to make an app in 10 minutes (`py tools/new_app.py my_app "My App" "What it does."`), try it on the badge and open a pull request. Questions go to [Discussions](https://github.com/Akiyo974/badger/discussions).
 
 - `main` is always deployable.
-- Every change goes through a branch (`feat/…`, `fix/…`) and a pull request, tested on the badge with `deploy.ps1` and reviewed by Copilot before merging.
+- Every change goes through a branch (`feat/…`, `fix/…`) and a pull request, tested on the badge and reviewed (Copilot, then the maintainer) before merging.
 - Every PR adds its line to `CHANGELOG.md`, under "Unreleased".
+
+Code under the [MIT License](LICENSE); the stock badge software in `system/` belongs to its authors.
 
 ## Good to know
 

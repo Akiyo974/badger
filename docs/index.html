@@ -70,6 +70,11 @@
   .tag { font-size: 11px; font-weight: 600; padding: 1px 7px; border-radius: 999px; margin-left: 7px; vertical-align: 2px; }
   .tag.new { background: #d3fa3722; color: var(--accent); } .tag.mod { background: #26a64133; color: var(--g4); }
   .muted { color: var(--dim); }
+  .contribute { margin-top: 44px; display: grid; grid-template-columns: 1fr auto; gap: 20px; align-items: center; background: linear-gradient(135deg, #0e442955, var(--panel)); border: 1px solid var(--line); border-radius: 16px; padding: 24px; }
+  @media (max-width: 720px) { .contribute { grid-template-columns: 1fr; } }
+  .contribute h3 { margin: 0 0 6px; font-size: 22px; }
+  .contribute p { margin: 0; color: var(--dim); }
+  .contribute code { background: #0d1117; border: 1px solid var(--line); border-radius: 6px; padding: 2px 6px; font-size: 14px; color: var(--text); }
   footer { color: var(--dim); font-size: 13px; padding: 40px 0 30px; border-top: 1px solid var(--line); margin-top: 44px; }
 </style>
 </head>
@@ -84,7 +89,7 @@
   <section class="hero">
     <div>
       <h1>Your GitHub Universe badge, <em>from the browser</em>.</h1>
-      <p class="lead">Apps, games and tools for the Badger 2350. Plug the badge in over USB and use <b>Badge Studio</b> to install apps, put your own versions of the built-in ones, reorder the home screen, change its settings and take screenshots. No install: Chrome or Edge is enough.</p>
+      <p class="lead">Open-source apps, games and tools for the Badger 2350. Plug the badge in over USB and use <b>Badge Studio</b> to install apps, put your own versions of the built-in ones, reorder the home screen, change its settings and take screenshots. No install: Chrome or Edge is enough.</p>
       <div class="buttons">
         <a class="button primary" href="studio/">Open Badge Studio</a>
         <a class="button" href="https://github.com/Akiyo974/badger">Source on GitHub</a>
@@ -121,8 +126,19 @@
     <div class="market" id="market"><p class="muted">Loading the apps from GitHub…</p></div>
   </section>
 
+  <section class="contribute">
+    <div>
+      <h3>Make your own app</h3>
+      <p>Every app added to the repo shows up in this store for every badge owner. One command gives you a working app to start from: <code>py tools/new_app.py my_app "My App" "What it does."</code> Try it on your badge from your fork, then open a pull request. No badge? Badge Studio and this site need help too.</p>
+    </div>
+    <div class="buttons">
+      <a class="button primary" href="https://github.com/Akiyo974/badger/blob/main/CONTRIBUTING.md">Contributing guide</a>
+      <a class="button" href="https://github.com/Akiyo974/badger/labels/good%20first%20issue">Good first issues</a>
+    </div>
+  </section>
+
   <footer>Not affiliated with GitHub or Pimoroni. Badge Studio talks to the badge over Web Serial, from your browser. Apps come from GitHub; your settings never leave your computer.</footer>
 </div>
-<script src="site.js?v=3"></script>
+<script src="site.js?v=4"></script>
 </body>
 </html>

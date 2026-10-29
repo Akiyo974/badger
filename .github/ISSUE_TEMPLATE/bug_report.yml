@@ -1,0 +1,43 @@
+name: Bug report
+description: Something does not work on the badge, in Badge Studio or on the site.
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: Thanks for taking the time! The more precise, the faster it gets fixed.
+  - type: dropdown
+    id: where
+    attributes:
+      label: Where
+      options:
+        - An app on the badge
+        - The menu
+        - Badge Studio
+        - The home page
+        - The tools (deploy, screenshots…)
+        - The watch app (Badger Remote)
+    validations:
+      required: true
+  - type: input
+    id: app
+    attributes:
+      label: Which app or tab
+      placeholder: Radar, Duck Maze, Studio > Extensions…
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened
+      description: What you did, what you expected, what you got instead.
+    validations:
+      required: true
+  - type: textarea
+    id: error
+    attributes:
+      label: Error message
+      description: From Badge Studio's Console tab or the browser console, if there is one.
+      render: text
+  - type: input
+    id: setup
+    attributes:
+      label: Setup
+      placeholder: MonaOS 4.0, Chrome 140 on Windows 11
