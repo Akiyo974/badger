@@ -130,12 +130,15 @@ async function show() {
   const [id, title] = GUIDES[index];
   for (const link of document.querySelectorAll("#nav a")) link.classList.toggle("on", link.dataset.id === id);
   const article = $("#guide");
+  // Only the guide asked last shows: a slower one may arrive after it
+  const asked = location.hash;
   try {
     cache[id] ||= fetch(`${id === "index" ? "README" : id}.md`).then((r) => {
       if (!r.ok) throw new Error(`the guide answered ${r.status}`);
       return r.text();
     });
     const text = await cache[id];
+    if (location.hash !== asked) return;
     const previous = GUIDES[index - 1], next = GUIDES[index + 1];
     article.innerHTML = markdown(text)
       + `<div class="pager"><span>${previous ? `<a href="#${previous[0]}">← ${escapeHtml(previous[1])}</a>` : ""}</span>`
@@ -143,6 +146,7 @@ async function show() {
     document.title = id === "index" ? "Badge Guides" : `${title} guide`;
   } catch (error) {
     cache[id] = null;
+    if (location.hash !== asked) return;
     article.innerHTML = `<p class="muted">This guide could not be loaded (${escapeHtml(error.message)}). It is also on <a href="https://github.com/Akiyo974/badger/tree/main/docs/guides">GitHub</a>.</p>`;
   }
   const target = anchor && document.getElementById(anchor);

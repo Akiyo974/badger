@@ -1626,14 +1626,12 @@ async function useRepairRoot(handle) {
   if (names.has("INFO_UF2.TXT")) {
     throw new Error("This is the RP2350 drive (the chip's bootloader), not BADGER: unplug and press RESET, or double-tap RESET.");
   }
-  // On some firmware the drive holds /system in a system folder
+  // On some firmware the drive holds /system in a system folder: repair that
+  // folder, even when the files that usually identify it are the ones missing
   if (!names.has("main.py") && !names.has("apps") && names.has("system")) {
-    const inner = await handle.getDirectoryHandle("system");
-    if ((await hasEntry(inner, "apps", "directory")) || (await hasEntry(inner, "main.py", "file"))) {
-      handle = inner;
-      names.clear();
-      for await (const [name] of handle.entries()) names.add(name);
-    }
+    handle = await handle.getDirectoryHandle("system");
+    names.clear();
+    for await (const [name] of handle.entries()) names.add(name);
   }
   if (names.has("menu") && !names.has("apps")) {
     throw new Error("This is the apps folder: pick the BADGER drive itself, one level up.");
@@ -1660,7 +1658,8 @@ async function pickRepairDrive() {
     return;
   }
   try {
-    const saved = await idb("get", undefined, "root").catch(() => null);
+    // The drive picked last time, unless the person asks for another one
+    const saved = repairRoot ? null : await idb("get", undefined, "root").catch(() => null);
     if (saved) {
       try { await useRepairRoot(saved); return; } catch (_) {}
     }
@@ -1691,7 +1690,11 @@ function renderRepair() {
 // Compares every file of the reference with the drive, by git blob id
 async function scanRepair() {
   if (!repairRoot) return;
+  const root = repairRoot;
   const source = repairSource();
+  // Only the latest scan shows: an older one, for another reference or drive, may finish last
+  const turn = (scanRepair.turn = (scanRepair.turn || 0) + 1);
+  const current = () => turn === scanRepair.turn;
   const box = $("#repair-result");
   box.innerHTML = `<p class="muted">Comparing…</p>`;
   repairScan = null;
@@ -1702,15 +1705,18 @@ async function scanRepair() {
     let done = 0;
     for (const entry of tree) {
       const path = entry.path.slice(source.base.length + 1);
-      const handle = await fileAt(repairRoot, path);
+      const handle = await fileAt(root, path);
       if (!handle) missing.push({ path, sha: entry.sha, size: entry.size });
       else if ((await gitBlobSha(new Uint8Array(await (await handle.getFile()).arrayBuffer()))) !== entry.sha) {
         changed.push({ path, sha: entry.sha, size: entry.size });
       }
+      if (!current()) return;
       if (++done % 20 === 0) $("#repair-state").textContent = `Checked ${done} of ${tree.length} files…`;
     }
-    repairScan = { source, total: tree.length, missing, changed };
+    if (!current()) return;
+    repairScan = { source, root, total: tree.length, missing, changed };
   } catch (error) {
+    if (!current()) return;
     box.innerHTML = `<div class="notice err">Could not compare: ${escapeHtml(error.message)}</div>`;
     $("#repair-state").textContent = "";
     renderRepair();
@@ -1753,7 +1759,7 @@ const repair = (...args) => exclusive(() => repairNow(...args));
 const restoreRepair = (...args) => exclusive(() => restoreRepairNow(...args));
 
 async function repairNow(all) {
-  if (!repairRoot || !repairScan) return;
+  if (!repairRoot || !repairScan || repairScan.root !== repairRoot || repairScan.source !== repairSource()) return;
   const { source } = repairScan;
   const files = all ? [...repairScan.missing, ...repairScan.changed] : [...repairScan.missing];
   const replaced = all ? repairScan.changed : [];
@@ -1772,26 +1778,35 @@ async function repairNow(all) {
       if ((await gitBlobSha(bytes)) !== file.sha) throw new Error(`${file.path} did not download correctly`);
       downloads.push({ path: file.path, bytes });
     }
+    // The drive may have changed since the comparison: look again at what is there now.
+    // Put back missing files never replaces a file; Repair all backs up every file it replaces
+    const writes = [], keep = [];
+    for (const file of downloads) {
+      const handle = await fileAt(repairRoot, file.path);
+      if (!handle) { writes.push(file); continue; }
+      const bytes = new Uint8Array(await (await handle.getFile()).arrayBuffer());
+      if ((await gitBlobSha(bytes)) === (await gitBlobSha(file.bytes))) continue;
+      if (!all) continue;
+      writes.push(file);
+      keep.push({ path: file.path, bytes });
+    }
     let saved = null;
-    if (replaced.length) {
+    if (keep.length) {
       state.textContent = "Backing up the different files…";
       saved = `repair-${stamp()}`;
       const target = await folder(repairRoot, `${REPAIR_BACKUPS}/${saved}`, true);
-      for (const file of replaced) {
-        const handle = await fileAt(repairRoot, file.path);
-        if (handle) await writeOnDrive(target, file.path, new Uint8Array(await (await handle.getFile()).arrayBuffer()));
-      }
+      for (const file of keep) await writeOnDrive(target, file.path, file.bytes);
       // Written last: without it the backup did not finish
       await writeOnDrive(target, ".studio-backup.json", encoder.encode(JSON.stringify({
-        source: source.label, at: new Date().toISOString(), files: replaced.map((f) => f.path),
+        source: source.label, at: new Date().toISOString(), files: keep.map((f) => f.path),
       })));
     }
     let done = 0;
-    for (const file of downloads) {
-      state.textContent = `Writing ${++done} of ${downloads.length}: ${file.path}`;
+    for (const file of writes) {
+      state.textContent = `Writing ${++done} of ${writes.length}: ${file.path}`;
       await writeOnDrive(repairRoot, file.path, file.bytes);
     }
-    toast(`${downloads.length} file${downloads.length > 1 ? "s" : ""} repaired${saved ? ", the replaced ones are backed up" : ""}. Restart the badge when you are done.`, 7000);
+    toast(`${writes.length} file${writes.length === 1 ? "" : "s"} repaired${saved ? ", the replaced ones are backed up" : ""}. Restart the badge when you are done.`, 7000);
   } catch (error) {
     toast("Repair stopped: " + error.message + ". Nothing was deleted; run Repair again.", 9000);
   }
