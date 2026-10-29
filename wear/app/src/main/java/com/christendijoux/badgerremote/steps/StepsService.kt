@@ -2,6 +2,7 @@ package com.christendijoux.badgerremote.steps
 
 import android.content.Context
 import android.os.SystemClock
+import android.util.Log
 import androidx.concurrent.futures.await
 import androidx.health.services.client.HealthServices
 import androidx.health.services.client.PassiveListenerService
@@ -19,11 +20,15 @@ import java.time.ZoneId
  */
 class StepsService : PassiveListenerService() {
     override fun onNewDataPointsReceived(dataPoints: DataPointContainer) {
+        val boot = bootInstant()
+        Log.d(TAG, "steps ${dataPoints.getData(DataType.STEPS).sumOf { it.value }}, daily " +
+            dataPoints.getData(DataType.STEPS_DAILY).joinToString { "${it.value} until ${it.getEndInstant(boot)}" })
         val store = StepStore(this)
-        store.save(StepCounting.add(store.today(), dataPoints, bootInstant()))
+        store.save(StepCounting.add(store.today(), dataPoints, boot))
     }
 
     companion object {
+        private const val TAG = "BadgerSteps"
         private val DATA_TYPES = setOf(DataType.STEPS, DataType.STEPS_DAILY)
 
         /** Starts (or restarts, after a reboot) the background listening. */
@@ -34,6 +39,7 @@ class StepsService : PassiveListenerService() {
             if (types.isEmpty()) return false
             val config = PassiveListenerConfig.builder().setDataTypes(types).build()
             client.setPassiveListenerServiceAsync(StepsService::class.java, config).await()
+            Log.d(TAG, "listening to $types")
             return true
         }
 
