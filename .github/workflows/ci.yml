@@ -62,8 +62,11 @@ jobs:
       - name: Store catalog checks
         run: python tests/test_catalog.py
 
+      - name: Guides checks
+        run: python tests/test_guides.py
+
       - name: Badge Studio syntax
-        run: node --check docs/studio/studio.js && node --check docs/site.js
+        run: node --check docs/studio/studio.js && node --check docs/site.js && node --check docs/guides/guides.js
 
   wear:
     name: Wear OS app (build, tests, lint)

@@ -55,6 +55,8 @@ Plug the badge in over USB and switch it on.
 - **Any computer**: commit your app and push your branch (the commands are in step 4), then open [Badge Studio](https://akiyo974.github.io/badger/studio/) in Chrome or Edge, connect the badge, pick **Another repository…** in the store and type `<you>/badger@feat/my-app`. Install your app from there.
 - **By hand**: switch the badge to USB drive mode (Mass Storage app), copy your folder into the drive's `apps` folder, eject, restart.
 
+Add a guide for your app in `docs/guides/<your_app>.md` (copy one of the others) and list it in `docs/guides/README.md` and in `GUIDES` of `docs/guides/guides.js`.
+
 Errors are printed on the serial console: Badge Studio's **Console** tab shows them.
 
 To add a screenshot to the README gallery: `./tools/screenshot.ps1 -App my_app` (or the **Screenshot** tab of Badge Studio).

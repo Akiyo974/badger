@@ -12,6 +12,8 @@ My mods for the **GitHub Universe '26** badge (Badger 2350: RP2350, 320×240 col
   <img src="docs/screenshots/badge.png" width="320" alt="Badge app: GitHub stats">
 </p>
 
+**New to the badge?** Start with the **[guides](docs/guides/README.md)** ([on the site](https://akiyo974.github.io/badger/guides/)): one per app made or changed here, with how to install, the controls and the settings.
+
 ## Gallery
 
 Screenshots taken straight from the badge with `tools/screenshot.ps1`.
@@ -53,7 +55,7 @@ The badges on the Radar screenshots are simulated (I only have one badge), and s
 | `templates/app/` | Starting point of a new app, copied by `tools/new_app.py` |
 | `tests/` | Tests run in CI: app checks, Contacts compatibility with stock badges, Radar behaviour, Duck Maze levels, watch steps |
 | `wear/` | **Badger Remote**, the Wear OS watch app that presses the badge's buttons (Kotlin, Compose for Wear OS) |
-| `docs/` | GitHub Pages site and **Badge Studio** (`docs/studio/`), README screenshots and their list (`docs/screenshots/captures.json`) |
+| `docs/` | GitHub Pages site, **Badge Studio** (`docs/studio/`), the app guides (`docs/guides/`, Markdown shown on the site), README screenshots and their list (`docs/screenshots/captures.json`) |
 | `secrets.example.py` | Settings template; the real `secrets.py` is never committed |
 | `CHANGELOG.md` | Change history |
 | `CREDITS.md`, `SECURITY.md`, `PRIVACY.md` | Who made what and licenses, how to report a security issue, what the badge and the site share |
@@ -286,6 +288,7 @@ py tests/test_watch_steps.py
 py tests/test_duck_maze.py
 py tests/test_apps.py
 py tests/test_catalog.py
+py tests/test_guides.py
 ```
 
 Simulates card swaps between the stock Contacts app (read from the first commit) and the version in this repo, to check that swapping with an unmodified badge still works.
