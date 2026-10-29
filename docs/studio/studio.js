@@ -542,6 +542,12 @@ function renderInstalled() {
   }
 }
 
+let snapshotPromise;
+function snapshot() {
+  snapshotPromise ||= fetch("../catalog.json").then((r) => (r.ok ? r.json() : { trees: {} })).then((d) => d.trees, () => ({}));
+  return snapshotPromise;
+}
+
 async function loadCatalogue(source) {
   if (catalogues[source.id]) return catalogues[source.id];
   const cacheKey = "studio-tree-" + source.id;
@@ -551,10 +557,17 @@ async function loadCatalogue(source) {
     if (cached && Date.now() - cached.at < 10 * 60 * 1000) tree = cached.tree;
   } catch (_) {}
   if (!tree) {
-    const response = await fetch(`https://api.github.com/repos/${source.repo}/git/trees/${source.branch}?recursive=1`);
-    if (!response.ok) throw new Error(`GitHub answered ${response.status} for ${source.repo}`);
-    tree = (await response.json()).tree.filter((e) => e.type === "blob" && e.path.startsWith(source.base + "/"));
-    try { sessionStorage.setItem(cacheKey, JSON.stringify({ at: Date.now(), tree })); } catch (_) {}
+    try {
+      const response = await fetch(`https://api.github.com/repos/${source.repo}/git/trees/${source.branch}?recursive=1`);
+      if (!response.ok) throw new Error(`GitHub answered ${response.status} for ${source.repo}`);
+      tree = (await response.json()).tree.filter((e) => e.type === "blob" && e.path.startsWith(source.base + "/"));
+      try { sessionStorage.setItem(cacheKey, JSON.stringify({ at: Date.now(), tree })); } catch (_) {}
+    } catch (error) {
+      // GitHub allows 60 calls an hour per IP address: a shared Wi-Fi runs out.
+      // ../catalog.json is the same list for the built-in sources (tools/make_catalog.py)
+      tree = (await snapshot())[`${source.repo}@${source.branch}:${source.base}`];
+      if (!tree) throw error;
+    }
   }
   const apps = {};
   for (const entry of tree) {
@@ -1676,7 +1689,8 @@ async function sendConsole() {
 // ---------- wiring ----------
 
 function wire() {
-  if (!("serial" in navigator)) {
+  // Android Chrome has Web Serial, but for Bluetooth only: phones cannot reach the badge's USB
+  if (!("serial" in navigator) || navigator.userAgentData?.mobile || /Android|iPhone|iPad|iPod/i.test(navigator.userAgent)) {
     $("#unsupported").hidden = false;
     $("#connect").disabled = true;
   }

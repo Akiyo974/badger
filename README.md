@@ -96,6 +96,10 @@ To try a pull request: `git checkout <branch>` then `./tools/deploy.ps1`.
 | **Screenshot** | The screen, or any app after a few seconds, as a PNG |
 | **Console** | The MicroPython REPL |
 
+The official site [badger.github.io](https://badger.github.io) has its own app store, which writes to the badge's USB drive, and a [simulator](https://badger.github.io/editor) to try code without a badge. Badge Studio works over the serial port instead, without switching modes, and adds the settings, screenshots, the home screen order, backups and apps from any repository.
+
+If GitHub's API rate limit is reached (60 calls an hour per IP address, shared on a conference Wi-Fi), the store falls back to `docs/catalog.json`, a copy of the app list that `tools/make_catalog.py` refreshes every hour (`.github/workflows/catalog.yml`).
+
 The menu of this repo is needed for the installed apps to show up (under an **INSTALLED** band) and for the home screen layout: on a stock badge, install the **Menu** extension first. The page itself is in `docs/studio/` and runs locally with `py -m http.server 8765 --directory docs`.
 
 ### By hand
@@ -280,6 +284,7 @@ py tests/test_radar.py
 py tests/test_watch_steps.py
 py tests/test_duck_maze.py
 py tests/test_apps.py
+py tests/test_catalog.py
 ```
 
 Simulates card swaps between the stock Contacts app (read from the first commit) and the version in this repo, to check that swapping with an unmodified badge still works.

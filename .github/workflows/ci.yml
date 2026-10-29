@@ -59,6 +59,9 @@ jobs:
       - name: App checks (README, icon, paths)
         run: python tests/test_apps.py
 
+      - name: Store catalog checks
+        run: python tests/test_catalog.py
+
       - name: Badge Studio syntax
         run: node --check docs/studio/studio.js && node --check docs/site.js
 

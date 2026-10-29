@@ -39,6 +39,9 @@
   .buttons { display: flex; gap: 10px; flex-wrap: wrap; }
   .button { display: inline-block; padding: 11px 18px; border-radius: 10px; border: 1px solid var(--line); background: var(--panel-2); color: var(--text); text-decoration: none; font-weight: 600; }
   .button.primary { background: var(--accent); border-color: var(--accent); color: #0d1117; }
+  .desktop-only { margin: 16px 0 0; padding: 12px 14px; border-left: 3px solid var(--accent); background: var(--panel-2); border-radius: 8px; color: var(--dim); font-size: 15px; max-width: 34em; }
+  .desktop-only b { color: var(--text); }
+  .desktop-only button { margin-top: 10px; font: inherit; cursor: pointer; }
   .screen { background: #000; border: 10px solid #1f2630; border-radius: 18px; box-shadow: 0 20px 60px #0008; overflow: hidden; }
   .screen img { display: block; width: 100%; image-rendering: pixelated; aspect-ratio: 4 / 3; }
   h2 { font-size: 13px; text-transform: uppercase; letter-spacing: .08em; color: var(--dim); margin: 36px 0 14px; }
@@ -94,6 +97,10 @@
         <a class="button primary" href="studio/">Open Badge Studio</a>
         <a class="button" href="https://github.com/Akiyo974/badger">Source on GitHub</a>
       </div>
+      <div class="desktop-only" id="desktop-only" hidden>
+        <b>On your phone?</b> Badge Studio talks to the badge over USB, so it needs Chrome or Edge on a computer. Browse the apps below, and open this page on your computer when the badge is at hand.
+        <br><button class="button" id="send-link" type="button">Send me the link</button>
+      </div>
     </div>
     <div class="screen"><img src="screenshots/menu.png" alt="The badge's home screen, with the CUSTOM band of apps"></div>
   </section>
@@ -129,7 +136,7 @@
   <section class="contribute">
     <div>
       <h3>Make your own app</h3>
-      <p>Every app added to the repo shows up in this store for every badge owner. One command gives you a working app to start from: <code>py tools/new_app.py my_app "My App" "What it does."</code> Try it on your badge from your fork, then open a pull request. No badge? Badge Studio and this site need help too.</p>
+      <p>Every app added to the repo shows up in this store for every badge owner. One command gives you a working app to start from: <code>py tools/new_app.py my_app "My App" "What it does."</code> Try it on your badge from your fork, then open a pull request. No badge? Run your app in the official <a href="https://badger.github.io/editor">badge simulator</a>, or help with Badge Studio and this site.</p>
     </div>
     <div class="buttons">
       <a class="button primary" href="https://github.com/Akiyo974/badger/blob/main/CONTRIBUTING.md">Contributing guide</a>
@@ -139,6 +146,6 @@
 
   <footer>Not affiliated with GitHub or Pimoroni. Badge Studio talks to the badge over Web Serial, from your browser. Apps come from GitHub; your settings go only to your badge. No tracking.<br><a href="https://github.com/Akiyo974/badger/blob/main/CREDITS.md">Credits</a> · <a href="https://github.com/Akiyo974/badger/blob/main/PRIVACY.md">Privacy</a> · <a href="https://github.com/Akiyo974/badger/blob/main/SECURITY.md">Security</a> · <a href="https://github.com/Akiyo974/badger/blob/main/LICENSE">MIT License</a></footer>
 </div>
-<script src="site.js?v=4"></script>
+<script src="site.js?v=6"></script>
 </body>
 </html>

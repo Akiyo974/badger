@@ -1,0 +1,47 @@
+name: Store catalog
+
+# Refreshes docs/catalog.json, the copy of the store's app list that the site
+# and Badge Studio use when the GitHub API rate limit is reached.
+on:
+  schedule:
+    - cron: '23 * * * *'
+  push:
+    branches: [main]
+    paths: ['system/apps/**', 'tools/make_catalog.py']
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pages: write
+
+concurrency:
+  group: catalog
+  cancel-in-progress: false
+
+jobs:
+  catalog:
+    name: Refresh docs/catalog.json
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.13'
+
+      - name: Make the catalog
+        run: python tools/make_catalog.py
+
+      - name: Commit it if it changed
+        run: |
+          if git diff --quiet -- docs/catalog.json; then exit 0; fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -m "Refresh the store catalog" -- docs/catalog.json
+          git push
+          # A push with GITHUB_TOKEN does not start the Pages build: ask for one
+          gh api --method POST "repos/${{ github.repository }}/pages/builds"
+        env:
+          GH_TOKEN: ${{ github.token }}

@@ -1,0 +1,3698 @@
+{
+ "trees": {
+  "Akiyo974/badger@main:system/apps": [
+   {
+    "path": "system/apps/badge/README.md",
+    "sha": "f3ecf91a727c4596a1bf06c7c8d5ab9ab56023ba",
+    "size": 1793
+   },
+   {
+    "path": "system/apps/badge/__init__.py",
+    "sha": "5d6b16033d34e7ce09ebc249b6417779b0b0da2a",
+    "size": 33839
+   },
+   {
+    "path": "system/apps/badge/icon.png",
+    "sha": "0c71cfd8322ed528668280820e73886b8172dd18",
+    "size": 818
+   },
+   {
+    "path": "system/apps/badge/qr_github.png",
+    "sha": "120ec818cf783528552c93a3c7a002c8375ac868",
+    "size": 874
+   },
+   {
+    "path": "system/apps/badge/qr_linkedin.png",
+    "sha": "de32dcc7b2473c291199aaa3330e2633d6a1174e",
+    "size": 955
+   },
+   {
+    "path": "system/apps/badge/qr_site.png",
+    "sha": "ef91ee3f765583392bcaf4a729451337cefda64a",
+    "size": 877
+   },
+   {
+    "path": "system/apps/brattal/__init__.py",
+    "sha": "b6ae079373e7a3bb1128bbe76d34b70fa6e1eb20",
+    "size": 23803
+   },
+   {
+    "path": "system/apps/contacts/README.md",
+    "sha": "e1256e04025f6771b00b96961d607998e316cb88",
+    "size": 304
+   },
+   {
+    "path": "system/apps/contacts/__init__.py",
+    "sha": "9477ec34c0a900b9d102be1290728902bf67ec78",
+    "size": 22433
+   },
+   {
+    "path": "system/apps/duck_maze/README.md",
+    "sha": "a0b58f1de44a19de97a2bde943c5017660b89c79",
+    "size": 394
+   },
+   {
+    "path": "system/apps/duck_maze/__init__.py",
+    "sha": "121331b8407937c7e4d8104ea7b60135655cc140",
+    "size": 17934
+   },
+   {
+    "path": "system/apps/duck_maze/duck.png",
+    "sha": "dcfcd56f7cb31a0fc13b5654e64421dddbcdc24a",
+    "size": 248
+   },
+   {
+    "path": "system/apps/duck_maze/icon.png",
+    "sha": "72ac64c005cd7295c070c884816e53ba1a620659",
+    "size": 304
+   },
+   {
+    "path": "system/apps/duck_maze/levels.py",
+    "sha": "710e6d325a728f377a3bd2c91895419c61f611ec",
+    "size": 2960
+   },
+   {
+    "path": "system/apps/flappy_mona/__init__.py",
+    "sha": "49accc72cb5fb6e7178ab314e711f6e3d68591ba",
+    "size": 3608
+   },
+   {
+    "path": "system/apps/flappy_mona/assets/background.png",
+    "sha": "0d2b1ac78508a534ed779f83b2dd651b7550cc88",
+    "size": 1486
+   },
+   {
+    "path": "system/apps/flappy_mona/assets/cloud.png",
+    "sha": "be37581db47225383403f1e4abd54dc9e255465b",
+    "size": 1647
+   },
+   {
+    "path": "system/apps/flappy_mona/assets/grass.png",
+    "sha": "5a4df1305f304ada129d6a6b9951cb2898c0129d",
+    "size": 1532
+   },
+   {
+    "path": "system/apps/flappy_mona/assets/mona.png",
+    "sha": "8a927590c023290935bd23cdf6a4eb4b55892983",
+    "size": 2612
+   },
+   {
+    "path": "system/apps/flappy_mona/assets/obstacles.png",
+    "sha": "d86ff151a8a4f3481eeb6af215e7dae5755da298",
+    "size": 702
+   },
+   {
+    "path": "system/apps/flappy_mona/mona.py",
+    "sha": "f062b404732d6f2918914840ed6ea9f7b0258ea4",
+    "size": 2521
+   },
+   {
+    "path": "system/apps/flappy_mona/obstacle.py",
+    "sha": "038d1495ec295ecced986838bd39509c5b96f4b9",
+    "size": 1559
+   },
+   {
+    "path": "system/apps/iss/__init__.py",
+    "sha": "79c7d999d926f14db18e5b9f4866f4550d3b53b6",
+    "size": 23342
+   },
+   {
+    "path": "system/apps/iss/world.geo.json",
+    "sha": "2dca606a0697494c89313dad473432e32f08b44f",
+    "size": 215029
+   },
+   {
+    "path": "system/apps/life/__init__.py",
+    "sha": "6e832adbc6df6820915f179f14a34fff8b71a92d",
+    "size": 7310
+   },
+   {
+    "path": "system/apps/mass_storage/__init__.py",
+    "sha": "c1d59810e397b00014efb7c9de7a72df0b19038c",
+    "size": 915
+   },
+   {
+    "path": "system/apps/menu/__init__.py",
+    "sha": "c7c80ca0c7b0b1acffdc16695c3fdeb1fdd00d38",
+    "size": 5677
+   },
+   {
+    "path": "system/apps/menu/achievements.py",
+    "sha": "a9245406b043414138920c68e397d9373362b72b",
+    "size": 22621
+   },
+   {
+    "path": "system/apps/menu/anim/badge.bin",
+    "sha": "c63b9a24ba8a02729d14c1d4e91ca7653bcd6d24",
+    "size": 25684
+   },
+   {
+    "path": "system/apps/menu/anim/brattal.bin",
+    "sha": "e6631ab83e3a5f8c22923422ae14b205a5a1a0b6",
+    "size": 12247
+   },
+   {
+    "path": "system/apps/menu/anim/contacts.bin",
+    "sha": "f0f42c489530a6045cb7a9f6cc1dfa1ecec8e51c",
+    "size": 30864
+   },
+   {
+    "path": "system/apps/menu/anim/default.bin",
+    "sha": "fb89191f0f75ea395e4f23430903077c6402953a",
+    "size": 55234
+   },
+   {
+    "path": "system/apps/menu/anim/flappy_mona.bin",
+    "sha": "82d97a1174818f9e06cacb9cc794d46e501326d7",
+    "size": 29711
+   },
+   {
+    "path": "system/apps/menu/anim/iss.bin",
+    "sha": "a11ccea4683be48e34fc03946fe19314f242110d",
+    "size": 36682
+   },
+   {
+    "path": "system/apps/menu/anim/life.bin",
+    "sha": "d4dbaafb787725db2f1b8caf2da9e7bb7f6fe5a5",
+    "size": 19004
+   },
+   {
+    "path": "system/apps/menu/anim/mass_storage.bin",
+    "sha": "6b17af9c18f0602684091fd5480e4de8fcf6e3ad",
+    "size": 19395
+   },
+   {
+    "path": "system/apps/menu/anim/merge_conflict.bin",
+    "sha": "bfca10218091a2c57e4fa781bcc0058de519d44b",
+    "size": 6078
+   },
+   {
+    "path": "system/apps/menu/anim/mona_paint.bin",
+    "sha": "9e55f97272f5acbd6871823d8dcded8595ea70a5",
+    "size": 52886
+   },
+   {
+    "path": "system/apps/menu/anim/mona_pet.bin",
+    "sha": "93e7c5236cfadb870483d44c4a78846a50743ddc",
+    "size": 38688
+   },
+   {
+    "path": "system/apps/menu/anim/pong.bin",
+    "sha": "972635dc5536a9e91c66be58533215f2757ea9fe",
+    "size": 38544
+   },
+   {
+    "path": "system/apps/menu/anim/rogue.bin",
+    "sha": "df2cdb71caf8bb72f4235c2b1f642dd3bb31f6ce",
+    "size": 47349
+   },
+   {
+    "path": "system/apps/menu/anim/settings.bin",
+    "sha": "aa89449afcb2358bb31f855ea19dc3ad49fffb87",
+    "size": 33268
+   },
+   {
+    "path": "system/apps/menu/anim/show.bin",
+    "sha": "6a76b00ef30857ebb2792952498c9d952ca14251",
+    "size": 8944
+   },
+   {
+    "path": "system/apps/menu/anim/snake.bin",
+    "sha": "716cd8b496a669ebcb487e9bf797cd590e4a3d2d",
+    "size": 18616
+   },
+   {
+    "path": "system/apps/menu/app.py",
+    "sha": "e1e76be96374fbf797f5986f15939a7b0e908c4f",
+    "size": 22883
+   },
+   {
+    "path": "system/apps/menu/awards/ascii-donut-small.png",
+    "sha": "0bcc40ee3f5cb404d07ca3660693fd4a069a83fb",
+    "size": 2992
+   },
+   {
+    "path": "system/apps/menu/awards/ascii-donut.png",
+    "sha": "7565a25c2082f3f4620f19cd66cfc5f8db5d676b",
+    "size": 10405
+   },
+   {
+    "path": "system/apps/menu/awards/ascii-mona-small.png",
+    "sha": "39e5019ef8eb705f3d54d57056e34b373efe6952",
+    "size": 6015
+   },
+   {
+    "path": "system/apps/menu/awards/ascii-mona.png",
+    "sha": "d9d45227e8c6451726fd8e5472f74456824849d0",
+    "size": 19385
+   },
+   {
+    "path": "system/apps/menu/awards/cab-small.png",
+    "sha": "dfc79aaf85cc107e378f2056d65c9260c6768d58",
+    "size": 5207
+   },
+   {
+    "path": "system/apps/menu/awards/cab.png",
+    "sha": "e57a5c86fc8c099a9a1b2610af1e8c6003bdbebd",
+    "size": 11440
+   },
+   {
+    "path": "system/apps/menu/awards/cabana-small.png",
+    "sha": "d984abf32bbe682ca0d91ce036ddd3b3d91f76ea",
+    "size": 708
+   },
+   {
+    "path": "system/apps/menu/awards/cabana.png",
+    "sha": "a0b86895bcec6ca95b8604baabf00b169e72acd6",
+    "size": 1218
+   },
+   {
+    "path": "system/apps/menu/awards/compass-needle.png",
+    "sha": "f3a9efe44458f50024d433d0fdeea868a50a3335",
+    "size": 2765
+   },
+   {
+    "path": "system/apps/menu/awards/compass-shadow.png",
+    "sha": "86bb026672064db6140b1c6167625646cca18a27",
+    "size": 608
+   },
+   {
+    "path": "system/apps/menu/awards/compass.png",
+    "sha": "346d77c94151d2d014327ee221b8f608fd3933f3",
+    "size": 13255
+   },
+   {
+    "path": "system/apps/menu/awards/diner-small.png",
+    "sha": "7584ba2c8c116869f2e0cfc9709746b29e4fd505",
+    "size": 6311
+   },
+   {
+    "path": "system/apps/menu/awards/diner.png",
+    "sha": "b5f1c667097a8b9e9cbe139ad67022162d259b49",
+    "size": 17949
+   },
+   {
+    "path": "system/apps/menu/awards/frying-pan-small.png",
+    "sha": "43b996ac86e9ddf1083ffb02e477b64b087faae4",
+    "size": 6806
+   },
+   {
+    "path": "system/apps/menu/awards/frying-pan.png",
+    "sha": "fec68f9107b8e6d90207e3db47b203775126ab6b",
+    "size": 16727
+   },
+   {
+    "path": "system/apps/menu/awards/keycap-small.png",
+    "sha": "31f4c30cdfbddd7c32aa91ad02fd21c1f6cae5ce",
+    "size": 7292
+   },
+   {
+    "path": "system/apps/menu/awards/keycap.png",
+    "sha": "0cb5bcfa8add9f8f77a1345d9231e04d7200787b",
+    "size": 18202
+   },
+   {
+    "path": "system/apps/menu/awards/up-arrow-small.png",
+    "sha": "25deb440c380eb6b6df11fcb48d05468bc51bdf1",
+    "size": 1462
+   },
+   {
+    "path": "system/apps/menu/awards/up-arrow.png",
+    "sha": "3a199f98e4c82345ada03b65dfa0b29cda79bb4c",
+    "size": 2343
+   },
+   {
+    "path": "system/apps/menu/awards/vinyl-small.png",
+    "sha": "971442c4a05d18cff28322dbb17be4b4f77d6808",
+    "size": 6208
+   },
+   {
+    "path": "system/apps/menu/awards/vinyl.png",
+    "sha": "5714ce460887743e1123bb50a17d60a0e6864c15",
+    "size": 18167
+   },
+   {
+    "path": "system/apps/menu/celebration.py",
+    "sha": "1d9c97bfdc1ca6eaa654f350f168d7edb782ffb4",
+    "size": 6770
+   },
+   {
+    "path": "system/apps/menu/dizzy.py",
+    "sha": "4dfb8ce606fa56242f82d7bbe27830ea2fd9ca4c",
+    "size": 4820
+   },
+   {
+    "path": "system/apps/menu/duck.png",
+    "sha": "c1998512a8b5d9216da36b80f250b308c353d134",
+    "size": 260
+   },
+   {
+    "path": "system/apps/menu/gallery.py",
+    "sha": "b3f7e96faaf22d4e3ebcfb59046fbccebcc16f8b",
+    "size": 3837
+   },
+   {
+    "path": "system/apps/menu/icons.mpy",
+    "sha": "8b41d1bf569384f31352140e4d11fcb9789fa5e0",
+    "size": 17943
+   },
+   {
+    "path": "system/apps/menu/mona-dizzy.png",
+    "sha": "123130c7ea98509a443485346c7a82b529e31bd3",
+    "size": 371
+   },
+   {
+    "path": "system/apps/menu/mona.mpy",
+    "sha": "3d848d230bdd40e61c51af512f043cc0c2acf74f",
+    "size": 1568
+   },
+   {
+    "path": "system/apps/menu/mona3d.mpy",
+    "sha": "ef3367ccea159ed693d17a4a4f0deaabf1b0bcb7",
+    "size": 3600
+   },
+   {
+    "path": "system/apps/menu/mona_menu.p3d",
+    "sha": "c47c6a6f781b78fad6ff369a5bd5de19f94c5ac6",
+    "size": 24308
+   },
+   {
+    "path": "system/apps/menu/opening.mpy",
+    "sha": "0f977222ac8c9ddde43250113e262bb310a66386",
+    "size": 1135
+   },
+   {
+    "path": "system/apps/menu/photos/ducky-profile.png",
+    "sha": "831cb1bfe30667e1bd95577a20cf9465bf7e8f3a",
+    "size": 24228
+   },
+   {
+    "path": "system/apps/menu/photos/ducky-quilt.png",
+    "sha": "ee6ea52ef3cb6812589a4e47c0f635da53557284",
+    "size": 23706
+   },
+   {
+    "path": "system/apps/menu/photos/mona-centered.png",
+    "sha": "7df498106312bfa1995f2192122d4dc4235025e7",
+    "size": 27600
+   },
+   {
+    "path": "system/apps/menu/photos/mona-ducky-blue.png",
+    "sha": "10191fd7a973c72ce37d999f410e34b7986d7ed0",
+    "size": 33810
+   },
+   {
+    "path": "system/apps/menu/photos/mona-quilt.png",
+    "sha": "08a6a197e22e04473510834a32a3db7970b09b61",
+    "size": 18523
+   },
+   {
+    "path": "system/apps/menu/photos/tiles/ducky-profile.png",
+    "sha": "b569df776152b36fc2d70453c4d1a8672c7799cb",
+    "size": 7975
+   },
+   {
+    "path": "system/apps/menu/photos/tiles/ducky-quilt.png",
+    "sha": "435834e8ad5d481da91faf1ec7c08328c304494d",
+    "size": 13456
+   },
+   {
+    "path": "system/apps/menu/photos/tiles/mona-centered.png",
+    "sha": "dc7e444010c34ce0a9ead7ced10c66306bb412a7",
+    "size": 19976
+   },
+   {
+    "path": "system/apps/menu/photos/tiles/mona-ducky-blue.png",
+    "sha": "a7ce0798f95e1f913feb1af156e4f3840ce2f5d2",
+    "size": 14276
+   },
+   {
+    "path": "system/apps/menu/photos/tiles/mona-quilt.png",
+    "sha": "eb98a2455473624ac701eea2c43195406c27644a",
+    "size": 8944
+   },
+   {
+    "path": "system/apps/menu/silhouettes.py",
+    "sha": "ddbff5eef1560d80e0c47448af542371f739be6b",
+    "size": 3281
+   },
+   {
+    "path": "system/apps/menu/src/icons.py",
+    "sha": "b8956eb898d41bd946a356cad304c675742898c1",
+    "size": 18575
+   },
+   {
+    "path": "system/apps/menu/src/mona.py",
+    "sha": "6bf33407c757c29bb941c7fe9946f70ad510d9ff",
+    "size": 2952
+   },
+   {
+    "path": "system/apps/menu/src/mona3d.py",
+    "sha": "d8b188a37d5bf2caa71acacdce25086709ed879c",
+    "size": 10232
+   },
+   {
+    "path": "system/apps/menu/src/opening.py",
+    "sha": "119d03f6218f6d8824f6ba6eb671c9232fa81582",
+    "size": 1898
+   },
+   {
+    "path": "system/apps/menu/src/ui.py",
+    "sha": "4f439d6a19faf806cfca73203fc6d91709ff6cbf",
+    "size": 3622
+   },
+   {
+    "path": "system/apps/menu/ui.mpy",
+    "sha": "e02f56c5e146013da6ce4694462353a5d54febdd",
+    "size": 2012
+   },
+   {
+    "path": "system/apps/merge_conflict/__init__.py",
+    "sha": "f98e43b35f8a88a1610c5ac7968ac4cf020ab520",
+    "size": 31124
+   },
+   {
+    "path": "system/apps/merge_conflict/games.py",
+    "sha": "6068aef2c95cf142c2f936fda6ed786b072644b4",
+    "size": 71059
+   },
+   {
+    "path": "system/apps/merge_conflict/mona-code.png",
+    "sha": "dfaca4131b2c5b9d5eb5ed90b8d22453a434de33",
+    "size": 869
+   },
+   {
+    "path": "system/apps/merge_conflict/mona-dance.png",
+    "sha": "7c701daa542804567fd6aca1d3e0e08ee9818fd7",
+    "size": 716
+   },
+   {
+    "path": "system/apps/merge_conflict/mona-dead.png",
+    "sha": "dc2d29865160c11be96a8909cd63762b7c5e6ec9",
+    "size": 685
+   },
+   {
+    "path": "system/apps/merge_conflict/mona-default.png",
+    "sha": "8688d9d2488a255f869fdf43a7aee039e4bf38ad",
+    "size": 886
+   },
+   {
+    "path": "system/apps/merge_conflict/mona-eating.png",
+    "sha": "0d1f6edb972a32e5f89c482fe938daa9153ac49b",
+    "size": 922
+   },
+   {
+    "path": "system/apps/merge_conflict/mona-heart.png",
+    "sha": "8c3a6f2885c2daf4f926ab9bf772a32324897b6a",
+    "size": 1123
+   },
+   {
+    "path": "system/apps/merge_conflict/mona-notify.png",
+    "sha": "7d8c88d1b1927a1368378a35ae540533ea1ae353",
+    "size": 949
+   },
+   {
+    "path": "system/apps/merge_conflict/replay.py",
+    "sha": "f24d19e4c1bec92e31844645af4fd1d13f67115d",
+    "size": 17928
+   },
+   {
+    "path": "system/apps/merge_conflict/ui.py",
+    "sha": "dbb63be3b6f02846c0a404b7d807d7a5d98ca315",
+    "size": 15446
+   },
+   {
+    "path": "system/apps/mona_paint/__init__.py",
+    "sha": "35e82222995fde9d76bb5261d82a7fdb2d994498",
+    "size": 17448
+   },
+   {
+    "path": "system/apps/mona_paint/ui.py",
+    "sha": "88d0f4659507556f6c8cc8210a06b8652b5c0f86",
+    "size": 10843
+   },
+   {
+    "path": "system/apps/mona_pet/README.md",
+    "sha": "25145354dec7d2d8e32c038d6f85f60b0e46a830",
+    "size": 170
+   },
+   {
+    "path": "system/apps/mona_pet/__init__.py",
+    "sha": "4c2b6ded72a2dc8b6a009d365220e74e2edee6cd",
+    "size": 8161
+   },
+   {
+    "path": "system/apps/mona_pet/assets/background/background_day.png",
+    "sha": "ad1e50d25797973a67aa7425d7e1e89168252167",
+    "size": 2176
+   },
+   {
+    "path": "system/apps/mona_pet/assets/background/background_dusk.png",
+    "sha": "287f3d699f99db69aa13307ddd35150f6fcf8599",
+    "size": 953
+   },
+   {
+    "path": "system/apps/mona_pet/assets/background/background_night.png",
+    "sha": "8c3a4c250e73a4c81ff6777845f99c79ec48791e",
+    "size": 961
+   },
+   {
+    "path": "system/apps/mona_pet/assets/mona-sprites/mona-code.png",
+    "sha": "e0b3f5e165853411f7cd9bc054cf5b6cfa62e7b4",
+    "size": 542
+   },
+   {
+    "path": "system/apps/mona_pet/assets/mona-sprites/mona-dance.png",
+    "sha": "3af6902edbb1dc7960df6b28b97e1a7266b78f37",
+    "size": 461
+   },
+   {
+    "path": "system/apps/mona_pet/assets/mona-sprites/mona-dead.png",
+    "sha": "7b8a6179cbbe3daa44900199bdcd115530c53a38",
+    "size": 500
+   },
+   {
+    "path": "system/apps/mona_pet/assets/mona-sprites/mona-default.png",
+    "sha": "2de5c752e1816fdb7dab644669e85704b7804694",
+    "size": 577
+   },
+   {
+    "path": "system/apps/mona_pet/assets/mona-sprites/mona-eating.png",
+    "sha": "f2968fdffb7f92ca2d90bf0d0806e529f372fb90",
+    "size": 594
+   },
+   {
+    "path": "system/apps/mona_pet/assets/mona-sprites/mona-heart.png",
+    "sha": "c14ec7edd9750248f89a38bf824a04c788ee2c0d",
+    "size": 726
+   },
+   {
+    "path": "system/apps/mona_pet/assets/mona-sprites/mona-love.png",
+    "sha": "c14ec7edd9750248f89a38bf824a04c788ee2c0d",
+    "size": 726
+   },
+   {
+    "path": "system/apps/mona_pet/assets/mona-sprites/mona-notify.png",
+    "sha": "116a183aac7def68f730822b2321a1816580fc6c",
+    "size": 541
+   },
+   {
+    "path": "system/apps/mona_pet/assets/mona-sprites/mona-sleep.png",
+    "sha": "99eb5e8b32c6790e40fc9a3d4234938509f054d7",
+    "size": 1133
+   },
+   {
+    "path": "system/apps/mona_pet/assets/ui/buttons.png",
+    "sha": "8570eb1d499b9c136117a3204fead1c2bd81a8d4",
+    "size": 704
+   },
+   {
+    "path": "system/apps/mona_pet/assets/ui/frame.png",
+    "sha": "4b6fc9d62e0a6b6906837ed4b954eb7670b8d279",
+    "size": 499
+   },
+   {
+    "path": "system/apps/mona_pet/clock.py",
+    "sha": "07dce2ddf9931625a1fe8a09710f53b4b9494289",
+    "size": 1921
+   },
+   {
+    "path": "system/apps/mona_pet/food.py",
+    "sha": "c349b477959e9a45d9fb0aba863125b946deadfe",
+    "size": 1616
+   },
+   {
+    "path": "system/apps/mona_pet/icons.py",
+    "sha": "812255b066a0c3cda3becd164667d728691198de",
+    "size": 471
+   },
+   {
+    "path": "system/apps/mona_pet/match.py",
+    "sha": "3552186add4a666f14abf35e6a74efa6d04252fc",
+    "size": 5941
+   },
+   {
+    "path": "system/apps/mona_pet/tufty.py",
+    "sha": "61d9528a9327aed48b1c3fd90d74e0a849f0fb9d",
+    "size": 5302
+   },
+   {
+    "path": "system/apps/mona_pet/ui.py",
+    "sha": "8054c5143c28642e1475020fd19b2efdb64876a6",
+    "size": 2717
+   },
+   {
+    "path": "system/apps/mona_pet/walk.py",
+    "sha": "d066c60d4360d9f025f30ba5ac6f0ba2bf0a689c",
+    "size": 3597
+   },
+   {
+    "path": "system/apps/pedometer/README.md",
+    "sha": "9ff5d820d047f7bf96a48dee6194b81f683ee2e9",
+    "size": 285
+   },
+   {
+    "path": "system/apps/pedometer/__init__.py",
+    "sha": "73a705985acdb02772f94d094e6cfb3129683d63",
+    "size": 6688
+   },
+   {
+    "path": "system/apps/pedometer/icon.png",
+    "sha": "453f514302aa39636f59ea5d888155e96b37141a",
+    "size": 130
+   },
+   {
+    "path": "system/apps/pong/__init__.py",
+    "sha": "2709306da29b570a9504950b0178eb93d8cc488a",
+    "size": 20234
+   },
+   {
+    "path": "system/apps/radar/README.md",
+    "sha": "9a9f8c2997a8508727c381fb7e94bc5c6fc2964d",
+    "size": 4283
+   },
+   {
+    "path": "system/apps/radar/__init__.py",
+    "sha": "ecb854bfe1fd05154721b99ab285c36fa2db8465",
+    "size": 35792
+   },
+   {
+    "path": "system/apps/radar/icon.png",
+    "sha": "ae25594d76daa0b7a620169c8b653b1dacf28c68",
+    "size": 224
+   },
+   {
+    "path": "system/apps/rogue/__init__.py",
+    "sha": "811a39df30f5c7b92085ef0692dd28c3e5ce95d3",
+    "size": 8196
+   },
+   {
+    "path": "system/apps/rogue/build.py",
+    "sha": "da4ed1c44b953ab96e3d9996db88b0d10713d3d1",
+    "size": 19517
+   },
+   {
+    "path": "system/apps/rogue/content.py",
+    "sha": "352836483b230046e435cd8311798949f9a0a924",
+    "size": 1088
+   },
+   {
+    "path": "system/apps/rogue/game.py",
+    "sha": "fc2f7bb25b70f733493773f60283b1b6c81c114e",
+    "size": 14477
+   },
+   {
+    "path": "system/apps/rogue/items.py",
+    "sha": "f59feff38d28070398bc0d96b702196dd77657f2",
+    "size": 5729
+   },
+   {
+    "path": "system/apps/rogue/monsters.py",
+    "sha": "28d601012bfc759a0ed7392f6b16505f8a276cc3",
+    "size": 7166
+   },
+   {
+    "path": "system/apps/rogue/render.py",
+    "sha": "aefbdb96d431ea1aef613c364ff0356c02a93f46",
+    "size": 20993
+   },
+   {
+    "path": "system/apps/rogue/rings.py",
+    "sha": "18454915c8242d11d42a1f4b4719778a5f7ee555",
+    "size": 1547
+   },
+   {
+    "path": "system/apps/rogue/save.py",
+    "sha": "45c7c15558d0cba5344891e1cdf960024ca77752",
+    "size": 4700
+   },
+   {
+    "path": "system/apps/rogue/scrolls.py",
+    "sha": "52b4fbd1538fbef70c19dde5da40c8c9965bb5b1",
+    "size": 4493
+   },
+   {
+    "path": "system/apps/rogue/world.py",
+    "sha": "6a21fafdd843f29ddbec62b1ef190ecd74363cd9",
+    "size": 8627
+   },
+   {
+    "path": "system/apps/settings/__init__.py",
+    "sha": "5b4b34195a7bdd5f719682685b10e514b1d63547",
+    "size": 13292
+   },
+   {
+    "path": "system/apps/show/__init__.py",
+    "sha": "839b193757ac8187ea4b8883752af1ed0ba36531",
+    "size": 126
+   },
+   {
+    "path": "system/apps/snake/__init__.py",
+    "sha": "84d2c85d1f152c5e622c55befe8b213cca917427",
+    "size": 13408
+   }
+  ],
+  "badger/home@main:badge/apps": [
+   {
+    "path": "badge/apps/30_minutes_to_alpha_centauri/README.md",
+    "sha": "96bd563583f51d1fd716f5c83ff5e2380cff3e7a",
+    "size": 255
+   },
+   {
+    "path": "badge/apps/30_minutes_to_alpha_centauri/__init__.py",
+    "sha": "c132f8d48450495c2fd19c55b897e5d92c4b19c4",
+    "size": 24738
+   },
+   {
+    "path": "badge/apps/30_minutes_to_alpha_centauri/assets/cargo.png",
+    "sha": "2c6e93c25f1a949fa08ef53e17e114a8eadc32c0",
+    "size": 6935
+   },
+   {
+    "path": "badge/apps/30_minutes_to_alpha_centauri/assets/game_over.png",
+    "sha": "00a24acb15a97943f788513d389197dbfa7e9de6",
+    "size": 37074
+   },
+   {
+    "path": "badge/apps/30_minutes_to_alpha_centauri/assets/hud.png",
+    "sha": "758123b7d7b7d29510f4fb8f9ac61fe9a2427cb7",
+    "size": 7611
+   },
+   {
+    "path": "badge/apps/30_minutes_to_alpha_centauri/assets/hyperion_bg.png",
+    "sha": "b679f9938ff4ab67c460d9b8416ed0caafef2986",
+    "size": 10375
+   },
+   {
+    "path": "badge/apps/30_minutes_to_alpha_centauri/assets/hyperion_obst.png",
+    "sha": "a782a9e95ff3c78e911df2f9358fb9ad16ebf20a",
+    "size": 17383
+   },
+   {
+    "path": "badge/apps/30_minutes_to_alpha_centauri/assets/hyperion_wall.png",
+    "sha": "c7c6966026dd695e8aedf19b9519a07143ca77a2",
+    "size": 9759
+   },
+   {
+    "path": "badge/apps/30_minutes_to_alpha_centauri/assets/intercom.png",
+    "sha": "f8d980d160239622d0f4439db5e8e640e3fd9769",
+    "size": 7174
+   },
+   {
+    "path": "badge/apps/30_minutes_to_alpha_centauri/assets/level_hyperion.png",
+    "sha": "431c643a15b7d45aa0f6fc56b006539e0f0a06d2",
+    "size": 7308
+   },
+   {
+    "path": "badge/apps/30_minutes_to_alpha_centauri/assets/package_load.png",
+    "sha": "3783ff059a4694f5d637d147f6b87ff2ffe531f7",
+    "size": 8010
+   },
+   {
+    "path": "badge/apps/30_minutes_to_alpha_centauri/assets/player.png",
+    "sha": "be3f0004d3007ed896f976dd642972690c0c2720",
+    "size": 4822
+   },
+   {
+    "path": "badge/apps/30_minutes_to_alpha_centauri/assets/title.png",
+    "sha": "6c5bbc78f6ae809741888e606c0689803f3e33ba",
+    "size": 11657
+   },
+   {
+    "path": "badge/apps/30_minutes_to_alpha_centauri/assets/win.png",
+    "sha": "9b847bd717da5dd50b2afbf93054286708802a43",
+    "size": 5699
+   },
+   {
+    "path": "badge/apps/30_minutes_to_alpha_centauri/cutscene.py",
+    "sha": "087b337b2cfeb19c0c839db2887327c3247ee983",
+    "size": 2813
+   },
+   {
+    "path": "badge/apps/30_minutes_to_alpha_centauri/icon.png",
+    "sha": "9e1cf09b5f97253b2ffc0fa9c22e1ab10e4b202f",
+    "size": 1226
+   },
+   {
+    "path": "badge/apps/Copilot/README.md",
+    "sha": "2f136a6f6f0334ab5ff5fc9df7fecadde67d21ed",
+    "size": 8889
+   },
+   {
+    "path": "badge/apps/Copilot/__init__.py",
+    "sha": "e65be5238d60dfb829705181de68e3d33a1e0266",
+    "size": 12346
+   },
+   {
+    "path": "badge/apps/Copilot/assets/LICENSE.txt",
+    "sha": "78dec825fbf90768f1f6e0ca5154ffb4ee36d052",
+    "size": 1067
+   },
+   {
+    "path": "badge/apps/Copilot/assets/attention-00.png",
+    "sha": "222efd2a47743382445cb6b2b596f1255d878ca2",
+    "size": 28751
+   },
+   {
+    "path": "badge/apps/Copilot/assets/attention-01.png",
+    "sha": "a2e4b76f81f387a9492b6cd2a8f18b079821cabe",
+    "size": 26389
+   },
+   {
+    "path": "badge/apps/Copilot/assets/attention-02.png",
+    "sha": "8df50d2b4c7c79c01914c0f5df4f9217916b6784",
+    "size": 25800
+   },
+   {
+    "path": "badge/apps/Copilot/assets/attention-03.png",
+    "sha": "38544ff36ae69cf818f311361f8fcd95ab1130c4",
+    "size": 26127
+   },
+   {
+    "path": "badge/apps/Copilot/assets/attention-04.png",
+    "sha": "65dcb75ae4f40f7465dfc78cde1033b1c86f4f96",
+    "size": 25878
+   },
+   {
+    "path": "badge/apps/Copilot/assets/attention-05.png",
+    "sha": "678bfd1cb1e01f4a40c22008ee06388a8c963a7b",
+    "size": 26004
+   },
+   {
+    "path": "badge/apps/Copilot/assets/attention-06.png",
+    "sha": "13ae8e8af31caf578e956c606cd3ee39dc5ef377",
+    "size": 26039
+   },
+   {
+    "path": "badge/apps/Copilot/assets/attention-07.png",
+    "sha": "6a2e1bbf1f9f00635f41d91b684ab688401b746e",
+    "size": 25428
+   },
+   {
+    "path": "badge/apps/Copilot/assets/attention-08.png",
+    "sha": "3165ee1e6b2d3b8175c1e59c37589a9262e928cb",
+    "size": 25966
+   },
+   {
+    "path": "badge/apps/Copilot/assets/attention-09.png",
+    "sha": "c77bd5bab800539615de6ac3da085d31b12be30d",
+    "size": 26599
+   },
+   {
+    "path": "badge/apps/Copilot/assets/attention-10.png",
+    "sha": "ab2b49691ae0c306df52eaa1dc198b87bedd2455",
+    "size": 26197
+   },
+   {
+    "path": "badge/apps/Copilot/assets/attention-11.png",
+    "sha": "b77188412748a526d6e583b4acbee1683e0d30d5",
+    "size": 26265
+   },
+   {
+    "path": "badge/apps/Copilot/assets/blink-1.png",
+    "sha": "7887a4f71011576e791c099d7f45832e58d117ab",
+    "size": 28717
+   },
+   {
+    "path": "badge/apps/Copilot/assets/blink-2.png",
+    "sha": "111c7aaefbdc50fbe06e945de1c143d79354cba3",
+    "size": 28502
+   },
+   {
+    "path": "badge/apps/Copilot/assets/blink-3.png",
+    "sha": "0e7cc8ca8eb589e69c1bba1802e55d6ce142c12d",
+    "size": 28389
+   },
+   {
+    "path": "badge/apps/Copilot/assets/blink-4.png",
+    "sha": "5cee6564515be45e4db1b0ef4354cc7cfc6a84a4",
+    "size": 28192
+   },
+   {
+    "path": "badge/apps/Copilot/assets/complete-00.png",
+    "sha": "222efd2a47743382445cb6b2b596f1255d878ca2",
+    "size": 28751
+   },
+   {
+    "path": "badge/apps/Copilot/assets/complete-01.png",
+    "sha": "992561cdf4c6168c3bbb779cf5b6f0cf35a82386",
+    "size": 26014
+   },
+   {
+    "path": "badge/apps/Copilot/assets/complete-02.png",
+    "sha": "b2981c10c97a7bfdddfa894b778481e1f03992fd",
+    "size": 25915
+   },
+   {
+    "path": "badge/apps/Copilot/assets/complete-03.png",
+    "sha": "a92ac088cf380c2516d722b6a81e1fc225a00af9",
+    "size": 25938
+   },
+   {
+    "path": "badge/apps/Copilot/assets/complete-04.png",
+    "sha": "199555d3e8e11891a0d42a94c32b30cdb3436ba1",
+    "size": 25853
+   },
+   {
+    "path": "badge/apps/Copilot/assets/complete-05.png",
+    "sha": "0da75db57152bc9f5c3db334c6768c5389aafa7b",
+    "size": 25857
+   },
+   {
+    "path": "badge/apps/Copilot/assets/complete-06.png",
+    "sha": "c4c655dc6b8b1ffad5845a42ec9cc92df083a4d2",
+    "size": 25957
+   },
+   {
+    "path": "badge/apps/Copilot/assets/complete-07.png",
+    "sha": "2e981e9f45579258acc73fd2624cc41a6bfbf7c8",
+    "size": 26090
+   },
+   {
+    "path": "badge/apps/Copilot/assets/complete-08.png",
+    "sha": "8039c2c68b511908b7af8b850a2ae15343933d93",
+    "size": 26258
+   },
+   {
+    "path": "badge/apps/Copilot/assets/complete-09.png",
+    "sha": "63c19d0c730d510a8b8568085a3977200c0e2e15",
+    "size": 26173
+   },
+   {
+    "path": "badge/apps/Copilot/assets/complete-10.png",
+    "sha": "e30ef62023e03c3a52c8c76cd581df084d41c99e",
+    "size": 26356
+   },
+   {
+    "path": "badge/apps/Copilot/assets/complete-11.png",
+    "sha": "03b0dffea9be59bfbef4753e7a2d44c06afaa526",
+    "size": 26318
+   },
+   {
+    "path": "badge/apps/Copilot/assets/down-00.png",
+    "sha": "222efd2a47743382445cb6b2b596f1255d878ca2",
+    "size": 28751
+   },
+   {
+    "path": "badge/apps/Copilot/assets/down-01.png",
+    "sha": "f0a5cc8e40302dea66dde1e7571502cb40a3e028",
+    "size": 30653
+   },
+   {
+    "path": "badge/apps/Copilot/assets/down-02.png",
+    "sha": "c7596a6ec88757012eeb9aebe02e00fd76d9c319",
+    "size": 31598
+   },
+   {
+    "path": "badge/apps/Copilot/assets/down-03.png",
+    "sha": "4049bb7c1c92cb88f83d4c9178a7c9196b14458e",
+    "size": 32808
+   },
+   {
+    "path": "badge/apps/Copilot/assets/down-04.png",
+    "sha": "dd4ed7cf734859dfea00c534e87dcd1f28efc6ce",
+    "size": 32875
+   },
+   {
+    "path": "badge/apps/Copilot/assets/down-05.png",
+    "sha": "25e3224b66194d63c4f92a331f01e31875e4fe3b",
+    "size": 32324
+   },
+   {
+    "path": "badge/apps/Copilot/assets/down-06.png",
+    "sha": "e61ffc1aa6d53a0c709e8590e24a62e72dd048d0",
+    "size": 31702
+   },
+   {
+    "path": "badge/apps/Copilot/assets/down-07.png",
+    "sha": "73d9538acef893eb940665ff802b4b26736f85dd",
+    "size": 30912
+   },
+   {
+    "path": "badge/apps/Copilot/assets/down-08.png",
+    "sha": "05183e9b2c1b9a9ed006ed2a5ed0f813df0ed2d9",
+    "size": 30063
+   },
+   {
+    "path": "badge/apps/Copilot/assets/down-09.png",
+    "sha": "a78b0c58de8b0f2c57ef70552ff844bb7c1efb9d",
+    "size": 28966
+   },
+   {
+    "path": "badge/apps/Copilot/assets/down-10.png",
+    "sha": "167637f85f112436a0ce3cb0d68b99e3219be715",
+    "size": 29285
+   },
+   {
+    "path": "badge/apps/Copilot/assets/down-11.png",
+    "sha": "5dd2a0fdf405e3eec1ca46461aea2273780f4145",
+    "size": 29620
+   },
+   {
+    "path": "badge/apps/Copilot/assets/left-00.png",
+    "sha": "222efd2a47743382445cb6b2b596f1255d878ca2",
+    "size": 28751
+   },
+   {
+    "path": "badge/apps/Copilot/assets/left-01.png",
+    "sha": "e9e50edb5bdf96cd7961cb5352fd3593d96e0517",
+    "size": 28309
+   },
+   {
+    "path": "badge/apps/Copilot/assets/left-02.png",
+    "sha": "9e242940555b667002d037d2123fa3a96a92ef57",
+    "size": 28469
+   },
+   {
+    "path": "badge/apps/Copilot/assets/left-03.png",
+    "sha": "9e7d540752079f0e92c955c58302de6c5a308a8d",
+    "size": 26009
+   },
+   {
+    "path": "badge/apps/Copilot/assets/left-04.png",
+    "sha": "dcf1065694f71301d5ef9db02302bca967e6fddf",
+    "size": 24051
+   },
+   {
+    "path": "badge/apps/Copilot/assets/left-05.png",
+    "sha": "bf9f40efedd2ddcde950f31d547a40e661a390ac",
+    "size": 23456
+   },
+   {
+    "path": "badge/apps/Copilot/assets/left-06.png",
+    "sha": "f743a4d733108fcd76a7f9a00513f6ac11de4e58",
+    "size": 22022
+   },
+   {
+    "path": "badge/apps/Copilot/assets/left-07.png",
+    "sha": "09b055ca9a1c6d83e035b30b56be05c9593a5373",
+    "size": 21388
+   },
+   {
+    "path": "badge/apps/Copilot/assets/left-08.png",
+    "sha": "9a3abb5a976678a30178b3314bd90a9bb8bbb863",
+    "size": 21206
+   },
+   {
+    "path": "badge/apps/Copilot/assets/left-09.png",
+    "sha": "20bff16de8c6bdf12a71bfdfddf040eaacacf4f3",
+    "size": 21600
+   },
+   {
+    "path": "badge/apps/Copilot/assets/left-10.png",
+    "sha": "a7eecff67fd45e81d4c7db7842953cf5ac07af16",
+    "size": 21222
+   },
+   {
+    "path": "badge/apps/Copilot/assets/left-11.png",
+    "sha": "408d9d9710a55eeb3df66235b58026cf2ca9395e",
+    "size": 21761
+   },
+   {
+    "path": "badge/apps/Copilot/assets/neutral.png",
+    "sha": "222efd2a47743382445cb6b2b596f1255d878ca2",
+    "size": 28751
+   },
+   {
+    "path": "badge/apps/Copilot/assets/right-00.png",
+    "sha": "222efd2a47743382445cb6b2b596f1255d878ca2",
+    "size": 28751
+   },
+   {
+    "path": "badge/apps/Copilot/assets/right-01.png",
+    "sha": "6b9da4601a9807022535722f8daf035afbf4a326",
+    "size": 28801
+   },
+   {
+    "path": "badge/apps/Copilot/assets/right-02.png",
+    "sha": "984ed074f9046717132b047e9210486f88ddf75f",
+    "size": 29588
+   },
+   {
+    "path": "badge/apps/Copilot/assets/right-03.png",
+    "sha": "281411506d6b114deab7963bb2446ee9f9721910",
+    "size": 29491
+   },
+   {
+    "path": "badge/apps/Copilot/assets/right-04.png",
+    "sha": "f425a236655a3041b44e2b43f3550664479265ce",
+    "size": 29407
+   },
+   {
+    "path": "badge/apps/Copilot/assets/right-05.png",
+    "sha": "95f97351471c8218b310fdb883a57aa5ec69ea1f",
+    "size": 28846
+   },
+   {
+    "path": "badge/apps/Copilot/assets/right-06.png",
+    "sha": "4f295414d51fb9b5aad162b61d420382ec622010",
+    "size": 27837
+   },
+   {
+    "path": "badge/apps/Copilot/assets/right-07.png",
+    "sha": "1865c36952a9629b2cc8c44eac294a122ce36f2f",
+    "size": 26662
+   },
+   {
+    "path": "badge/apps/Copilot/assets/right-08.png",
+    "sha": "a117cd5d180b33e8529671f9d54a4b574aa2e342",
+    "size": 25644
+   },
+   {
+    "path": "badge/apps/Copilot/assets/right-09.png",
+    "sha": "8b242707cc8ecd4c54f585f1254c0cd06bf97208",
+    "size": 24969
+   },
+   {
+    "path": "badge/apps/Copilot/assets/right-10.png",
+    "sha": "e165fced5a2b32630b2b3a506bffa73e0ba8c6d4",
+    "size": 24177
+   },
+   {
+    "path": "badge/apps/Copilot/assets/right-11.png",
+    "sha": "060854dd89df470ef43908af70df65b2ff03ad88",
+    "size": 24002
+   },
+   {
+    "path": "badge/apps/Copilot/assets/sources.json",
+    "sha": "2219ede6f40fb1946b47db46c0eaa7340b3edd22",
+    "size": 28619
+   },
+   {
+    "path": "badge/apps/Copilot/assets/surprise-00.png",
+    "sha": "222efd2a47743382445cb6b2b596f1255d878ca2",
+    "size": 28751
+   },
+   {
+    "path": "badge/apps/Copilot/assets/surprise-01.png",
+    "sha": "a6dde77e34c6ca4725db4d95c1c43653a4d8a8a6",
+    "size": 27665
+   },
+   {
+    "path": "badge/apps/Copilot/assets/surprise-02.png",
+    "sha": "4bbc5ab1dd4f5634d5f8d86d29e6810ff67a4e2d",
+    "size": 27156
+   },
+   {
+    "path": "badge/apps/Copilot/assets/surprise-03.png",
+    "sha": "039c2c4e8aa87207148c40f7d4ab7fcb2bdcbb36",
+    "size": 29961
+   },
+   {
+    "path": "badge/apps/Copilot/assets/surprise-04.png",
+    "sha": "f9b33c284b26d4adb9f79e17d59f25d1e017e774",
+    "size": 30471
+   },
+   {
+    "path": "badge/apps/Copilot/assets/surprise-05.png",
+    "sha": "f407e41538b2da8f9994627fc64b9f445efce2b1",
+    "size": 31243
+   },
+   {
+    "path": "badge/apps/Copilot/assets/surprise-06.png",
+    "sha": "ace9d9418d75fe1fa44b9b12abfdd0394054872f",
+    "size": 30701
+   },
+   {
+    "path": "badge/apps/Copilot/assets/surprise-07.png",
+    "sha": "140bf1034bc016cab4c6d1c1e4db57a52df3cbc4",
+    "size": 30230
+   },
+   {
+    "path": "badge/apps/Copilot/assets/surprise-08.png",
+    "sha": "88929e924eee3e9a3c99b4ff88c1f79b6a78554f",
+    "size": 30080
+   },
+   {
+    "path": "badge/apps/Copilot/assets/surprise-09.png",
+    "sha": "8525b8480cd227afdae207bb00f7da0c0335fd23",
+    "size": 30112
+   },
+   {
+    "path": "badge/apps/Copilot/assets/surprise-10.png",
+    "sha": "750d6b82ebc78383b822b66861b40f4c224eb69b",
+    "size": 30187
+   },
+   {
+    "path": "badge/apps/Copilot/assets/surprise-11.png",
+    "sha": "222efd2a47743382445cb6b2b596f1255d878ca2",
+    "size": 28751
+   },
+   {
+    "path": "badge/apps/Copilot/assets/up-00.png",
+    "sha": "222efd2a47743382445cb6b2b596f1255d878ca2",
+    "size": 28751
+   },
+   {
+    "path": "badge/apps/Copilot/assets/up-01.png",
+    "sha": "fa50188c932b798a700dd69c45af929e694bdf3b",
+    "size": 27801
+   },
+   {
+    "path": "badge/apps/Copilot/assets/up-02.png",
+    "sha": "cdda76cc85cd54cbc05bc825f42059e2029ea590",
+    "size": 27768
+   },
+   {
+    "path": "badge/apps/Copilot/assets/up-03.png",
+    "sha": "bcb6e09653ceb8a5627ddbc13ac7f11d715351b0",
+    "size": 27159
+   },
+   {
+    "path": "badge/apps/Copilot/assets/up-04.png",
+    "sha": "692afc33b5df45b5ef2e00c8ab560e95681fbdcd",
+    "size": 26457
+   },
+   {
+    "path": "badge/apps/Copilot/assets/up-05.png",
+    "sha": "8bec474df997a62a0f72203b284461b54dcd1879",
+    "size": 26348
+   },
+   {
+    "path": "badge/apps/Copilot/assets/up-06.png",
+    "sha": "f03ba5e23ee849b1957bd637773d6ee31babc295",
+    "size": 24737
+   },
+   {
+    "path": "badge/apps/Copilot/assets/up-07.png",
+    "sha": "be276fd4fee8f0ec1c300a8fcd0728e3b2773fa0",
+    "size": 24056
+   },
+   {
+    "path": "badge/apps/Copilot/assets/up-08.png",
+    "sha": "16e2ef0b1cc2ef6e775dc30686f275920da5204d",
+    "size": 23464
+   },
+   {
+    "path": "badge/apps/Copilot/assets/up-09.png",
+    "sha": "3b69f156ea63c45b5cb3e59452ec8d0bf9d51fe7",
+    "size": 23577
+   },
+   {
+    "path": "badge/apps/Copilot/assets/up-10.png",
+    "sha": "e505070d0ef41b7ca5e6c79a0a5ddbb07762eee6",
+    "size": 23039
+   },
+   {
+    "path": "badge/apps/Copilot/assets/up-11.png",
+    "sha": "f2cd9f722cdbb1aa236d155ad428b994d41676e0",
+    "size": 23475
+   },
+   {
+    "path": "badge/apps/Copilot/assets/working-00.png",
+    "sha": "222efd2a47743382445cb6b2b596f1255d878ca2",
+    "size": 28751
+   },
+   {
+    "path": "badge/apps/Copilot/assets/working-01.png",
+    "sha": "e775f31c4b5fdb1ea895fd37d6ab82de308f359a",
+    "size": 26549
+   },
+   {
+    "path": "badge/apps/Copilot/assets/working-02.png",
+    "sha": "44ecaec7362eccd01184ed1f7eec964e1d91ac07",
+    "size": 26383
+   },
+   {
+    "path": "badge/apps/Copilot/assets/working-03.png",
+    "sha": "c8f93624e3850b37ea0a0b55514bdc1440eae3f9",
+    "size": 26433
+   },
+   {
+    "path": "badge/apps/Copilot/assets/working-04.png",
+    "sha": "31c3d19d01849423181974aa9fea6471c29b4a60",
+    "size": 26541
+   },
+   {
+    "path": "badge/apps/Copilot/assets/working-05.png",
+    "sha": "457818f396b59e1a7ca523e76afeec52ce471cc3",
+    "size": 26840
+   },
+   {
+    "path": "badge/apps/Copilot/assets/working-06.png",
+    "sha": "fdc37577e5b67374f5d2d4a0083ec443650fbdf3",
+    "size": 26791
+   },
+   {
+    "path": "badge/apps/Copilot/assets/working-07.png",
+    "sha": "f41b2874ed2557c63663c229f043f2ef570dc710",
+    "size": 27091
+   },
+   {
+    "path": "badge/apps/Copilot/assets/working-08.png",
+    "sha": "36386e701256a68abca158f443ba579828b99265",
+    "size": 27231
+   },
+   {
+    "path": "badge/apps/Copilot/assets/working-09.png",
+    "sha": "e82e3aa444a568953e09baee471e52e3fb35691c",
+    "size": 27249
+   },
+   {
+    "path": "badge/apps/Copilot/assets/working-10.png",
+    "sha": "f082716555b57b3f9931f8db62cefb013db6ecfa",
+    "size": 27769
+   },
+   {
+    "path": "badge/apps/Copilot/assets/working-11.png",
+    "sha": "ef2491ea27108a149a2778ac57e807d5c2dc09c8",
+    "size": 28115
+   },
+   {
+    "path": "badge/apps/Copilot/copilot_monitor.py",
+    "sha": "4ea026851f28ecac7ef7fcac748484c84d6e2408",
+    "size": 18977
+   },
+   {
+    "path": "badge/apps/Copilot/icon.png",
+    "sha": "e934474c2d237a35105a0d1df9fca4302254bf85",
+    "size": 1216
+   },
+   {
+    "path": "badge/apps/badge/README.md",
+    "sha": "00ad521386d5d2d41a7555d84edaf6c32af0d513",
+    "size": 377
+   },
+   {
+    "path": "badge/apps/badge/__init__.py",
+    "sha": "73fec47b8f1ed82d8c377c0d415829694b2d4850",
+    "size": 11564
+   },
+   {
+    "path": "badge/apps/badge/icon.png",
+    "sha": "0c71cfd8322ed528668280820e73886b8172dd18",
+    "size": 818
+   },
+   {
+    "path": "badge/apps/bee_amazed/README.md",
+    "sha": "6d4af85bdbb329447be1221a0e085a4ccf33f1fb",
+    "size": 207
+   },
+   {
+    "path": "badge/apps/bee_amazed/__init__.py",
+    "sha": "4584f4eccb0f78f857ac002d93a9f450b295ce7d",
+    "size": 12136
+   },
+   {
+    "path": "badge/apps/bee_amazed/assets/background.png",
+    "sha": "58bfd0df1dd98a5213395acafa4fc6643adb3057",
+    "size": 8383
+   },
+   {
+    "path": "badge/apps/bee_amazed/assets/bee-down.png",
+    "sha": "e8d440a9dd27f9fbfc73915b17e847eaff9b51db",
+    "size": 611
+   },
+   {
+    "path": "badge/apps/bee_amazed/assets/bee-left.png",
+    "sha": "8251a9cb06a19f34b1923f17dd6c1d1936a7daf6",
+    "size": 684
+   },
+   {
+    "path": "badge/apps/bee_amazed/assets/bee-right.png",
+    "sha": "7c2e2f4e0b59814530a233f9606a9dd852943f35",
+    "size": 680
+   },
+   {
+    "path": "badge/apps/bee_amazed/assets/bee-up.png",
+    "sha": "1e9b3b6b180780f10c2376210a16ace12c05a6d9",
+    "size": 521
+   },
+   {
+    "path": "badge/apps/bee_amazed/assets/flower.png",
+    "sha": "b02195e6e04e31193859da35f8489dcf1e79ffc8",
+    "size": 559
+   },
+   {
+    "path": "badge/apps/bee_amazed/assets/hedge.png",
+    "sha": "99bffa3cc58e307c0e3cc7f3cd87dd58976b1cd4",
+    "size": 8778
+   },
+   {
+    "path": "badge/apps/bee_amazed/icon.png",
+    "sha": "71f0c2aad634f87665d00b090feea00197a0f0d7",
+    "size": 498
+   },
+   {
+    "path": "badge/apps/brattal/README.md",
+    "sha": "5362bb28bbfe1e02c6efd369f192440b2a7036b7",
+    "size": 147
+   },
+   {
+    "path": "badge/apps/brattal/__init__.py",
+    "sha": "b6ae079373e7a3bb1128bbe76d34b70fa6e1eb20",
+    "size": 23803
+   },
+   {
+    "path": "badge/apps/camera/README.md",
+    "sha": "f3a1effe5e9a369a7e56e908b018a0a9ce89d95e",
+    "size": 9812
+   },
+   {
+    "path": "badge/apps/camera/__init__.py",
+    "sha": "8d41d135aadbc2e447b4f768cfa0a853a2a0c816",
+    "size": 20171
+   },
+   {
+    "path": "badge/apps/camera/assets/LICENSE-MDI.txt",
+    "sha": "d645695673349e3947e8e5ae42332d0ac3164cd7",
+    "size": 11358
+   },
+   {
+    "path": "badge/apps/camera/assets/NOTICE.txt",
+    "sha": "583b849c0f7bb3ad6dca41321aa98c192cc0ea32",
+    "size": 538
+   },
+   {
+    "path": "badge/apps/camera/assets/camera-wireless.png",
+    "sha": "91ba7af0bde85806c2f3303e1df9137d2f68edec",
+    "size": 1781
+   },
+   {
+    "path": "badge/apps/camera/assets/camera-wireless.svg",
+    "sha": "eb0d0f6a652f303210106d61ccfddee8ce54f7ca",
+    "size": 478
+   },
+   {
+    "path": "badge/apps/camera/assets/camera.svg",
+    "sha": "2c21eee83519fe86ef53616c5635c5cc3c6088f7",
+    "size": 317
+   },
+   {
+    "path": "badge/apps/camera/assets/mona.png",
+    "sha": "676fec82b5d7b11ac1875ac593423ed27724daef",
+    "size": 9045
+   },
+   {
+    "path": "badge/apps/camera/camera_ble.py",
+    "sha": "fe73a2c1a55c3cf49411e7a09024deee111b5bef",
+    "size": 15006
+   },
+   {
+    "path": "badge/apps/camera/camera_core.py",
+    "sha": "782503269a58fad4332fa55d595aed1089d2bfd8",
+    "size": 10528
+   },
+   {
+    "path": "badge/apps/camera/camera_launcher_icon.py",
+    "sha": "1fbe2f1c7ef251c2c69fb885362a5a05d0d97e7b",
+    "size": 941
+   },
+   {
+    "path": "badge/apps/camera/camera_pairing.py",
+    "sha": "83452974a4e11f0c3650073fc9362de9dcde9d14",
+    "size": 4889
+   },
+   {
+    "path": "badge/apps/camera/icon.png",
+    "sha": "7cebea8d84bc3e73c20cbe006e0067f28d7f0338",
+    "size": 324
+   },
+   {
+    "path": "badge/apps/camera/screenshot.png",
+    "sha": "4eb448626fde7bd1e95401976f46659c039b04a9",
+    "size": 4488657
+   },
+   {
+    "path": "badge/apps/clock/README.md",
+    "sha": "e699d790c366a52007e6d4d0dd11162a6c798636",
+    "size": 494
+   },
+   {
+    "path": "badge/apps/clock/__init__.py",
+    "sha": "e9b1827c0fba4d094b8e6dde812042c5b8622e91",
+    "size": 26768
+   },
+   {
+    "path": "badge/apps/clock/assets/digital_dots.png",
+    "sha": "705d593c4fb38112ad09b9b002ea23f7c1345d01",
+    "size": 1773
+   },
+   {
+    "path": "badge/apps/clock/assets/digital_dots_invert.png",
+    "sha": "58b9994f2a57099141e278d70c48f3de7ab0fb3c",
+    "size": 5526
+   },
+   {
+    "path": "badge/apps/clock/assets/digital_num.png",
+    "sha": "c43e174b9654b20244484208798875413ffd9f57",
+    "size": 7792
+   },
+   {
+    "path": "badge/apps/clock/assets/digital_num_invert.png",
+    "sha": "48e3608836ad1f08410bb2598508fad0aca8fd3c",
+    "size": 1462
+   },
+   {
+    "path": "badge/apps/clock/assets/icons.png",
+    "sha": "29fcb2ee21b57881058f23f74aa8e8b335a4bb19",
+    "size": 1474
+   },
+   {
+    "path": "badge/apps/clock/assets/nixie_bg.png",
+    "sha": "bbed29c84002c5e114b85b41ec6ee7f511a879e9",
+    "size": 13466
+   },
+   {
+    "path": "badge/apps/clock/assets/nixie_fg.png",
+    "sha": "60c101755c217ee1abf6cbc4771acf24f43815d6",
+    "size": 1777
+   },
+   {
+    "path": "badge/apps/clock/assets/nixie_num.png",
+    "sha": "2b20c209ceb5c96d6bcc049ce39060fe328cb2b8",
+    "size": 40282
+   },
+   {
+    "path": "badge/apps/clock/daylightsaving.py",
+    "sha": "4318ae1ae4788cae1597493bd1bdedbad6c76ebb",
+    "size": 4569
+   },
+   {
+    "path": "badge/apps/clock/icon.png",
+    "sha": "e88190ece1d315acfaa0b79cb73c919f377f2185",
+    "size": 504
+   },
+   {
+    "path": "badge/apps/clock/usermessage.py",
+    "sha": "87df01f4f85f92dc173c8c897360f3e67993a2a4",
+    "size": 2354
+   },
+   {
+    "path": "badge/apps/commits/README.md",
+    "sha": "c5cd56625a39d2b5f52b56ae7eff8134cbfd7c38",
+    "size": 191
+   },
+   {
+    "path": "badge/apps/commits/__init__.py",
+    "sha": "8dbc4eb08ce9074225d80203260edd0a44e1917c",
+    "size": 4865
+   },
+   {
+    "path": "badge/apps/commits/icon.png",
+    "sha": "0abb69147eead26d83398c764a414bff521f9b24",
+    "size": 152
+   },
+   {
+    "path": "badge/apps/contacts/README.md",
+    "sha": "cd2c1a530584867747ed9e1ba3651f5dd520a188",
+    "size": 210
+   },
+   {
+    "path": "badge/apps/contacts/__init__.py",
+    "sha": "bff2e9dc82a0bd1fc8b67a70c404e8b41ac425ea",
+    "size": 18910
+   },
+   {
+    "path": "badge/apps/demos/README.md",
+    "sha": "caa272cd76bb66d472804433056c1c8a74438922",
+    "size": 232
+   },
+   {
+    "path": "badge/apps/demos/__init__.py",
+    "sha": "d80007c2f48d79da4cf30652bc79e26da951d6dc",
+    "size": 1844
+   },
+   {
+    "path": "badge/apps/demos/demos/__init__.py",
+    "sha": "a5fd95a6c91c6f7abb9fddd4a86e53b53a704624",
+    "size": 215
+   },
+   {
+    "path": "badge/apps/demos/demos/blur.py",
+    "sha": "40db9365a6b9fb77383cc3d0c75f6c90e8c7efe2",
+    "size": 427
+   },
+   {
+    "path": "badge/apps/demos/demos/blur_brush.py",
+    "sha": "a3a2dbf9727e178c43c4a8b93cab760692aaa979",
+    "size": 1005
+   },
+   {
+    "path": "badge/apps/demos/demos/circles.py",
+    "sha": "8ed2fe853377e8626637044f63f65b0aa2b43060",
+    "size": 314
+   },
+   {
+    "path": "badge/apps/demos/demos/dither.py",
+    "sha": "d359bef20dd5ceb1e184c1524d4ee211fd913ae8",
+    "size": 377
+   },
+   {
+    "path": "badge/apps/demos/demos/erase_brush.py",
+    "sha": "857142ae5f88d1bd319ba3074b851f1628e12590",
+    "size": 1597
+   },
+   {
+    "path": "badge/apps/demos/demos/fill_rules.py",
+    "sha": "5f531b9499a4f9bd3cc954f8a620fbe5bf1911e1",
+    "size": 1683
+   },
+   {
+    "path": "badge/apps/demos/demos/gradient.py",
+    "sha": "9784fc10cdfa3d07bb8195c8bb7a79f95c289a86",
+    "size": 1959
+   },
+   {
+    "path": "badge/apps/demos/demos/image_brush.py",
+    "sha": "187254c3355857f3773dcb270bfae03eb481f1ba",
+    "size": 293
+   },
+   {
+    "path": "badge/apps/demos/demos/intersect.py",
+    "sha": "391a4cc24a5d769c003dccbc7b455e1df9b94ba6",
+    "size": 689
+   },
+   {
+    "path": "badge/apps/demos/demos/joins_caps.py",
+    "sha": "8cb47b50a9b72968359ba00aa50ab5885aa93727",
+    "size": 1724
+   },
+   {
+    "path": "badge/apps/demos/demos/lighten_darken.py",
+    "sha": "a1c4ab0d51dcfacace2ae4a500ac9b175e12c77e",
+    "size": 1016
+   },
+   {
+    "path": "badge/apps/demos/demos/line_clip.py",
+    "sha": "98f8cfb428a3505ba1bd6f296c5324ec67a5c480",
+    "size": 992
+   },
+   {
+    "path": "badge/apps/demos/demos/lines.py",
+    "sha": "698a8b1fa18c4b45d7b606ef62d7db33953e61b2",
+    "size": 358
+   },
+   {
+    "path": "badge/apps/demos/demos/pattern.py",
+    "sha": "7417840921ff1f98e00feddae0374e22103f8738",
+    "size": 860
+   },
+   {
+    "path": "badge/apps/demos/demos/pixelate.py",
+    "sha": "62ab7ade2448fc7398d4750af24bc368cc216ebb",
+    "size": 964
+   },
+   {
+    "path": "badge/apps/demos/demos/raycast.py",
+    "sha": "15d5d653b772987c5982935564664d240f3cf337",
+    "size": 4364
+   },
+   {
+    "path": "badge/apps/demos/demos/shape.py",
+    "sha": "464b084653a16cf1acbd12f743606060450fd2a9",
+    "size": 432
+   },
+   {
+    "path": "badge/apps/demos/demos/sprites.py",
+    "sha": "51725716c925f974d0280c6e7b9868e3fc74f632",
+    "size": 480
+   },
+   {
+    "path": "badge/apps/demos/demos/stroke.py",
+    "sha": "38d068107ca8248653876e7f339a7c8462249b6d",
+    "size": 1058
+   },
+   {
+    "path": "badge/apps/demos/demos/text.py",
+    "sha": "55f98a915115c8a7053c433ed623a7d72fcd9530",
+    "size": 1434
+   },
+   {
+    "path": "badge/apps/demos/demos/text_align.py",
+    "sha": "d64c92f95dd833a4052170b2f9bfb1d0496945fd",
+    "size": 1779
+   },
+   {
+    "path": "badge/apps/demos/demos/transform_sprite.py",
+    "sha": "12d5e07219567478ca8ee68b839e72ca093c1e11",
+    "size": 495
+   },
+   {
+    "path": "badge/apps/demos/demos/triangles.py",
+    "sha": "8255c7707b08c5f8e6650e1cdccfe067ed56ccfb",
+    "size": 464
+   },
+   {
+    "path": "badge/apps/demos/demos/vector_shapes.py",
+    "sha": "db04de987fb55358800ec952763c40941de160e1",
+    "size": 1395
+   },
+   {
+    "path": "badge/apps/demos/demos/vector_text.py",
+    "sha": "45ad86bc4a2a25b9a6cf014fc90d503ca1f6ff06",
+    "size": 1826
+   },
+   {
+    "path": "badge/apps/demos/icon.png",
+    "sha": "c6291862930d91382593d9672998b67a83e20d55",
+    "size": 313
+   },
+   {
+    "path": "badge/apps/extend_a_squirrel/README.md",
+    "sha": "b23d10772b03401d272945a952cfce5ef6782ec3",
+    "size": 270
+   },
+   {
+    "path": "badge/apps/extend_a_squirrel/__init__.py",
+    "sha": "39b5798f51f8a05d8285db32efabd562d2fd9f38",
+    "size": 5966
+   },
+   {
+    "path": "badge/apps/extend_a_squirrel/assets/acorn10.png",
+    "sha": "591085b36fc1a759453b6240b2b9c56e68c14872",
+    "size": 185
+   },
+   {
+    "path": "badge/apps/extend_a_squirrel/assets/acorn15.png",
+    "sha": "850808b02638f64e79deb6b55ec023589580003c",
+    "size": 277
+   },
+   {
+    "path": "badge/apps/extend_a_squirrel/assets/acorn_multi.png",
+    "sha": "352a44c42969be1016a48c4504ef9e017234457c",
+    "size": 241
+   },
+   {
+    "path": "badge/apps/extend_a_squirrel/assets/bg.png",
+    "sha": "a960568647484eb03ea7320648a815354a59fe02",
+    "size": 16498
+   },
+   {
+    "path": "badge/apps/extend_a_squirrel/assets/gameover.png",
+    "sha": "bdd6caaba629ee0f503a148bde405d66e78eebec",
+    "size": 4852
+   },
+   {
+    "path": "badge/apps/extend_a_squirrel/assets/sqirl.png",
+    "sha": "67ae474430e5adf6eca58cf2413f8049291cc5dc",
+    "size": 1020
+   },
+   {
+    "path": "badge/apps/extend_a_squirrel/assets/title.png",
+    "sha": "096ec7bc2456d4e524fb1fc896bd5930a9ea68f3",
+    "size": 11861
+   },
+   {
+    "path": "badge/apps/extend_a_squirrel/draw_tufty.py",
+    "sha": "04da0383eb31419ce1d67720a1ea5fe437bd9685",
+    "size": 8982
+   },
+   {
+    "path": "badge/apps/extend_a_squirrel/icon.png",
+    "sha": "75bc7514db0e69d2b8bc4c78b9919ce7adf881fb",
+    "size": 1309
+   },
+   {
+    "path": "badge/apps/flappy_mona/README.md",
+    "sha": "0ace0f2d9a4dd35fb688e2cf04057df53292f553",
+    "size": 204
+   },
+   {
+    "path": "badge/apps/flappy_mona/__init__.py",
+    "sha": "49accc72cb5fb6e7178ab314e711f6e3d68591ba",
+    "size": 3608
+   },
+   {
+    "path": "badge/apps/flappy_mona/assets/background.png",
+    "sha": "0d2b1ac78508a534ed779f83b2dd651b7550cc88",
+    "size": 1486
+   },
+   {
+    "path": "badge/apps/flappy_mona/assets/cloud.png",
+    "sha": "be37581db47225383403f1e4abd54dc9e255465b",
+    "size": 1647
+   },
+   {
+    "path": "badge/apps/flappy_mona/assets/grass.png",
+    "sha": "5a4df1305f304ada129d6a6b9951cb2898c0129d",
+    "size": 1532
+   },
+   {
+    "path": "badge/apps/flappy_mona/assets/mona.png",
+    "sha": "8a927590c023290935bd23cdf6a4eb4b55892983",
+    "size": 2612
+   },
+   {
+    "path": "badge/apps/flappy_mona/assets/obstacles.png",
+    "sha": "d86ff151a8a4f3481eeb6af215e7dae5755da298",
+    "size": 702
+   },
+   {
+    "path": "badge/apps/flappy_mona/icon.png",
+    "sha": "a680f3ee098714928605ad61d3ff854ddb264892",
+    "size": 725
+   },
+   {
+    "path": "badge/apps/flappy_mona/mona.py",
+    "sha": "f062b404732d6f2918914840ed6ea9f7b0258ea4",
+    "size": 2521
+   },
+   {
+    "path": "badge/apps/flappy_mona/obstacle.py",
+    "sha": "038d1495ec295ecced986838bd39509c5b96f4b9",
+    "size": 1559
+   },
+   {
+    "path": "badge/apps/gallery/README.md",
+    "sha": "e545bf7f3ace3822d6bc43561f64dfcf40a9a818",
+    "size": 257
+   },
+   {
+    "path": "badge/apps/gallery/__init__.py",
+    "sha": "bf89c0bc16c054f5fcf0aa6b73536679b3fd9d91",
+    "size": 4556
+   },
+   {
+    "path": "badge/apps/gallery/icon.png",
+    "sha": "f153ed0d6fc6c685e5e1560be15e63bfd1a1e5f4",
+    "size": 780
+   },
+   {
+    "path": "badge/apps/gallery/images/duck.png",
+    "sha": "c4a0409a45b1fe1c25a517d57116d6814efd7478",
+    "size": 97767
+   },
+   {
+    "path": "badge/apps/ghost_signal/README.md",
+    "sha": "77535f6b0276e6a41af8d13553aba70605440fae",
+    "size": 220
+   },
+   {
+    "path": "badge/apps/ghost_signal/__init__.py",
+    "sha": "ccd033b972b46189c1d3fdd48b14b6d4d23e5c53",
+    "size": 9693
+   },
+   {
+    "path": "badge/apps/hydrate/README.md",
+    "sha": "cf35adc54fcd287313904a461d26d49bb5de5c6f",
+    "size": 227
+   },
+   {
+    "path": "badge/apps/hydrate/__init__.py",
+    "sha": "93928a4efe12ccc27b939115680d3c3c0c41d967",
+    "size": 4842
+   },
+   {
+    "path": "badge/apps/hydrate/icon.png",
+    "sha": "c4871dd3186cfa9750c6235bd2214c5ad871f153",
+    "size": 281
+   },
+   {
+    "path": "badge/apps/input_test/README.md",
+    "sha": "887f34a8907758ef3a68181e388f0d6595d8e423",
+    "size": 281
+   },
+   {
+    "path": "badge/apps/input_test/__init__.py",
+    "sha": "97a76291ef45ff9849cb795626390090d9c40685",
+    "size": 4810
+   },
+   {
+    "path": "badge/apps/input_test/icon.png",
+    "sha": "788dc69c611f4a6bee24c2ce784c8f23ad474dff",
+    "size": 111
+   },
+   {
+    "path": "badge/apps/iss/README.md",
+    "sha": "bad0d5bd8d20c037a6537289eb4420496831aa47",
+    "size": 183
+   },
+   {
+    "path": "badge/apps/iss/__init__.py",
+    "sha": "79c7d999d926f14db18e5b9f4866f4550d3b53b6",
+    "size": 23342
+   },
+   {
+    "path": "badge/apps/iss/world.geo.json",
+    "sha": "2dca606a0697494c89313dad473432e32f08b44f",
+    "size": 215029
+   },
+   {
+    "path": "badge/apps/life/README.md",
+    "sha": "5a7484162a22199d429a1f10fb3bc0f3b244bc68",
+    "size": 212
+   },
+   {
+    "path": "badge/apps/life/__init__.py",
+    "sha": "6e832adbc6df6820915f179f14a34fff8b71a92d",
+    "size": 7310
+   },
+   {
+    "path": "badge/apps/life/icon.png",
+    "sha": "389e5160578110d9dd8062969766e658e56cf99e",
+    "size": 1001
+   },
+   {
+    "path": "badge/apps/mass_storage/README.md",
+    "sha": "013b32bd9ece89abca194df14698516d900931b4",
+    "size": 300
+   },
+   {
+    "path": "badge/apps/mass_storage/__init__.py",
+    "sha": "c1d59810e397b00014efb7c9de7a72df0b19038c",
+    "size": 915
+   },
+   {
+    "path": "badge/apps/mass_storage/icon.png",
+    "sha": "6caba6c12589fdc5e6b4abf748a5af1be2d30f5d",
+    "size": 300
+   },
+   {
+    "path": "badge/apps/menu/README.md",
+    "sha": "b28f3b777968be8f0eff0f7265eb04d16b13b3a8",
+    "size": 310
+   },
+   {
+    "path": "badge/apps/menu/__init__.py",
+    "sha": "4858ce77a2f88d1725ba2f94ce10863343a48607",
+    "size": 5202
+   },
+   {
+    "path": "badge/apps/menu/achievements.py",
+    "sha": "677e9860604321cb3aeb82026aaeda50694384e7",
+    "size": 22588
+   },
+   {
+    "path": "badge/apps/menu/anim/badge.bin",
+    "sha": "c63b9a24ba8a02729d14c1d4e91ca7653bcd6d24",
+    "size": 25684
+   },
+   {
+    "path": "badge/apps/menu/anim/brattal.bin",
+    "sha": "e6631ab83e3a5f8c22923422ae14b205a5a1a0b6",
+    "size": 12247
+   },
+   {
+    "path": "badge/apps/menu/anim/contacts.bin",
+    "sha": "f0f42c489530a6045cb7a9f6cc1dfa1ecec8e51c",
+    "size": 30864
+   },
+   {
+    "path": "badge/apps/menu/anim/default.bin",
+    "sha": "fb89191f0f75ea395e4f23430903077c6402953a",
+    "size": 55234
+   },
+   {
+    "path": "badge/apps/menu/anim/flappy_mona.bin",
+    "sha": "82d97a1174818f9e06cacb9cc794d46e501326d7",
+    "size": 29711
+   },
+   {
+    "path": "badge/apps/menu/anim/iss.bin",
+    "sha": "a11ccea4683be48e34fc03946fe19314f242110d",
+    "size": 36682
+   },
+   {
+    "path": "badge/apps/menu/anim/life.bin",
+    "sha": "d4dbaafb787725db2f1b8caf2da9e7bb7f6fe5a5",
+    "size": 19004
+   },
+   {
+    "path": "badge/apps/menu/anim/mass_storage.bin",
+    "sha": "6b17af9c18f0602684091fd5480e4de8fcf6e3ad",
+    "size": 19395
+   },
+   {
+    "path": "badge/apps/menu/anim/merge_conflict.bin",
+    "sha": "bfca10218091a2c57e4fa781bcc0058de519d44b",
+    "size": 6078
+   },
+   {
+    "path": "badge/apps/menu/anim/mona_paint.bin",
+    "sha": "9e55f97272f5acbd6871823d8dcded8595ea70a5",
+    "size": 52886
+   },
+   {
+    "path": "badge/apps/menu/anim/mona_pet.bin",
+    "sha": "93e7c5236cfadb870483d44c4a78846a50743ddc",
+    "size": 38688
+   },
+   {
+    "path": "badge/apps/menu/anim/pong.bin",
+    "sha": "972635dc5536a9e91c66be58533215f2757ea9fe",
+    "size": 38544
+   },
+   {
+    "path": "badge/apps/menu/anim/rogue.bin",
+    "sha": "df2cdb71caf8bb72f4235c2b1f642dd3bb31f6ce",
+    "size": 47349
+   },
+   {
+    "path": "badge/apps/menu/anim/settings.bin",
+    "sha": "aa89449afcb2358bb31f855ea19dc3ad49fffb87",
+    "size": 33268
+   },
+   {
+    "path": "badge/apps/menu/anim/show.bin",
+    "sha": "6a76b00ef30857ebb2792952498c9d952ca14251",
+    "size": 8944
+   },
+   {
+    "path": "badge/apps/menu/anim/snake.bin",
+    "sha": "716cd8b496a669ebcb487e9bf797cd590e4a3d2d",
+    "size": 18616
+   },
+   {
+    "path": "badge/apps/menu/app.py",
+    "sha": "65c86c304b205c95648224b731e38272a54b958c",
+    "size": 18308
+   },
+   {
+    "path": "badge/apps/menu/awards/ascii-donut-small.png",
+    "sha": "0bcc40ee3f5cb404d07ca3660693fd4a069a83fb",
+    "size": 2992
+   },
+   {
+    "path": "badge/apps/menu/awards/ascii-donut.png",
+    "sha": "7565a25c2082f3f4620f19cd66cfc5f8db5d676b",
+    "size": 10405
+   },
+   {
+    "path": "badge/apps/menu/awards/ascii-mona-small.png",
+    "sha": "39e5019ef8eb705f3d54d57056e34b373efe6952",
+    "size": 6015
+   },
+   {
+    "path": "badge/apps/menu/awards/ascii-mona.png",
+    "sha": "d9d45227e8c6451726fd8e5472f74456824849d0",
+    "size": 19385
+   },
+   {
+    "path": "badge/apps/menu/awards/cab-small.png",
+    "sha": "dfc79aaf85cc107e378f2056d65c9260c6768d58",
+    "size": 5207
+   },
+   {
+    "path": "badge/apps/menu/awards/cab.png",
+    "sha": "e57a5c86fc8c099a9a1b2610af1e8c6003bdbebd",
+    "size": 11440
+   },
+   {
+    "path": "badge/apps/menu/awards/cabana-small.png",
+    "sha": "d984abf32bbe682ca0d91ce036ddd3b3d91f76ea",
+    "size": 708
+   },
+   {
+    "path": "badge/apps/menu/awards/cabana.png",
+    "sha": "a0b86895bcec6ca95b8604baabf00b169e72acd6",
+    "size": 1218
+   },
+   {
+    "path": "badge/apps/menu/awards/compass-needle.png",
+    "sha": "f3a9efe44458f50024d433d0fdeea868a50a3335",
+    "size": 2765
+   },
+   {
+    "path": "badge/apps/menu/awards/compass-shadow.png",
+    "sha": "86bb026672064db6140b1c6167625646cca18a27",
+    "size": 608
+   },
+   {
+    "path": "badge/apps/menu/awards/compass.png",
+    "sha": "346d77c94151d2d014327ee221b8f608fd3933f3",
+    "size": 13255
+   },
+   {
+    "path": "badge/apps/menu/awards/diner-small.png",
+    "sha": "7584ba2c8c116869f2e0cfc9709746b29e4fd505",
+    "size": 6311
+   },
+   {
+    "path": "badge/apps/menu/awards/diner.png",
+    "sha": "b5f1c667097a8b9e9cbe139ad67022162d259b49",
+    "size": 17949
+   },
+   {
+    "path": "badge/apps/menu/awards/frying-pan-small.png",
+    "sha": "43b996ac86e9ddf1083ffb02e477b64b087faae4",
+    "size": 6806
+   },
+   {
+    "path": "badge/apps/menu/awards/frying-pan.png",
+    "sha": "fec68f9107b8e6d90207e3db47b203775126ab6b",
+    "size": 16727
+   },
+   {
+    "path": "badge/apps/menu/awards/keycap-small.png",
+    "sha": "31f4c30cdfbddd7c32aa91ad02fd21c1f6cae5ce",
+    "size": 7292
+   },
+   {
+    "path": "badge/apps/menu/awards/keycap.png",
+    "sha": "0cb5bcfa8add9f8f77a1345d9231e04d7200787b",
+    "size": 18202
+   },
+   {
+    "path": "badge/apps/menu/awards/up-arrow-small.png",
+    "sha": "25deb440c380eb6b6df11fcb48d05468bc51bdf1",
+    "size": 1462
+   },
+   {
+    "path": "badge/apps/menu/awards/up-arrow.png",
+    "sha": "3a199f98e4c82345ada03b65dfa0b29cda79bb4c",
+    "size": 2343
+   },
+   {
+    "path": "badge/apps/menu/awards/vinyl-small.png",
+    "sha": "971442c4a05d18cff28322dbb17be4b4f77d6808",
+    "size": 6208
+   },
+   {
+    "path": "badge/apps/menu/awards/vinyl.png",
+    "sha": "5714ce460887743e1123bb50a17d60a0e6864c15",
+    "size": 18167
+   },
+   {
+    "path": "badge/apps/menu/celebration.py",
+    "sha": "1d9c97bfdc1ca6eaa654f350f168d7edb782ffb4",
+    "size": 6770
+   },
+   {
+    "path": "badge/apps/menu/gallery.py",
+    "sha": "b3f7e96faaf22d4e3ebcfb59046fbccebcc16f8b",
+    "size": 3837
+   },
+   {
+    "path": "badge/apps/menu/icons.mpy",
+    "sha": "8b41d1bf569384f31352140e4d11fcb9789fa5e0",
+    "size": 17943
+   },
+   {
+    "path": "badge/apps/menu/mona.mpy",
+    "sha": "3d848d230bdd40e61c51af512f043cc0c2acf74f",
+    "size": 1568
+   },
+   {
+    "path": "badge/apps/menu/mona3d.mpy",
+    "sha": "ef3367ccea159ed693d17a4a4f0deaabf1b0bcb7",
+    "size": 3600
+   },
+   {
+    "path": "badge/apps/menu/mona_menu.p3d",
+    "sha": "c47c6a6f781b78fad6ff369a5bd5de19f94c5ac6",
+    "size": 24308
+   },
+   {
+    "path": "badge/apps/menu/opening.mpy",
+    "sha": "0f977222ac8c9ddde43250113e262bb310a66386",
+    "size": 1135
+   },
+   {
+    "path": "badge/apps/menu/photos/ducky-profile.png",
+    "sha": "831cb1bfe30667e1bd95577a20cf9465bf7e8f3a",
+    "size": 24228
+   },
+   {
+    "path": "badge/apps/menu/photos/ducky-quilt.png",
+    "sha": "ee6ea52ef3cb6812589a4e47c0f635da53557284",
+    "size": 23706
+   },
+   {
+    "path": "badge/apps/menu/photos/mona-centered.png",
+    "sha": "7df498106312bfa1995f2192122d4dc4235025e7",
+    "size": 27600
+   },
+   {
+    "path": "badge/apps/menu/photos/mona-ducky-blue.png",
+    "sha": "10191fd7a973c72ce37d999f410e34b7986d7ed0",
+    "size": 33810
+   },
+   {
+    "path": "badge/apps/menu/photos/mona-quilt.png",
+    "sha": "08a6a197e22e04473510834a32a3db7970b09b61",
+    "size": 18523
+   },
+   {
+    "path": "badge/apps/menu/photos/tiles/ducky-profile.png",
+    "sha": "b569df776152b36fc2d70453c4d1a8672c7799cb",
+    "size": 7975
+   },
+   {
+    "path": "badge/apps/menu/photos/tiles/ducky-quilt.png",
+    "sha": "435834e8ad5d481da91faf1ec7c08328c304494d",
+    "size": 13456
+   },
+   {
+    "path": "badge/apps/menu/photos/tiles/mona-centered.png",
+    "sha": "dc7e444010c34ce0a9ead7ced10c66306bb412a7",
+    "size": 19976
+   },
+   {
+    "path": "badge/apps/menu/photos/tiles/mona-ducky-blue.png",
+    "sha": "a7ce0798f95e1f913feb1af156e4f3840ce2f5d2",
+    "size": 14276
+   },
+   {
+    "path": "badge/apps/menu/photos/tiles/mona-quilt.png",
+    "sha": "eb98a2455473624ac701eea2c43195406c27644a",
+    "size": 8944
+   },
+   {
+    "path": "badge/apps/menu/silhouettes.py",
+    "sha": "ddbff5eef1560d80e0c47448af542371f739be6b",
+    "size": 3281
+   },
+   {
+    "path": "badge/apps/menu/src/icons.py",
+    "sha": "b8956eb898d41bd946a356cad304c675742898c1",
+    "size": 18575
+   },
+   {
+    "path": "badge/apps/menu/src/mona.py",
+    "sha": "6bf33407c757c29bb941c7fe9946f70ad510d9ff",
+    "size": 2952
+   },
+   {
+    "path": "badge/apps/menu/src/mona3d.py",
+    "sha": "d8b188a37d5bf2caa71acacdce25086709ed879c",
+    "size": 10232
+   },
+   {
+    "path": "badge/apps/menu/src/opening.py",
+    "sha": "119d03f6218f6d8824f6ba6eb671c9232fa81582",
+    "size": 1898
+   },
+   {
+    "path": "badge/apps/menu/src/ui.py",
+    "sha": "4f439d6a19faf806cfca73203fc6d91709ff6cbf",
+    "size": 3622
+   },
+   {
+    "path": "badge/apps/menu/ui.mpy",
+    "sha": "e02f56c5e146013da6ce4694462353a5d54febdd",
+    "size": 2012
+   },
+   {
+    "path": "badge/apps/merge_conflict/README.md",
+    "sha": "49918ff11b019d99327a67bf3b8bd2868f6088d1",
+    "size": 249
+   },
+   {
+    "path": "badge/apps/merge_conflict/__init__.py",
+    "sha": "f98e43b35f8a88a1610c5ac7968ac4cf020ab520",
+    "size": 31124
+   },
+   {
+    "path": "badge/apps/merge_conflict/games.py",
+    "sha": "6068aef2c95cf142c2f936fda6ed786b072644b4",
+    "size": 71059
+   },
+   {
+    "path": "badge/apps/merge_conflict/mona-code.png",
+    "sha": "dfaca4131b2c5b9d5eb5ed90b8d22453a434de33",
+    "size": 869
+   },
+   {
+    "path": "badge/apps/merge_conflict/mona-dance.png",
+    "sha": "7c701daa542804567fd6aca1d3e0e08ee9818fd7",
+    "size": 716
+   },
+   {
+    "path": "badge/apps/merge_conflict/mona-dead.png",
+    "sha": "dc2d29865160c11be96a8909cd63762b7c5e6ec9",
+    "size": 685
+   },
+   {
+    "path": "badge/apps/merge_conflict/mona-default.png",
+    "sha": "8688d9d2488a255f869fdf43a7aee039e4bf38ad",
+    "size": 886
+   },
+   {
+    "path": "badge/apps/merge_conflict/mona-eating.png",
+    "sha": "0d1f6edb972a32e5f89c482fe938daa9153ac49b",
+    "size": 922
+   },
+   {
+    "path": "badge/apps/merge_conflict/mona-heart.png",
+    "sha": "8c3a6f2885c2daf4f926ab9bf772a32324897b6a",
+    "size": 1123
+   },
+   {
+    "path": "badge/apps/merge_conflict/mona-notify.png",
+    "sha": "7d8c88d1b1927a1368378a35ae540533ea1ae353",
+    "size": 949
+   },
+   {
+    "path": "badge/apps/merge_conflict/replay.py",
+    "sha": "f24d19e4c1bec92e31844645af4fd1d13f67115d",
+    "size": 17928
+   },
+   {
+    "path": "badge/apps/merge_conflict/ui.py",
+    "sha": "dbb63be3b6f02846c0a404b7d807d7a5d98ca315",
+    "size": 15446
+   },
+   {
+    "path": "badge/apps/mona_paint/README.md",
+    "sha": "d20ea6b9fe3d4099f5f6ba739bc053e0c4934550",
+    "size": 177
+   },
+   {
+    "path": "badge/apps/mona_paint/__init__.py",
+    "sha": "35e82222995fde9d76bb5261d82a7fdb2d994498",
+    "size": 17448
+   },
+   {
+    "path": "badge/apps/mona_paint/ui.py",
+    "sha": "88d0f4659507556f6c8cc8210a06b8652b5c0f86",
+    "size": 10843
+   },
+   {
+    "path": "badge/apps/mona_pet/README.md",
+    "sha": "0e79071a078b213c76ff3cd24a6c29e54609bea1",
+    "size": 225
+   },
+   {
+    "path": "badge/apps/mona_pet/__init__.py",
+    "sha": "09e88b3c0e6fb31a6a36193a35d29eb305721a4e",
+    "size": 7548
+   },
+   {
+    "path": "badge/apps/mona_pet/assets/background/background_day.png",
+    "sha": "ad1e50d25797973a67aa7425d7e1e89168252167",
+    "size": 2176
+   },
+   {
+    "path": "badge/apps/mona_pet/assets/background/background_dusk.png",
+    "sha": "287f3d699f99db69aa13307ddd35150f6fcf8599",
+    "size": 953
+   },
+   {
+    "path": "badge/apps/mona_pet/assets/background/background_night.png",
+    "sha": "8c3a4c250e73a4c81ff6777845f99c79ec48791e",
+    "size": 961
+   },
+   {
+    "path": "badge/apps/mona_pet/assets/mona-sprites/mona-code.png",
+    "sha": "e0b3f5e165853411f7cd9bc054cf5b6cfa62e7b4",
+    "size": 542
+   },
+   {
+    "path": "badge/apps/mona_pet/assets/mona-sprites/mona-dance.png",
+    "sha": "3af6902edbb1dc7960df6b28b97e1a7266b78f37",
+    "size": 461
+   },
+   {
+    "path": "badge/apps/mona_pet/assets/mona-sprites/mona-dead.png",
+    "sha": "7b8a6179cbbe3daa44900199bdcd115530c53a38",
+    "size": 500
+   },
+   {
+    "path": "badge/apps/mona_pet/assets/mona-sprites/mona-default.png",
+    "sha": "2de5c752e1816fdb7dab644669e85704b7804694",
+    "size": 577
+   },
+   {
+    "path": "badge/apps/mona_pet/assets/mona-sprites/mona-eating.png",
+    "sha": "f2968fdffb7f92ca2d90bf0d0806e529f372fb90",
+    "size": 594
+   },
+   {
+    "path": "badge/apps/mona_pet/assets/mona-sprites/mona-heart.png",
+    "sha": "c14ec7edd9750248f89a38bf824a04c788ee2c0d",
+    "size": 726
+   },
+   {
+    "path": "badge/apps/mona_pet/assets/mona-sprites/mona-love.png",
+    "sha": "c14ec7edd9750248f89a38bf824a04c788ee2c0d",
+    "size": 726
+   },
+   {
+    "path": "badge/apps/mona_pet/assets/mona-sprites/mona-notify.png",
+    "sha": "116a183aac7def68f730822b2321a1816580fc6c",
+    "size": 541
+   },
+   {
+    "path": "badge/apps/mona_pet/assets/mona-sprites/mona-sleep.png",
+    "sha": "99eb5e8b32c6790e40fc9a3d4234938509f054d7",
+    "size": 1133
+   },
+   {
+    "path": "badge/apps/mona_pet/assets/ui/buttons.png",
+    "sha": "8570eb1d499b9c136117a3204fead1c2bd81a8d4",
+    "size": 704
+   },
+   {
+    "path": "badge/apps/mona_pet/assets/ui/frame.png",
+    "sha": "4b6fc9d62e0a6b6906837ed4b954eb7670b8d279",
+    "size": 499
+   },
+   {
+    "path": "badge/apps/mona_pet/clock.py",
+    "sha": "07dce2ddf9931625a1fe8a09710f53b4b9494289",
+    "size": 1921
+   },
+   {
+    "path": "badge/apps/mona_pet/food.py",
+    "sha": "c349b477959e9a45d9fb0aba863125b946deadfe",
+    "size": 1616
+   },
+   {
+    "path": "badge/apps/mona_pet/icons.py",
+    "sha": "812255b066a0c3cda3becd164667d728691198de",
+    "size": 471
+   },
+   {
+    "path": "badge/apps/mona_pet/match.py",
+    "sha": "3552186add4a666f14abf35e6a74efa6d04252fc",
+    "size": 5941
+   },
+   {
+    "path": "badge/apps/mona_pet/tufty.py",
+    "sha": "61d9528a9327aed48b1c3fd90d74e0a849f0fb9d",
+    "size": 5302
+   },
+   {
+    "path": "badge/apps/mona_pet/ui.py",
+    "sha": "86b5e09177405f58a45b8318f222f3ae45ca964a",
+    "size": 3481
+   },
+   {
+    "path": "badge/apps/monapet/README.md",
+    "sha": "2f43233907581ed5d66759bbd4b8de337682ddf9",
+    "size": 208
+   },
+   {
+    "path": "badge/apps/monapet/__init__.py",
+    "sha": "188282db28157aaf4a8dfd2c5e4914d359a61d6f",
+    "size": 1790
+   },
+   {
+    "path": "badge/apps/monapet/assets/arrows.png",
+    "sha": "cb1fff4ed5b4149f2c8df79cbb00b80dc109b714",
+    "size": 175
+   },
+   {
+    "path": "badge/apps/monapet/assets/icons.png",
+    "sha": "c126d4f5ecf15ff48b07bf3147dba03b06ad8883",
+    "size": 473
+   },
+   {
+    "path": "badge/apps/monapet/assets/mona-sprites/mona-code.png",
+    "sha": "e0b3f5e165853411f7cd9bc054cf5b6cfa62e7b4",
+    "size": 542
+   },
+   {
+    "path": "badge/apps/monapet/assets/mona-sprites/mona-dance.png",
+    "sha": "3af6902edbb1dc7960df6b28b97e1a7266b78f37",
+    "size": 461
+   },
+   {
+    "path": "badge/apps/monapet/assets/mona-sprites/mona-dead.png",
+    "sha": "7b8a6179cbbe3daa44900199bdcd115530c53a38",
+    "size": 500
+   },
+   {
+    "path": "badge/apps/monapet/assets/mona-sprites/mona-default.png",
+    "sha": "2de5c752e1816fdb7dab644669e85704b7804694",
+    "size": 577
+   },
+   {
+    "path": "badge/apps/monapet/assets/mona-sprites/mona-eating.png",
+    "sha": "f2968fdffb7f92ca2d90bf0d0806e529f372fb90",
+    "size": 594
+   },
+   {
+    "path": "badge/apps/monapet/assets/mona-sprites/mona-heart.png",
+    "sha": "c14ec7edd9750248f89a38bf824a04c788ee2c0d",
+    "size": 726
+   },
+   {
+    "path": "badge/apps/monapet/assets/mona-sprites/mona-love.png",
+    "sha": "c14ec7edd9750248f89a38bf824a04c788ee2c0d",
+    "size": 726
+   },
+   {
+    "path": "badge/apps/monapet/assets/mona-sprites/mona-notify.png",
+    "sha": "116a183aac7def68f730822b2321a1816580fc6c",
+    "size": 541
+   },
+   {
+    "path": "badge/apps/monapet/assets/portrait.png",
+    "sha": "7f3ab40f04d88a352b6128cc2112f4f2b1dfde2e",
+    "size": 440
+   },
+   {
+    "path": "badge/apps/monapet/icon.png",
+    "sha": "b6488a862d92c110f6bc87aa6b691261f65e8ae5",
+    "size": 973
+   },
+   {
+    "path": "badge/apps/monapet/mona.py",
+    "sha": "8e6e02bdf5039ad8a4fcf46f75b18674716ac96b",
+    "size": 3992
+   },
+   {
+    "path": "badge/apps/monapet/ui.py",
+    "sha": "088001f7c5cc82cec0da9c7201e367a7e97b16a7",
+    "size": 1672
+   },
+   {
+    "path": "badge/apps/pong/README.md",
+    "sha": "3a7b0305d133f22e96a6359f008487b93dbaf21d",
+    "size": 138
+   },
+   {
+    "path": "badge/apps/pong/__init__.py",
+    "sha": "2709306da29b570a9504950b0178eb93d8cc488a",
+    "size": 20234
+   },
+   {
+    "path": "badge/apps/quest/README.md",
+    "sha": "80426f9e4219448cd72eae4ab8b20d302fa71cc3",
+    "size": 408
+   },
+   {
+    "path": "badge/apps/quest/__init__.py",
+    "sha": "9ec313106ffe5cc5d7f6fafda4399dee818cf61c",
+    "size": 3872
+   },
+   {
+    "path": "badge/apps/quest/assets/mona.png",
+    "sha": "a5ee90bb7cf16171c9d73534fdf79b4325ddd95d",
+    "size": 4238
+   },
+   {
+    "path": "badge/apps/quest/assets/splash.png",
+    "sha": "ab0cc9eacfa26e01100628c5ee513d0a6417d759",
+    "size": 4825
+   },
+   {
+    "path": "badge/apps/quest/beacon.py",
+    "sha": "2b233e10c2ba82227d8ee8005d47034e97815eb7",
+    "size": 393
+   },
+   {
+    "path": "badge/apps/quest/icon.png",
+    "sha": "1001d08887e5ac321f9415ca045352f80f81ee24",
+    "size": 1201
+   },
+   {
+    "path": "badge/apps/quest/ui.py",
+    "sha": "ef329bae8a6aade1d969dfadbc801d6344311c99",
+    "size": 2033
+   },
+   {
+    "path": "badge/apps/rogue/README.md",
+    "sha": "286d2ecade3139723d98aa6328dfe47e04e37b31",
+    "size": 217
+   },
+   {
+    "path": "badge/apps/rogue/__init__.py",
+    "sha": "811a39df30f5c7b92085ef0692dd28c3e5ce95d3",
+    "size": 8196
+   },
+   {
+    "path": "badge/apps/rogue/build.py",
+    "sha": "da4ed1c44b953ab96e3d9996db88b0d10713d3d1",
+    "size": 19517
+   },
+   {
+    "path": "badge/apps/rogue/content.py",
+    "sha": "352836483b230046e435cd8311798949f9a0a924",
+    "size": 1088
+   },
+   {
+    "path": "badge/apps/rogue/game.py",
+    "sha": "fc2f7bb25b70f733493773f60283b1b6c81c114e",
+    "size": 14477
+   },
+   {
+    "path": "badge/apps/rogue/items.py",
+    "sha": "f59feff38d28070398bc0d96b702196dd77657f2",
+    "size": 5729
+   },
+   {
+    "path": "badge/apps/rogue/monsters.py",
+    "sha": "28d601012bfc759a0ed7392f6b16505f8a276cc3",
+    "size": 7166
+   },
+   {
+    "path": "badge/apps/rogue/render.py",
+    "sha": "aefbdb96d431ea1aef613c364ff0356c02a93f46",
+    "size": 20993
+   },
+   {
+    "path": "badge/apps/rogue/rings.py",
+    "sha": "18454915c8242d11d42a1f4b4719778a5f7ee555",
+    "size": 1547
+   },
+   {
+    "path": "badge/apps/rogue/save.py",
+    "sha": "45c7c15558d0cba5344891e1cdf960024ca77752",
+    "size": 4700
+   },
+   {
+    "path": "badge/apps/rogue/scrolls.py",
+    "sha": "52b4fbd1538fbef70c19dde5da40c8c9965bb5b1",
+    "size": 4493
+   },
+   {
+    "path": "badge/apps/rogue/world.py",
+    "sha": "6a21fafdd843f29ddbec62b1ef190ecd74363cd9",
+    "size": 8627
+   },
+   {
+    "path": "badge/apps/sense/README.md",
+    "sha": "e39c69229d2fece7747eb73ea94b91bfb90d8ab4",
+    "size": 276
+   },
+   {
+    "path": "badge/apps/sense/__init__.py",
+    "sha": "c365314fc2df7112cf78099e6b658a53acf874b7",
+    "size": 12148
+   },
+   {
+    "path": "badge/apps/sense/icon.png",
+    "sha": "1001d08887e5ac321f9415ca045352f80f81ee24",
+    "size": 1201
+   },
+   {
+    "path": "badge/apps/settings/README.md",
+    "sha": "1b92ee0d0832f4650e0f27a95503a0dbfd3702b7",
+    "size": 208
+   },
+   {
+    "path": "badge/apps/settings/__init__.py",
+    "sha": "5b4b34195a7bdd5f719682685b10e514b1d63547",
+    "size": 13292
+   },
+   {
+    "path": "badge/apps/show/README.md",
+    "sha": "1dec79dc82913351c60d5f0e9e95d975d85b0ba3",
+    "size": 149
+   },
+   {
+    "path": "badge/apps/show/__init__.py",
+    "sha": "839b193757ac8187ea4b8883752af1ed0ba36531",
+    "size": 126
+   },
+   {
+    "path": "badge/apps/sketchy_sketch/README.md",
+    "sha": "f6cbe2b4141120f7de92c3a81721c1b20969bfda",
+    "size": 251
+   },
+   {
+    "path": "badge/apps/sketchy_sketch/__init__.py",
+    "sha": "0eee161aeea5000fe1e93a6a3254773c8ed4c77b",
+    "size": 2225
+   },
+   {
+    "path": "badge/apps/sketchy_sketch/assets/nope.ppf",
+    "sha": "f136406fbbd4731f01b05e2ad0013b1bd7d12d5a",
+    "size": 9102
+   },
+   {
+    "path": "badge/apps/sketchy_sketch/icon.png",
+    "sha": "4d8f3eddc16df54ef77164561b274cce06e4af0f",
+    "size": 774
+   },
+   {
+    "path": "badge/apps/sketchy_sketch/ui.py",
+    "sha": "ae04ebc1805c571dd5a1ec64c6e6db162bf0030f",
+    "size": 2935
+   },
+   {
+    "path": "badge/apps/snake/README.md",
+    "sha": "df6aa5608421f9aed3d0049f3902ccafdeb1c6d6",
+    "size": 163
+   },
+   {
+    "path": "badge/apps/snake/__init__.py",
+    "sha": "84d2c85d1f152c5e622c55befe8b213cca917427",
+    "size": 13408
+   },
+   {
+    "path": "badge/apps/snarky_sciuridae/README.md",
+    "sha": "6c30599494b80205449b2fe7abc17e475d3147aa",
+    "size": 212
+   },
+   {
+    "path": "badge/apps/snarky_sciuridae/__init__.py",
+    "sha": "a0f1f40b5498bbd627f5b011c7524153e776b22b",
+    "size": 3194
+   },
+   {
+    "path": "badge/apps/snarky_sciuridae/assets/background/background_day.png",
+    "sha": "ad1e50d25797973a67aa7425d7e1e89168252167",
+    "size": 2176
+   },
+   {
+    "path": "badge/apps/snarky_sciuridae/assets/background/background_dusk.png",
+    "sha": "287f3d699f99db69aa13307ddd35150f6fcf8599",
+    "size": 953
+   },
+   {
+    "path": "badge/apps/snarky_sciuridae/assets/background/background_night.png",
+    "sha": "8c3a4c250e73a4c81ff6777845f99c79ec48791e",
+    "size": 961
+   },
+   {
+    "path": "badge/apps/snarky_sciuridae/assets/squirrel-sprites/clean.png",
+    "sha": "83fedf75b639d4260fe5c97ce4172ced7d95c2d3",
+    "size": 2562
+   },
+   {
+    "path": "badge/apps/snarky_sciuridae/assets/squirrel-sprites/dance.png",
+    "sha": "43dc68c0b16d64b4784179b854ce3cc7bc1e6e95",
+    "size": 3279
+   },
+   {
+    "path": "badge/apps/snarky_sciuridae/assets/squirrel-sprites/dead.png",
+    "sha": "4a87ec26753620c067c0162d39783c692db3c580",
+    "size": 2466
+   },
+   {
+    "path": "badge/apps/snarky_sciuridae/assets/squirrel-sprites/dig.png",
+    "sha": "711e9f1b707c8187194bfb4ef762f58149274728",
+    "size": 2170
+   },
+   {
+    "path": "badge/apps/snarky_sciuridae/assets/squirrel-sprites/eat.png",
+    "sha": "05d36e5586a1dd4b2b6ee3c0665f572cc3c10cfb",
+    "size": 2530
+   },
+   {
+    "path": "badge/apps/snarky_sciuridae/assets/squirrel-sprites/idle.png",
+    "sha": "07daed9b36e544933253a2afa3a2ed12e6fd9874",
+    "size": 2436
+   },
+   {
+    "path": "badge/apps/snarky_sciuridae/assets/squirrel-sprites/lick.png",
+    "sha": "41fd395feae5d91176fe9c2eeb1fe6f744f3a5c5",
+    "size": 1265
+   },
+   {
+    "path": "badge/apps/snarky_sciuridae/assets/squirrel-sprites/notify.png",
+    "sha": "12c9edca33dbed6811e220dcf70ecae8bcfa4e10",
+    "size": 436
+   },
+   {
+    "path": "badge/apps/snarky_sciuridae/assets/squirrel-sprites/run.png",
+    "sha": "c008dfccf0bc750e29198aac280eae7117192c92",
+    "size": 2841
+   },
+   {
+    "path": "badge/apps/snarky_sciuridae/assets/squirrel-sprites/sleep.png",
+    "sha": "3aa79566746edf2b90264fb4e009a35b556f9b21",
+    "size": 1472
+   },
+   {
+    "path": "badge/apps/snarky_sciuridae/assets/squirrel-sprites/tail.png",
+    "sha": "096eb7717db31f2a79b1d8092d70285dd4e33c17",
+    "size": 1505
+   },
+   {
+    "path": "badge/apps/snarky_sciuridae/assets/ui/buttons_48x14.png",
+    "sha": "ebe237832e47865ea1e99493e8d13241b45d29f4",
+    "size": 1260
+   },
+   {
+    "path": "badge/apps/snarky_sciuridae/assets/ui/icons.png",
+    "sha": "c126d4f5ecf15ff48b07bf3147dba03b06ad8883",
+    "size": 473
+   },
+   {
+    "path": "badge/apps/snarky_sciuridae/assets/ui/overlay_scanlines.png",
+    "sha": "6dbe173edf1942744111fcf50d7721d0023a1008",
+    "size": 1529
+   },
+   {
+    "path": "badge/apps/snarky_sciuridae/assets/ui/tufty_frame_beige.png",
+    "sha": "9ae07cc0b03b57b8cd7f7c30134f200dbdb1c8c5",
+    "size": 1130
+   },
+   {
+    "path": "badge/apps/snarky_sciuridae/icon.png",
+    "sha": "87c1e83bc9820fe96f2c406db6c088e71f6d2954",
+    "size": 680
+   },
+   {
+    "path": "badge/apps/snarky_sciuridae/ui.py",
+    "sha": "1ab43ba4257afceaebf85e9cbf0cac1228076b06",
+    "size": 3278
+   },
+   {
+    "path": "badge/apps/snarky_sciuridae/vpet.py",
+    "sha": "0002299720ec415ce21a8f6bb28440d444926130",
+    "size": 5412
+   },
+   {
+    "path": "badge/apps/startup/README.md",
+    "sha": "e42b779a8a2d4fae46ce00739aab946109ad8d37",
+    "size": 258
+   },
+   {
+    "path": "badge/apps/startup/__init__.py",
+    "sha": "7079167173fb81af10f9fb5c850759b76ff89448",
+    "size": 1208
+   },
+   {
+    "path": "badge/apps/startup/frames/intro_00000.png",
+    "sha": "a2d12e95cc4cbf0bec30630ac621a0a081d3cddc",
+    "size": 7935
+   },
+   {
+    "path": "badge/apps/startup/frames/intro_00001.png",
+    "sha": "fd95ab40cacf201976967b766108ed5d3cc0d46d",
+    "size": 7896
+   },
+   {
+    "path": "badge/apps/startup/frames/intro_00002.png",
+    "sha": "ea7af22f44fe57641193190c2236e444898edd15",
+    "size": 7895
+   },
+   {
+    "path": "badge/apps/startup/frames/intro_00003.png",
+    "sha": "6de26c20d776dc1f1de6a194f20a514b4225e048",
+    "size": 7805
+   },
+   {
+    "path": "badge/apps/startup/frames/intro_00004.png",
+    "sha": "031b49957f305c3c4d6dd3acbcb8059d4014980b",
+    "size": 7945
+   },
+   {
+    "path": "badge/apps/startup/frames/intro_00005.png",
+    "sha": "86a11e531da7f0029c24effd22200aad3f44704b",
+    "size": 7892
+   },
+   {
+    "path": "badge/apps/startup/frames/intro_00006.png",
+    "sha": "b53f454bfed67307e6b46e2b7caf058a68b83785",
+    "size": 7880
+   },
+   {
+    "path": "badge/apps/startup/frames/intro_00007.png",
+    "sha": "c8ee24d41d163a7d4e0a5311977389caf23aa825",
+    "size": 7879
+   },
+   {
+    "path": "badge/apps/startup/frames/intro_00008.png",
+    "sha": "02d5a09c2741e6661258d1df8189f437b8a6ec6c",
+    "size": 7870
+   },
+   {
+    "path": "badge/apps/startup/frames/intro_00009.png",
+    "sha": "40d43cc236274384423302ade9aeb1ef540d0d1b",
+    "size": 7840
+   },
+   {
+    "path": "badge/apps/startup/frames/intro_00010.png",
+    "sha": "0d0079eada7141a4f729d18e44014c82c0854077",
+    "size": 7725
+   },
+   {
+    "path": "badge/apps/startup/frames/intro_00011.png",
+    "sha": "97173da6d7e049d9157576b8892bcfc34c6884a7",
+    "size": 7802
+   },
+   {
+    "path": "badge/apps/startup/frames/intro_00012.png",
+    "sha": "4a420348fa63533c47f864d95d9361a1404484c7",
+    "size": 7850
+   },
+   {
+    "path": "badge/apps/startup/frames/intro_00013.png",
+    "sha": "313466d2e390d779b74f12f4b73fc76fb5030efe",
+    "size": 7830
+   },
+   {
+    "path": "badge/apps/startup/frames/intro_00014.png",
+    "sha": "4052f705ed833765dcc938da6269a5a53522fd69",
+    "size": 7825
+   },
+   {
+    "path": "badge/apps/startup/frames/intro_00015.png",
+    "sha": "c0feb03cf5d00638bff782fa84ff5a071abdcbd6",
+    "size": 7947
+   },
+   {
+    "path": "badge/apps/startup/frames/intro_00016.png",
+    "sha": "16d3fd01175e3bcded313cffffb486ea90cc00ce",
+    "size": 7962
+   },
+   {
+    "path": "badge/apps/startup/frames/intro_00017.png",
+    "sha": "6be3804229931f0086a5d62c9a2ba04120316154",
+    "size": 7810
+   },
+   {
+    "path": "badge/apps/startup/frames/intro_00018.png",
+    "sha": "b6095ab1689c783a84147b82965a4deb0b9cffcc",
+    "size": 7711
+   },
+   {
+    "path": "badge/apps/startup/frames/intro_00019.png",
+    "sha": "b4ad31b86aab73391dcb8463fa42003396589817",
+    "size": 7772
+   },
+   {
+    "path": "badge/apps/startup/frames/intro_00020.png",
+    "sha": "4195cdf69e56b5eade64b4e3ca9cbb043de5478b",
+    "size": 7673
+   },
+   {
+    "path": "badge/apps/startup/frames/intro_00021.png",
+    "sha": "b98b215b459b4178fba2a54484762d14078d832f",
+    "size": 7883
+   },
+   {
+    "path": "badge/apps/startup/frames/intro_00022.png",
+    "sha": "49eab2b0f5c2fd13bf0ca79affd3cbea6affcbd2",
+    "size": 7595
+   },
+   {
+    "path": "badge/apps/startup/frames/intro_00023.png",
+    "sha": "6c05ee704130133eb8447512bea7906334902063",
+    "size": 7662
+   },
+   {
+    "path": "badge/apps/startup/frames/intro_00024.png",
+    "sha": "f8d4e08b16ea9a4274483de4a77f524f67ecefed",
+    "size": 7704
+   },
+   {
+    "path": "badge/apps/startup/frames/intro_00025.png",
+    "sha": "966ff9f875650e4b371f2a5ea9f4a408b9571f99",
+    "size": 7734
+   },
+   {
+    "path": "badge/apps/startup/frames/intro_00026.png",
+    "sha": "f0d8e83f0a171f7bf5fb3cb73a90a19e1185deb9",
+    "size": 7632
+   },
+   {
+    "path": "badge/apps/startup/frames/intro_00027.png",
+    "sha": "88dea35c47625f73455d18f641dbe0298b95b96c",
+    "size": 7737
+   },
+   {
+    "path": "badge/apps/startup/frames/intro_00028.png",
+    "sha": "da8c124684c2a64043c48b8e17508ff56d3bd935",
+    "size": 7651
+   },
+   {
+    "path": "badge/apps/startup/frames/intro_00029.png",
+    "sha": "8aa0df6a9d8cf98381c96df9d8b3eada0051e886",
+    "size": 7567
+   },
+   {
+    "path": "badge/apps/startup/frames/intro_00030.png",
+    "sha": "e0dd398d4f3b94e7b07de00b0a37a09dbdc06465",
+    "size": 7532
+   },
+   {
+    "path": "badge/apps/startup/frames/intro_00031.png",
+    "sha": "4b185b53c956ea582c8d5563fe47efffcc2ec94d",
+    "size": 7479
+   },
+   {
+    "path": "badge/apps/startup/frames/intro_00032.png",
+    "sha": "9b78c52ed141332a69d32fc37de9588345fb089b",
+    "size": 7483
+   },
+   {
+    "path": "badge/apps/startup/frames/intro_00033.png",
+    "sha": "dec1a2ceb6f359d5c9fde7027fdb7b8371b69595",
+    "size": 7515
+   },
+   {
+    "path": "badge/apps/startup/frames/intro_00034.png",
+    "sha": "7a62d11c681eeeca0d2a6e53a60cdf553c896b58",
+    "size": 7537
+   },
+   {
+    "path": "badge/apps/startup/frames/intro_00035.png",
+    "sha": "c12c53dc866882a96ef07f3ba8d6cbf4dedee433",
+    "size": 7390
+   },
+   {
+    "path": "badge/apps/startup/frames/intro_00036.png",
+    "sha": "777e125a0938b5fe1e984e6d63a2cd45cca76042",
+    "size": 7630
+   },
+   {
+    "path": "badge/apps/startup/frames/intro_00037.png",
+    "sha": "25478d5202c0b57b4af27f0d4f059b2eb987f089",
+    "size": 7542
+   },
+   {
+    "path": "badge/apps/startup/frames/intro_00038.png",
+    "sha": "b37ff0a1fa32a5d8f6ac2c86d490f087a899674b",
+    "size": 7430
+   },
+   {
+    "path": "badge/apps/startup/frames/intro_00039.png",
+    "sha": "c54714d2976a51d65efc19870162f18da4955a53",
+    "size": 7291
+   },
+   {
+    "path": "badge/apps/startup/frames/intro_00040.png",
+    "sha": "48e1c5e997b582e57e030cfce9acbb276beee2da",
+    "size": 7201
+   },
+   {
+    "path": "badge/apps/startup/frames/intro_00041.png",
+    "sha": "9ff2f083d7c90a69bcce5775e2a036d0fc373482",
+    "size": 7243
+   },
+   {
+    "path": "badge/apps/startup/frames/intro_00042.png",
+    "sha": "538cb733946aa31f08711429d8f48d3cebe2cef5",
+    "size": 6888
+   },
+   {
+    "path": "badge/apps/startup/frames/intro_00043.png",
+    "sha": "7d09b1ea7752b0003ab6a8cebf8280d20344b732",
+    "size": 6857
+   },
+   {
+    "path": "badge/apps/startup/frames/intro_00044.png",
+    "sha": "410111c085de2bbddf5888482bc202346c3e7d6c",
+    "size": 6941
+   },
+   {
+    "path": "badge/apps/startup/frames/intro_00045.png",
+    "sha": "1c6ffca464d53ef5681120c76a273ff7bdb272d2",
+    "size": 6667
+   },
+   {
+    "path": "badge/apps/startup/frames/intro_00046.png",
+    "sha": "0226a86b26f0b9e217742831cd10c99d765fa3c4",
+    "size": 6620
+   },
+   {
+    "path": "badge/apps/startup/frames/intro_00047.png",
+    "sha": "c606e495ccf54818a7e351d12c4b489234edf785",
+    "size": 6458
+   },
+   {
+    "path": "badge/apps/startup/frames/intro_00048.png",
+    "sha": "02ab5bfe6dff1b7c0d8f8abf90f0b560ba97a3e3",
+    "size": 6401
+   },
+   {
+    "path": "badge/apps/startup/frames/intro_00049.png",
+    "sha": "3de60ea9fc56662d0a30ad9682eac7d5ad102669",
+    "size": 6351
+   },
+   {
+    "path": "badge/apps/startup/frames/intro_00050.png",
+    "sha": "f6ca6be5ce829af3b1d584d4f9e3532bf95c43e5",
+    "size": 6272
+   },
+   {
+    "path": "badge/apps/startup/frames/intro_00051.png",
+    "sha": "0f1965efc4a916a58340febd0407fdbe4517b075",
+    "size": 6336
+   },
+   {
+    "path": "badge/apps/startup/frames/intro_00052.png",
+    "sha": "cf7bbff5193221d38a32919414a10022d499481e",
+    "size": 6168
+   },
+   {
+    "path": "badge/apps/startup/frames/intro_00053.png",
+    "sha": "4daa21f9c87d95fd186f69dcd100c66b39f6c443",
+    "size": 6311
+   },
+   {
+    "path": "badge/apps/startup/frames/intro_00054.png",
+    "sha": "5dfb3a701b8c5e3abb0f8976cc3ecc173295b18b",
+    "size": 6054
+   },
+   {
+    "path": "badge/apps/startup/frames/intro_00055.png",
+    "sha": "f6ae8d730710c80898ed94aa197ec92dfc726bbd",
+    "size": 6054
+   },
+   {
+    "path": "badge/apps/startup/frames/intro_00056.png",
+    "sha": "dcaf258c1af71e63456a82ecfb54347fa545ac6b",
+    "size": 6028
+   },
+   {
+    "path": "badge/apps/startup/frames/intro_00057.png",
+    "sha": "7c7918ccfa2f637eb45235af708bceb81940ee0a",
+    "size": 5897
+   },
+   {
+    "path": "badge/apps/startup/frames/intro_00058.png",
+    "sha": "c02fed4e97bb8737dfed052a7928ca0b9a4b5c18",
+    "size": 5847
+   },
+   {
+    "path": "badge/apps/startup/frames/intro_00059.png",
+    "sha": "a7d93ea461ed62074dc97c1f43fefe24097f7e60",
+    "size": 5834
+   },
+   {
+    "path": "badge/apps/startup/frames/intro_00060.png",
+    "sha": "8750d2244c4ba35716d08c702688f4fd6742b8d9",
+    "size": 5687
+   },
+   {
+    "path": "badge/apps/startup/frames/intro_00061.png",
+    "sha": "9295087e0cf56e65e6b432a5d047ffe5bcea5e6e",
+    "size": 5789
+   },
+   {
+    "path": "badge/apps/startup/frames/intro_00062.png",
+    "sha": "5c3d36ff7f6b7c2cb4585d5639c01c6c6280fdcd",
+    "size": 5812
+   },
+   {
+    "path": "badge/apps/startup/frames/intro_00063.png",
+    "sha": "ffcddb2c04dc6840983367250382f2fd713e9b57",
+    "size": 5712
+   },
+   {
+    "path": "badge/apps/startup/frames/intro_00064.png",
+    "sha": "289d22e54e378a8c25ff9cbae2c9d27d75a722bd",
+    "size": 5941
+   },
+   {
+    "path": "badge/apps/startup/frames/intro_00065.png",
+    "sha": "55062887d04f3f23a04299aae1a84bcf3335f077",
+    "size": 5722
+   },
+   {
+    "path": "badge/apps/startup/frames/intro_00066.png",
+    "sha": "9b20aa12a6f381529eb8bd077e9875e8d378196b",
+    "size": 5812
+   },
+   {
+    "path": "badge/apps/startup/frames/intro_00067.png",
+    "sha": "ae7ace813e699e5b08802da25ba1692febc7e0f7",
+    "size": 5874
+   },
+   {
+    "path": "badge/apps/startup/frames/intro_00068.png",
+    "sha": "7873ea8074e6301ded13ca0cab47a063e3edb195",
+    "size": 5916
+   },
+   {
+    "path": "badge/apps/startup/frames/intro_00069.png",
+    "sha": "fcef8c7408d649aec5def4dc0a90180b7e4b7ebe",
+    "size": 5879
+   },
+   {
+    "path": "badge/apps/startup/frames/intro_00070.png",
+    "sha": "06ef105afba3aab7e4da4724fc5664f1241d930a",
+    "size": 5979
+   },
+   {
+    "path": "badge/apps/startup/frames/intro_00071.png",
+    "sha": "035857ecb6ad2833a4e55409fde1a6ea77453d8f",
+    "size": 5571
+   },
+   {
+    "path": "badge/apps/startup/frames/intro_00072.png",
+    "sha": "57521acc236b99396e0376c64e3c1c67f8add322",
+    "size": 5951
+   },
+   {
+    "path": "badge/apps/startup/frames/intro_00073.png",
+    "sha": "baccecda55279c3c00e12b3ffe33bcee997607e6",
+    "size": 5919
+   },
+   {
+    "path": "badge/apps/startup/frames/intro_00074.png",
+    "sha": "f12e7ba29f6b9da89056199d7249bccce22f02cc",
+    "size": 6078
+   },
+   {
+    "path": "badge/apps/startup/frames/intro_00075.png",
+    "sha": "9a602e35d14831372d5bb3ffe00bfe2b585986af",
+    "size": 6130
+   },
+   {
+    "path": "badge/apps/startup/frames/intro_00076.png",
+    "sha": "2841d2963ee550004f924ca2a5271fb06c3f1327",
+    "size": 6212
+   },
+   {
+    "path": "badge/apps/startup/frames/intro_00077.png",
+    "sha": "f84b601b701bc56395247e8a850dff5eea6244e7",
+    "size": 6255
+   },
+   {
+    "path": "badge/apps/startup/frames/intro_00078.png",
+    "sha": "8e12536ef5343dc4667b2ee7de9793593ed2df15",
+    "size": 6085
+   },
+   {
+    "path": "badge/apps/startup/frames/intro_00079.png",
+    "sha": "b802e8a4df74c73adfc91e05ae3335d4fa164fc2",
+    "size": 6296
+   },
+   {
+    "path": "badge/apps/startup/frames/intro_00080.png",
+    "sha": "2187adaf609c3d4d4f340b043d00138691309ce5",
+    "size": 6232
+   },
+   {
+    "path": "badge/apps/startup/frames/intro_00081.png",
+    "sha": "f03592318e645f069508af153c283d25cfa2dfd7",
+    "size": 6061
+   },
+   {
+    "path": "badge/apps/startup/frames/intro_00082.png",
+    "sha": "fb150681116a14c08882e27b3bb4e9d56c3c9ba9",
+    "size": 6293
+   },
+   {
+    "path": "badge/apps/startup/frames/intro_00083.png",
+    "sha": "88b557f75991586a1c7209bb3233d0e398751b8d",
+    "size": 6319
+   },
+   {
+    "path": "badge/apps/startup/frames/intro_00084.png",
+    "sha": "3b000498b2c283521198049071e9a6f33c4e3d92",
+    "size": 6436
+   },
+   {
+    "path": "badge/apps/startup/frames/intro_00085.png",
+    "sha": "2b9add69e2b454dd36b89cffd285ec830e234df1",
+    "size": 6552
+   },
+   {
+    "path": "badge/apps/startup/frames/intro_00086.png",
+    "sha": "5d95c4802a3f95733e332a80f3841c7e64f1d33a",
+    "size": 6561
+   },
+   {
+    "path": "badge/apps/startup/frames/intro_00087.png",
+    "sha": "e4316ed2a4ab9aacc8b2807759055b3a9a7653c5",
+    "size": 6455
+   },
+   {
+    "path": "badge/apps/startup/frames/intro_00088.png",
+    "sha": "f1478dfd62f421235426d25af001927e4913c7a6",
+    "size": 6353
+   },
+   {
+    "path": "badge/apps/startup/frames/intro_00089.png",
+    "sha": "e586fdaa5d3ed9a49af4b62833d0487cf03a8756",
+    "size": 6170
+   },
+   {
+    "path": "badge/apps/startup/frames/intro_00090.png",
+    "sha": "c62b9d6e8a02a763e37b08eb9091c38f3bd52caa",
+    "size": 6241
+   },
+   {
+    "path": "badge/apps/startup/frames/intro_00091.png",
+    "sha": "bf723b2368822cc5d383d5202e7843c64371c987",
+    "size": 6368
+   },
+   {
+    "path": "badge/apps/startup/frames/intro_00092.png",
+    "sha": "7a7a2d835da1212963b6ad2ab82db1f99aac2bc2",
+    "size": 6243
+   },
+   {
+    "path": "badge/apps/startup/frames/intro_00093.png",
+    "sha": "dd6d77ac4a5ccb5134914d7ccd163e8b429fd2e2",
+    "size": 6212
+   },
+   {
+    "path": "badge/apps/startup/frames/intro_00094.png",
+    "sha": "7355c9f982eb6944496995776e929e834ae3b626",
+    "size": 6322
+   },
+   {
+    "path": "badge/apps/startup/frames/intro_00095.png",
+    "sha": "6f0bac4fc4cde47278cdcc1b98e3707633927eec",
+    "size": 6453
+   },
+   {
+    "path": "badge/apps/startup/frames/intro_00096.png",
+    "sha": "ac63332efde4b541a45818a0de0c01055640ef4d",
+    "size": 6259
+   },
+   {
+    "path": "badge/apps/startup/frames/intro_00097.png",
+    "sha": "14e3078260211ab433db8eea3659098e6f56ef63",
+    "size": 6506
+   },
+   {
+    "path": "badge/apps/startup/frames/intro_00098.png",
+    "sha": "30f50762ab89e1e0f543718026987a2194ed0d90",
+    "size": 6473
+   },
+   {
+    "path": "badge/apps/startup/frames/intro_00099.png",
+    "sha": "a5a72bc4b9fc89a5eb107310a60e08a298f29ac5",
+    "size": 6498
+   },
+   {
+    "path": "badge/apps/startup/frames/intro_00100.png",
+    "sha": "c0ffd5094f9bb8c06ba62c0db049677daf0ad468",
+    "size": 6648
+   },
+   {
+    "path": "badge/apps/startup/frames/intro_00101.png",
+    "sha": "8bbee6eacd52a5d9df682319b82acb018b67c22a",
+    "size": 6572
+   },
+   {
+    "path": "badge/apps/startup/frames/intro_00102.png",
+    "sha": "fbceb2fa5f0efb723ec75f3f9ff2f424531cc0ac",
+    "size": 6483
+   },
+   {
+    "path": "badge/apps/startup/frames/intro_00103.png",
+    "sha": "2abbf1d9456874ae904d02f000615b6b0aa1793f",
+    "size": 6383
+   },
+   {
+    "path": "badge/apps/startup/frames/intro_00104.png",
+    "sha": "4cac59ac0e14cc4b2231b6ff004878253952f0e7",
+    "size": 6493
+   },
+   {
+    "path": "badge/apps/startup/frames/intro_00105.png",
+    "sha": "f52b3f18e92f97e1250687132421ecd09e23764f",
+    "size": 6243
+   },
+   {
+    "path": "badge/apps/startup/frames/intro_00106.png",
+    "sha": "44757510f6b7b136b3d960337f713fbb986c8840",
+    "size": 6370
+   },
+   {
+    "path": "badge/apps/startup/frames/intro_00107.png",
+    "sha": "32e77f820fcc09a185721b16dd23ef23fa915d1f",
+    "size": 6652
+   },
+   {
+    "path": "badge/apps/startup/frames/intro_00108.png",
+    "sha": "47b8cbd26836639d7bf8ea8e05f3cc8c257676af",
+    "size": 6473
+   },
+   {
+    "path": "badge/apps/startup/frames/intro_00109.png",
+    "sha": "503c86cd8506e456e8278ea3b9cd43d972a91a0b",
+    "size": 6539
+   },
+   {
+    "path": "badge/apps/startup/frames/intro_00110.png",
+    "sha": "6766298e3bbcc0b2feadd263cad2d1d616965a5c",
+    "size": 6576
+   },
+   {
+    "path": "badge/apps/startup/frames/intro_00111.png",
+    "sha": "589e718af0ca0c197b292089ed8c066fb0b43e42",
+    "size": 6540
+   },
+   {
+    "path": "badge/apps/startup/frames/intro_00112.png",
+    "sha": "998ad9abe7b21ded7b8cb2f4a7ca1c8535132b44",
+    "size": 6383
+   },
+   {
+    "path": "badge/apps/startup/frames/intro_00113.png",
+    "sha": "8c4cc41cfb37cf1cc1e7ebc513edc8c2f31183c1",
+    "size": 6551
+   },
+   {
+    "path": "badge/apps/startup/frames/intro_00114.png",
+    "sha": "c849e1f16e638505b00d46c7e4224e26bd180a2e",
+    "size": 6797
+   },
+   {
+    "path": "badge/apps/startup/frames/intro_00115.png",
+    "sha": "08ba570b25531accfe7b82d8c5ff98e300598f12",
+    "size": 6664
+   },
+   {
+    "path": "badge/apps/startup/frames/intro_00116.png",
+    "sha": "e2daf43223f29246236437ecfc8efa3c07889664",
+    "size": 6515
+   },
+   {
+    "path": "badge/apps/startup/frames/intro_00117.png",
+    "sha": "211e7d656173bed295840ef7b0d2d860ee046c5a",
+    "size": 6559
+   },
+   {
+    "path": "badge/apps/startup/frames/intro_00118.png",
+    "sha": "2d409f40183b2dede7f00c72ca1d4dc973f7be4e",
+    "size": 6631
+   },
+   {
+    "path": "badge/apps/startup/frames/intro_00119.png",
+    "sha": "325852a55b82290098d89ed105c40da7fc0cdd07",
+    "size": 6495
+   },
+   {
+    "path": "badge/apps/startup/frames/intro_00120.png",
+    "sha": "0e47b5ac108f6b560000f372102f72932fdd5d30",
+    "size": 6703
+   },
+   {
+    "path": "badge/apps/startup/frames/intro_00121.png",
+    "sha": "3af40a28916004e81f8521693d8f3f0c9acfd0b8",
+    "size": 6736
+   },
+   {
+    "path": "badge/apps/startup/frames/intro_00122.png",
+    "sha": "efa717c653a29427ff1a15e39ece33197fe96517",
+    "size": 6798
+   },
+   {
+    "path": "badge/apps/startup/frames/intro_00123.png",
+    "sha": "c55466deb711ac9390387f8a5f924ea9b38c1222",
+    "size": 6712
+   },
+   {
+    "path": "badge/apps/startup/frames/intro_00124.png",
+    "sha": "3d03d39f8b5bd34cdc70d32f250a96ab9eb0f3fb",
+    "size": 6915
+   },
+   {
+    "path": "badge/apps/startup/frames/intro_00125.png",
+    "sha": "1f975607b67ce9d532fbdc93ef0adf0d788b531c",
+    "size": 6901
+   },
+   {
+    "path": "badge/apps/startup/frames/intro_00126.png",
+    "sha": "ab0e7f414ef9c0c5c322646cddd01bbd4c2be193",
+    "size": 6895
+   },
+   {
+    "path": "badge/apps/startup/frames/intro_00127.png",
+    "sha": "d42ecfebd7e7da1cb0f95f4910796ff62469a364",
+    "size": 6940
+   },
+   {
+    "path": "badge/apps/startup/frames/intro_00128.png",
+    "sha": "1ae1ac8f7c7744b8d1d8bdcb505328c530a7011c",
+    "size": 6899
+   },
+   {
+    "path": "badge/apps/startup/frames/intro_00129.png",
+    "sha": "1a24b4a750d09af161026caeffb02bcfccc26082",
+    "size": 7074
+   },
+   {
+    "path": "badge/apps/startup/frames/intro_00130.png",
+    "sha": "3b437fab1f8671ecd7a3f281de65d7f04700b3a2",
+    "size": 6876
+   },
+   {
+    "path": "badge/apps/startup/frames/intro_00131.png",
+    "sha": "1879de072f2d8ea0b7f7a2a89cc2606d17d4edcd",
+    "size": 7101
+   },
+   {
+    "path": "badge/apps/startup/frames/intro_00132.png",
+    "sha": "873e3bba3fff6ed5b181dc7b0e973c2ade3f53ac",
+    "size": 6984
+   },
+   {
+    "path": "badge/apps/startup/frames/intro_00133.png",
+    "sha": "e814c81074939f0080e13ffcf490834d51d0561b",
+    "size": 7277
+   },
+   {
+    "path": "badge/apps/startup/frames/intro_00134.png",
+    "sha": "6079b752ae74556c2e8cd483f33784ae302125e2",
+    "size": 7081
+   },
+   {
+    "path": "badge/apps/startup/frames/intro_00135.png",
+    "sha": "08cc1caa1d1453fa47de63048f95b3fbad2dc241",
+    "size": 7100
+   },
+   {
+    "path": "badge/apps/startup/frames/intro_00136.png",
+    "sha": "5c913fa8930a5b29ace3c589c28c36fdcfd71700",
+    "size": 7200
+   },
+   {
+    "path": "badge/apps/startup/frames/intro_00137.png",
+    "sha": "eba062f8dc3a962c9665feb5b5ebe0ad0837973b",
+    "size": 7300
+   },
+   {
+    "path": "badge/apps/startup/frames/intro_00138.png",
+    "sha": "102c57a01d07c9bd6f448775b130362b73ae440b",
+    "size": 7395
+   },
+   {
+    "path": "badge/apps/startup/frames/intro_00139.png",
+    "sha": "934ec4a004ba1461b7c2ed4adaa3c329b86de317",
+    "size": 7693
+   },
+   {
+    "path": "badge/apps/startup/frames/intro_00140.png",
+    "sha": "e7e257195968ecb96292a4aab1af1e168a4e34dc",
+    "size": 7805
+   },
+   {
+    "path": "badge/apps/startup/frames/intro_00141.png",
+    "sha": "a5d4ad2d8397e67b0ddb55bc36f8d23acb823011",
+    "size": 7988
+   },
+   {
+    "path": "badge/apps/startup/frames/intro_00142.png",
+    "sha": "ec702cd603c675c1000b042dd46639363d848edf",
+    "size": 8210
+   },
+   {
+    "path": "badge/apps/startup/frames/intro_00143.png",
+    "sha": "7fac054fe8dd19d60dfc684e451ec368c8bbd333",
+    "size": 8355
+   },
+   {
+    "path": "badge/apps/startup/frames/intro_00144.png",
+    "sha": "14efdf48c495222e35ee94e0f5d7e56b3a18b391",
+    "size": 8697
+   },
+   {
+    "path": "badge/apps/startup/frames/intro_00145.png",
+    "sha": "bd7d976accc2d993cd048f3ba02e9d6560e71053",
+    "size": 8695
+   },
+   {
+    "path": "badge/apps/startup/frames/intro_00146.png",
+    "sha": "4a3a6bcdcbcc1f696ed809cdb7e91fe59d371c47",
+    "size": 8712
+   },
+   {
+    "path": "badge/apps/startup/frames/intro_00147.png",
+    "sha": "a0d2544a1540a7fc950bf4768cc809d43c9ba0b6",
+    "size": 8683
+   },
+   {
+    "path": "badge/apps/startup/frames/intro_00148.png",
+    "sha": "a38c49c6ed45c6b0684517b5647086bdef6babd9",
+    "size": 8623
+   },
+   {
+    "path": "badge/apps/startup/frames/intro_00149.png",
+    "sha": "8ae018e8d6d06d606785afa24d840385821fbe7a",
+    "size": 8620
+   },
+   {
+    "path": "badge/apps/startup/frames/intro_00150.png",
+    "sha": "62ec1434f778b12f0f02274252a16c531df7c36a",
+    "size": 8564
+   },
+   {
+    "path": "badge/apps/startup/frames/intro_00151.png",
+    "sha": "14fd13f5d41a1028e2204c66e9515fb5d9347f3c",
+    "size": 8470
+   },
+   {
+    "path": "badge/apps/startup/frames/intro_00152.png",
+    "sha": "7ba1f030df6fec07f2b20a7f09402166456a8597",
+    "size": 8321
+   },
+   {
+    "path": "badge/apps/startup/frames/intro_00153.png",
+    "sha": "940a084c3aab3d4b6b2caa1316e60f9942352a24",
+    "size": 8377
+   },
+   {
+    "path": "badge/apps/startup/frames/intro_00154.png",
+    "sha": "b13d990505ee246397bc190ca6cb1b1e0a57f306",
+    "size": 7999
+   },
+   {
+    "path": "badge/apps/startup/frames/intro_00155.png",
+    "sha": "a5ddf3f57c5dd585a1a18d4b14182ad91693ae6b",
+    "size": 7898
+   },
+   {
+    "path": "badge/apps/startup/frames/intro_00156.png",
+    "sha": "8f717c1a841fe5b1c76ef03cf366c1433380415a",
+    "size": 7938
+   },
+   {
+    "path": "badge/apps/startup/frames/intro_00157.png",
+    "sha": "fc28165477b4b4090c45c75902dd8818e1173bf0",
+    "size": 7874
+   },
+   {
+    "path": "badge/apps/startup/frames/intro_00158.png",
+    "sha": "e3ccbf93c64f44493efe75452f7e904b5c80ba0e",
+    "size": 8056
+   },
+   {
+    "path": "badge/apps/startup/frames/intro_00159.png",
+    "sha": "a45d5623d67f09a69c6b6e229c697804f3a3725a",
+    "size": 7955
+   },
+   {
+    "path": "badge/apps/system/README.md",
+    "sha": "525284cd2898439170268a72b225f5cd16064ba0",
+    "size": 1070
+   },
+   {
+    "path": "badge/apps/system/__init__.py",
+    "sha": "a4c813b068172e7e5b946b637125344c723bc263",
+    "size": 9809
+   },
+   {
+    "path": "badge/apps/system/icon.png",
+    "sha": "1b22bd03b0ca8f97feb0e01c81be375b50bacbed",
+    "size": 222
+   },
+   {
+    "path": "badge/apps/tennis/README.md",
+    "sha": "51427c9c30a8ca8638850e5134cc490e3d68eea3",
+    "size": 246
+   },
+   {
+    "path": "badge/apps/tennis/__init__.py",
+    "sha": "a868d4f67302558570902b0eaf3dba5cf079cfe0",
+    "size": 7369
+   },
+   {
+    "path": "badge/apps/tennis/icon.png",
+    "sha": "606c797d8a0c22c48dfbce31aa7ff47584ec03aa",
+    "size": 191
+   },
+   {
+    "path": "badge/apps/tomato/README.md",
+    "sha": "1a8650b291b27f1cc5c5a3495c0d785d32144e97",
+    "size": 169
+   },
+   {
+    "path": "badge/apps/tomato/__init__.py",
+    "sha": "aa52e82e6cc3363e774f79b7c33afa940fac010b",
+    "size": 5804
+   },
+   {
+    "path": "badge/apps/tomato/icon.png",
+    "sha": "f95768b5ac63c91c20a682c59e5f66c69f273a22",
+    "size": 594
+   }
+  ]
+ }
+}

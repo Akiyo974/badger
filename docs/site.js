@@ -32,15 +32,29 @@ function rawUrl(source, path) {
   return `https://raw.githubusercontent.com/${source.repo}/${source.branch}/${source.base}/${path}`;
 }
 
+let snapshotPromise;
+function snapshot() {
+  snapshotPromise ||= fetch("catalog.json").then((r) => (r.ok ? r.json() : { trees: {} })).then((d) => d.trees, () => ({}));
+  return snapshotPromise;
+}
+
 async function tree(source) {
   const key = "studio-tree-" + source.id;
   try {
     const cached = JSON.parse(sessionStorage.getItem(key) || "null");
     if (cached && Date.now() - cached.at < 10 * 60 * 1000) return cached.tree;
   } catch (_) {}
-  const response = await fetch(`https://api.github.com/repos/${source.repo}/git/trees/${source.branch}?recursive=1`);
-  if (!response.ok) throw new Error(`GitHub answered ${response.status}`);
-  const entries = (await response.json()).tree.filter((e) => e.type === "blob" && e.path.startsWith(source.base + "/"));
+  let entries;
+  try {
+    const response = await fetch(`https://api.github.com/repos/${source.repo}/git/trees/${source.branch}?recursive=1`);
+    if (!response.ok) throw new Error(`GitHub answered ${response.status}`);
+    entries = (await response.json()).tree.filter((e) => e.type === "blob" && e.path.startsWith(source.base + "/"));
+  } catch (error) {
+    // GitHub allows 60 calls an hour per IP address: a shared Wi-Fi runs out.
+    // catalog.json is the same list, refreshed by tools/make_catalog.py
+    entries = (await snapshot())[`${source.repo}@${source.branch}:${source.base}`];
+    if (!entries) throw error;
+  }
   try { sessionStorage.setItem(key, JSON.stringify({ at: Date.now(), tree: entries })); } catch (_) {}
   return entries;
 }
@@ -62,8 +76,14 @@ async function catalogue(source) {
   return list;
 }
 
-async function describe(source, app, el) {
-  if (!app.readme) return;
+// The first paragraph of the app's README, fetched once per app
+function describe(source, app) {
+  return (app.descPromise ||= readDescription(source, app));
+}
+
+async function readDescription(source, app) {
+  app.desc = "";
+  if (!app.readme) return "";
   try {
     const key = "studio-readme-" + source.id + "-" + app.slug + "-" + app.readme.sha;
     let text = sessionStorage.getItem(key);
@@ -72,8 +92,9 @@ async function describe(source, app, el) {
       try { sessionStorage.setItem(key, text); } catch (_) {}
     }
     const paragraph = text.split(/\n\s*\n/).map((p) => p.trim()).find((p) => p && !p.startsWith("#") && !p.startsWith("!") && !p.startsWith("<") && !p.startsWith("|")) || "";
-    el.textContent = paragraph.replace(/\[([^\]]+)\]\([^)]*\)/g, "$1").replace(/[*_`]/g, "").slice(0, 150);
+    app.desc = paragraph.replace(/\[([^\]]+)\]\([^)]*\)/g, "$1").replace(/[*_`]/g, "").slice(0, 150);
   } catch (_) {}
+  return app.desc;
 }
 
 let apps = [];
@@ -98,6 +119,16 @@ async function load() {
     apps.sort((a, b) => rank(a) - rank(b) || a.slug.localeCompare(b.slug));
     $("#market-count").textContent = apps.length;
     render();
+    // The search also reads the descriptions: fetch them all, and search
+    // again as they arrive if a search is typed
+    let again = 0;
+    for (const item of apps) {
+      describe(item.source, item.app).then(() => {
+        if (!$("#market-search").value.trim()) return;
+        clearTimeout(again);
+        again = setTimeout(render, 150);
+      });
+    }
   } catch (error) {
     box.innerHTML = `<p class="muted">The store could not be loaded (${escapeHtml(error.message)}). It is in <a href="studio/">Badge Studio</a>.</p>`;
   }
@@ -111,7 +142,7 @@ function render() {
   for (const item of apps) {
     if (filter === "here" && item.kind === "official") continue;
     if (filter === "official" && item.kind === "new") continue;
-    if (query && !item.slug.replace(/_/g, " ").toLowerCase().includes(query)) continue;
+    if (query && !(item.slug.replace(/_/g, " ") + " " + (item.app.desc || "")).toLowerCase().includes(query)) continue;
     const card = document.createElement("a");
     card.className = "app";
     card.href = `studio/#app=${item.source.id}/${encodeURIComponent(item.slug)}`;
@@ -122,7 +153,8 @@ function render() {
     const tag = { official: "", modded: `<span class="tag mod">modded here</span>`, new: `<span class="tag new">made here</span>` }[item.kind];
     card.innerHTML = `${picture}<div class="body"><div class="name">${escapeHtml(titleCase(item.slug))}${tag}</div><div class="desc"></div><div class="go">Install →</div></div>`;
     box.appendChild(card);
-    describe(item.source, item.app, card.querySelector(".desc"));
+    const desc = card.querySelector(".desc");
+    describe(item.source, item.app).then((text) => { desc.textContent = text; });
   }
   if (!box.children.length) box.innerHTML = `<p class="muted">No app matches.</p>`;
 }
@@ -134,4 +166,16 @@ for (const button of document.querySelectorAll("#market-filter button")) {
   };
 }
 $("#market-search").oninput = render;
+
+// Phones and tablets have no USB Web Serial: say so before the visitor taps through
+if (!("serial" in navigator) || navigator.userAgentData?.mobile || /Android|iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+  $("#desktop-only").hidden = false;
+  $("#send-link").onclick = async () => {
+    const url = location.origin + location.pathname;
+    try {
+      if (navigator.share) await navigator.share({ title: "Badge Studio", text: "Open on a computer with the badge plugged in", url });
+      else { await navigator.clipboard.writeText(url); $("#send-link").textContent = "Link copied"; }
+    } catch (_) {}
+  };
+}
 load();
