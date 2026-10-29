@@ -76,8 +76,14 @@ async function catalogue(source) {
   return list;
 }
 
-async function describe(source, app, el) {
-  if (!app.readme) return;
+// The first paragraph of the app's README, fetched once per app
+function describe(source, app) {
+  return (app.descPromise ||= readDescription(source, app));
+}
+
+async function readDescription(source, app) {
+  app.desc = "";
+  if (!app.readme) return "";
   try {
     const key = "studio-readme-" + source.id + "-" + app.slug + "-" + app.readme.sha;
     let text = sessionStorage.getItem(key);
@@ -86,8 +92,9 @@ async function describe(source, app, el) {
       try { sessionStorage.setItem(key, text); } catch (_) {}
     }
     const paragraph = text.split(/\n\s*\n/).map((p) => p.trim()).find((p) => p && !p.startsWith("#") && !p.startsWith("!") && !p.startsWith("<") && !p.startsWith("|")) || "";
-    app.desc = el.textContent = paragraph.replace(/\[([^\]]+)\]\([^)]*\)/g, "$1").replace(/[*_`]/g, "").slice(0, 150);
+    app.desc = paragraph.replace(/\[([^\]]+)\]\([^)]*\)/g, "$1").replace(/[*_`]/g, "").slice(0, 150);
   } catch (_) {}
+  return app.desc;
 }
 
 let apps = [];
@@ -112,6 +119,16 @@ async function load() {
     apps.sort((a, b) => rank(a) - rank(b) || a.slug.localeCompare(b.slug));
     $("#market-count").textContent = apps.length;
     render();
+    // The search also reads the descriptions: fetch them all, and search
+    // again as they arrive if a search is typed
+    let again = 0;
+    for (const item of apps) {
+      describe(item.source, item.app).then(() => {
+        if (!$("#market-search").value.trim()) return;
+        clearTimeout(again);
+        again = setTimeout(render, 150);
+      });
+    }
   } catch (error) {
     box.innerHTML = `<p class="muted">The store could not be loaded (${escapeHtml(error.message)}). It is in <a href="studio/">Badge Studio</a>.</p>`;
   }
@@ -136,7 +153,8 @@ function render() {
     const tag = { official: "", modded: `<span class="tag mod">modded here</span>`, new: `<span class="tag new">made here</span>` }[item.kind];
     card.innerHTML = `${picture}<div class="body"><div class="name">${escapeHtml(titleCase(item.slug))}${tag}</div><div class="desc"></div><div class="go">Install →</div></div>`;
     box.appendChild(card);
-    describe(item.source, item.app, card.querySelector(".desc"));
+    const desc = card.querySelector(".desc");
+    describe(item.source, item.app).then((text) => { desc.textContent = text; });
   }
   if (!box.children.length) box.innerHTML = `<p class="muted">No app matches.</p>`;
 }
