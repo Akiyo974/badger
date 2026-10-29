@@ -14,4 +14,9 @@
     <string name="button_select">Valider</string>
     <string name="button_back">Retour</string>
     <string name="button_home">Accueil</string>
+    <plurals name="steps_today">
+        <item quantity="one">%s pas</item>
+        <item quantity="many">%s pas</item>
+        <item quantity="other">%s pas</item>
+    </plurals>
 </resources>

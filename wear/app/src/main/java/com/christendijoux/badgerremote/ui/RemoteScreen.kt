@@ -43,6 +43,7 @@ import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.input.rotary.onRotaryScrollEvent
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.platform.LocalView
+import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.contentDescription
@@ -63,12 +64,15 @@ import com.christendijoux.badgerremote.Protocol
 import com.christendijoux.badgerremote.R
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import java.text.NumberFormat
 
 private val Ink = Color(0xFF050505)
 private val Paper = Color(0xFFF2F2EE)
 private val Accent = Color(0xFF5FED83)
 private val Fill = Color(0xFF1E2228)
 private val FillPressed = Color(0xFF2E4A36)
+
+private val STEPS_FORMAT: NumberFormat = NumberFormat.getIntegerInstance()
 
 /** Past this, a press becomes a held button (repeated until released). */
 private const val LONG_PRESS_MS = 350L
@@ -89,9 +93,13 @@ private val SPOTS = mapOf(
     BadgeButton.HOME to Spot(0.29f, 0.28f, 0.16f),
 )
 
+/** The day's steps under the buttons, and whether the badge has them. */
+data class StepsStatus(val total: Long, val sent: Boolean)
+
 @Composable
 fun RemoteScreen(
     state: LinkState,
+    steps: StepsStatus?,
     onSend: (Action, BadgeButton) -> Unit,
     onForget: () -> Unit,
     onAskPermission: () -> Unit,
@@ -126,6 +134,7 @@ fun RemoteScreen(
         ) {
             val size = min(maxWidth, maxHeight)
             Status(state, size, onForget, onAskPermission)
+            if (steps != null) Steps(steps, size)
             for ((button, spot) in SPOTS) {
                 RemoteButton(button, spot, size, connected, onSend)
             }
@@ -167,6 +176,24 @@ private fun Status(state: LinkState, size: Dp, onForget: () -> Unit, onAskPermis
                 .offset(y = size * -0.41f)
                 .width(size * 0.56f)
                 .then(if (action != null) Modifier.clickable(onClickLabel = label, onClick = action) else Modifier),
+        )
+    }
+}
+
+@Composable
+private fun Steps(steps: StepsStatus, size: Dp) {
+    val text = pluralStringResource(R.plurals.steps_today, steps.total.toInt(), STEPS_FORMAT.format(steps.total))
+    Box(Modifier.fillMaxSize()) {
+        Text(
+            text = if (steps.sent) "$text ✓" else text,
+            color = if (steps.sent) Accent else Paper.copy(alpha = 0.7f),
+            fontSize = 11.sp,
+            textAlign = TextAlign.Center,
+            maxLines = 1,
+            modifier = Modifier
+                .align(Alignment.Center)
+                .offset(y = size * 0.43f)
+                .width(size * 0.5f),
         )
     }
 }
