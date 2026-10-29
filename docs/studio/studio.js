@@ -482,8 +482,9 @@ let installed = { builtin: [], apps: [], menu: false };
 const catalogues = {};
 
 async function loadInstalled() {
+  // Not while an install runs: its staging copy is there
   installed = await badge.json(`
-_st_recover("${STAGING_ROOT}", "${INSTALL_ROOT}")
+${operation ? "" : `_st_recover("${STAGING_ROOT}", "${INSTALL_ROOT}")`}
 _apps = []
 for _n, _d in _st_ls("${INSTALL_ROOT}"):
     if not _d:
