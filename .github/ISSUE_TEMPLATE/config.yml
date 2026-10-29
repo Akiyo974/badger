@@ -1,0 +1,8 @@
+blank_issues_enabled: true
+contact_links:
+  - name: Questions and help
+    url: https://github.com/Akiyo974/badger/discussions
+    about: How to make an app, how something works, or just show your badge.
+  - name: Badge Studio
+    url: https://akiyo974.github.io/badger/studio/
+    about: Install apps on your badge from the browser.

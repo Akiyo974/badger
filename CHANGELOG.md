@@ -5,6 +5,10 @@ Notable changes to this repo. Format based on [Keep a Changelog](https://keepach
 ## Unreleased
 
 ### Added
+- **Contributing**: `CONTRIBUTING.md` with a 10-minute first app, `CODE_OF_CONDUCT.md`, MIT `LICENSE`, issue forms (bug, app idea), a pull request template, and a contributing section on the home page and in the README.
+- `tools/new_app.py` creates an app from `templates/app` (a working app, README and icon); `tests/test_apps.py` (in CI) checks every app has what the menu and Badge Studio need.
+- Badge Studio: **Another repository…** adds any GitHub repository, branch or folder as a store source, to try an app from a fork before its pull request.
+- `tools/screenshot.ps1 -App /apps/<name>` captures apps installed outside `/system`.
 - Home page: the whole app store (official apps and this repo's), read live from GitHub, with screenshots, search and filters; each app opens its page in Badge Studio (`studio/#app=<source>/<slug>`). Share image `docs/media/og.png` and a 20-second video `docs/media/badge-studio.mp4`, both drawn by `tools/make_promo.py`.
 - READMEs for Duck Maze, Pedometer, Contacts and Mona Pet, shown in the store.
 

@@ -1,0 +1,22 @@
+name: App idea
+description: An app or a feature you would like on the badge.
+labels: ["idea"]
+body:
+  - type: textarea
+    id: idea
+    attributes:
+      label: The idea
+      description: What would it do, and why would it be fun or useful at a conference?
+    validations:
+      required: true
+  - type: textarea
+    id: controls
+    attributes:
+      label: How it would work
+      description: Buttons, screens, sensors it uses (tilt, Bluetooth, NFC, Wi-Fi…). Sketches welcome.
+  - type: checkboxes
+    id: build
+    attributes:
+      label: Building it
+      options:
+        - label: I would like to build it myself (CONTRIBUTING.md explains how)

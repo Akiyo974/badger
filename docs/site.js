@@ -8,7 +8,6 @@ const SOURCES = [
   { id: "akiyo", label: "Akiyo974", repo: "Akiyo974/badger", branch: "main", base: "system/apps" },
 ];
 const SKIP_APPS = new Set(["menu", "startup", "system", "mass_storage", "settings"]);
-const MADE_HERE = new Set(["radar", "pedometer", "duck_maze"]);
 const MODDED = new Set(["badge", "contacts", "mona_pet"]);
 // Screenshots taken on the badge (docs/screenshots)
 const SHOTS = {
@@ -55,7 +54,7 @@ async function catalogue(source) {
     if (rest.some((part) => part.startsWith(".") || part === "__pycache__")) continue;
     (apps[slug] ||= { slug, files: [] }).files.push({ path: rest.join("/"), sha: entry.sha });
   }
-  const list = Object.values(apps).filter((app) => app.files.some((f) => f.path === "__init__.py"));
+  const list = Object.values(apps).filter((app) => /^[A-Za-z0-9_-]+$/.test(app.slug) && app.files.some((f) => f.path === "__init__.py"));
   for (const app of list) {
     app.icon = app.files.some((f) => f.path === "icon.png") ? rawUrl(source, app.slug + "/icon.png") : null;
     app.readme = app.files.find((f) => f.path.toLowerCase() === "readme.md");
@@ -88,8 +87,9 @@ async function load() {
     const slugs = [...new Set([...byOfficial.keys(), ...byMine.keys()])];
     apps = slugs.map((slug) => {
       const o = byOfficial.get(slug), m = byMine.get(slug);
-      // system/ also holds the stock apps as shipped: only these were changed here
-      const kind = MADE_HERE.has(slug) ? "new" : MODDED.has(slug) ? "modded" : "official";
+      // An app of this repo that the official one does not have was made here.
+      // system/ also holds the stock apps as shipped: only MODDED were changed
+      const kind = !o ? "new" : MODDED.has(slug) ? "modded" : "official";
       const app = (kind !== "official" && m) || o || m;
       return { slug, kind, app, source: app === m ? SOURCES[1] : SOURCES[0] };
     });

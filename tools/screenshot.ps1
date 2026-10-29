@@ -20,6 +20,10 @@
 .EXAMPLE
     ./tools/screenshot.ps1 -App badge -Setup 'g["qr_pages"].page = 1' -Out qr.png
     -Setup runs once the app has drawn its first frame; g holds its variables.
+
+.EXAMPLE
+    ./tools/screenshot.ps1 -App /apps/hello_badge -Out hello.png
+    An app installed outside /system, from Badge Studio for example.
 #>
 [CmdletBinding()]
 param(
@@ -117,7 +121,8 @@ function Get-Frame($serial, [string]$AppName, [double]$RunSeconds, [string]$Setu
     $serial.Write([char]3); Start-Sleep -Milliseconds 400
     $null = Invoke-Code $serial 'pass'
 
-    $path = "/system/apps/$AppName"
+    # A full path reaches apps installed outside /system, like /apps/<name>
+    $path = if ($AppName.StartsWith('/')) { $AppName } else { "/system/apps/$AppName" }
     $ms = [int]($RunSeconds * 1000)
     # -Setup code goes out in base64 to avoid any quoting trouble
     $setup64 = [Convert]::ToBase64String([Text.Encoding]::UTF8.GetBytes($SetupCode))
@@ -284,7 +289,7 @@ function Save-Png([byte[]]$Raw, [string]$Path, [int]$Scale) {
 }
 
 if ($App) {
-    if (-not $Out) { $Out = "docs/screenshots/$App.png" }
+    if (-not $Out) { $Out = "docs/screenshots/$(Split-Path $App -Leaf).png" }
     $captures = @([pscustomobject]@{ app = $App; file = $Out; seconds = $Seconds; setup = $Setup })
 }
 else {

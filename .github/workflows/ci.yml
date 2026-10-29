@@ -56,6 +56,9 @@ jobs:
       - name: Duck Maze level checks
         run: python tests/test_duck_maze.py
 
+      - name: App checks (README, icon, paths)
+        run: python tests/test_apps.py
+
       - name: Badge Studio syntax
         run: node --check docs/studio/studio.js && node --check docs/site.js
 
