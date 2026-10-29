@@ -1,5 +1,1684 @@
 {
  "trees": {
+  "Akiyo974/badger@6912f14355e5603f5793e61baf7acbe1889146c0:system": [
+   {
+    "path": "system/apps/badge/__init__.py",
+    "sha": "37aae1b9db1621477a50db5eeb1da28ab47eb767",
+    "size": 11280
+   },
+   {
+    "path": "system/apps/brattal/__init__.py",
+    "sha": "b6ae079373e7a3bb1128bbe76d34b70fa6e1eb20",
+    "size": 23803
+   },
+   {
+    "path": "system/apps/contacts/__init__.py",
+    "sha": "2b62d120f1799f3ee20134081606a8a5020f2fea",
+    "size": 18786
+   },
+   {
+    "path": "system/apps/flappy_mona/__init__.py",
+    "sha": "49accc72cb5fb6e7178ab314e711f6e3d68591ba",
+    "size": 3608
+   },
+   {
+    "path": "system/apps/flappy_mona/assets/background.png",
+    "sha": "0d2b1ac78508a534ed779f83b2dd651b7550cc88",
+    "size": 1486
+   },
+   {
+    "path": "system/apps/flappy_mona/assets/cloud.png",
+    "sha": "be37581db47225383403f1e4abd54dc9e255465b",
+    "size": 1647
+   },
+   {
+    "path": "system/apps/flappy_mona/assets/grass.png",
+    "sha": "5a4df1305f304ada129d6a6b9951cb2898c0129d",
+    "size": 1532
+   },
+   {
+    "path": "system/apps/flappy_mona/assets/mona.png",
+    "sha": "8a927590c023290935bd23cdf6a4eb4b55892983",
+    "size": 2612
+   },
+   {
+    "path": "system/apps/flappy_mona/assets/obstacles.png",
+    "sha": "d86ff151a8a4f3481eeb6af215e7dae5755da298",
+    "size": 702
+   },
+   {
+    "path": "system/apps/flappy_mona/mona.py",
+    "sha": "f062b404732d6f2918914840ed6ea9f7b0258ea4",
+    "size": 2521
+   },
+   {
+    "path": "system/apps/flappy_mona/obstacle.py",
+    "sha": "038d1495ec295ecced986838bd39509c5b96f4b9",
+    "size": 1559
+   },
+   {
+    "path": "system/apps/iss/__init__.py",
+    "sha": "79c7d999d926f14db18e5b9f4866f4550d3b53b6",
+    "size": 23342
+   },
+   {
+    "path": "system/apps/iss/world.geo.json",
+    "sha": "2dca606a0697494c89313dad473432e32f08b44f",
+    "size": 215029
+   },
+   {
+    "path": "system/apps/life/__init__.py",
+    "sha": "6e832adbc6df6820915f179f14a34fff8b71a92d",
+    "size": 7310
+   },
+   {
+    "path": "system/apps/mass_storage/__init__.py",
+    "sha": "c1d59810e397b00014efb7c9de7a72df0b19038c",
+    "size": 915
+   },
+   {
+    "path": "system/apps/menu/__init__.py",
+    "sha": "4858ce77a2f88d1725ba2f94ce10863343a48607",
+    "size": 5202
+   },
+   {
+    "path": "system/apps/menu/achievements.py",
+    "sha": "677e9860604321cb3aeb82026aaeda50694384e7",
+    "size": 22588
+   },
+   {
+    "path": "system/apps/menu/anim/badge.bin",
+    "sha": "c63b9a24ba8a02729d14c1d4e91ca7653bcd6d24",
+    "size": 25684
+   },
+   {
+    "path": "system/apps/menu/anim/brattal.bin",
+    "sha": "e6631ab83e3a5f8c22923422ae14b205a5a1a0b6",
+    "size": 12247
+   },
+   {
+    "path": "system/apps/menu/anim/contacts.bin",
+    "sha": "f0f42c489530a6045cb7a9f6cc1dfa1ecec8e51c",
+    "size": 30864
+   },
+   {
+    "path": "system/apps/menu/anim/default.bin",
+    "sha": "fb89191f0f75ea395e4f23430903077c6402953a",
+    "size": 55234
+   },
+   {
+    "path": "system/apps/menu/anim/flappy_mona.bin",
+    "sha": "82d97a1174818f9e06cacb9cc794d46e501326d7",
+    "size": 29711
+   },
+   {
+    "path": "system/apps/menu/anim/iss.bin",
+    "sha": "a11ccea4683be48e34fc03946fe19314f242110d",
+    "size": 36682
+   },
+   {
+    "path": "system/apps/menu/anim/life.bin",
+    "sha": "d4dbaafb787725db2f1b8caf2da9e7bb7f6fe5a5",
+    "size": 19004
+   },
+   {
+    "path": "system/apps/menu/anim/mass_storage.bin",
+    "sha": "6b17af9c18f0602684091fd5480e4de8fcf6e3ad",
+    "size": 19395
+   },
+   {
+    "path": "system/apps/menu/anim/merge_conflict.bin",
+    "sha": "bfca10218091a2c57e4fa781bcc0058de519d44b",
+    "size": 6078
+   },
+   {
+    "path": "system/apps/menu/anim/mona_paint.bin",
+    "sha": "9e55f97272f5acbd6871823d8dcded8595ea70a5",
+    "size": 52886
+   },
+   {
+    "path": "system/apps/menu/anim/mona_pet.bin",
+    "sha": "93e7c5236cfadb870483d44c4a78846a50743ddc",
+    "size": 38688
+   },
+   {
+    "path": "system/apps/menu/anim/pong.bin",
+    "sha": "972635dc5536a9e91c66be58533215f2757ea9fe",
+    "size": 38544
+   },
+   {
+    "path": "system/apps/menu/anim/rogue.bin",
+    "sha": "df2cdb71caf8bb72f4235c2b1f642dd3bb31f6ce",
+    "size": 47349
+   },
+   {
+    "path": "system/apps/menu/anim/settings.bin",
+    "sha": "aa89449afcb2358bb31f855ea19dc3ad49fffb87",
+    "size": 33268
+   },
+   {
+    "path": "system/apps/menu/anim/show.bin",
+    "sha": "6a76b00ef30857ebb2792952498c9d952ca14251",
+    "size": 8944
+   },
+   {
+    "path": "system/apps/menu/anim/snake.bin",
+    "sha": "716cd8b496a669ebcb487e9bf797cd590e4a3d2d",
+    "size": 18616
+   },
+   {
+    "path": "system/apps/menu/app.py",
+    "sha": "13ffb14aad36e5e90ce8211ad614b6b14443ac5c",
+    "size": 17695
+   },
+   {
+    "path": "system/apps/menu/awards/ascii-donut-small.png",
+    "sha": "0bcc40ee3f5cb404d07ca3660693fd4a069a83fb",
+    "size": 2992
+   },
+   {
+    "path": "system/apps/menu/awards/ascii-donut.png",
+    "sha": "7565a25c2082f3f4620f19cd66cfc5f8db5d676b",
+    "size": 10405
+   },
+   {
+    "path": "system/apps/menu/awards/ascii-mona-small.png",
+    "sha": "39e5019ef8eb705f3d54d57056e34b373efe6952",
+    "size": 6015
+   },
+   {
+    "path": "system/apps/menu/awards/ascii-mona.png",
+    "sha": "d9d45227e8c6451726fd8e5472f74456824849d0",
+    "size": 19385
+   },
+   {
+    "path": "system/apps/menu/awards/cab-small.png",
+    "sha": "dfc79aaf85cc107e378f2056d65c9260c6768d58",
+    "size": 5207
+   },
+   {
+    "path": "system/apps/menu/awards/cab.png",
+    "sha": "e57a5c86fc8c099a9a1b2610af1e8c6003bdbebd",
+    "size": 11440
+   },
+   {
+    "path": "system/apps/menu/awards/cabana-small.png",
+    "sha": "d984abf32bbe682ca0d91ce036ddd3b3d91f76ea",
+    "size": 708
+   },
+   {
+    "path": "system/apps/menu/awards/cabana.png",
+    "sha": "a0b86895bcec6ca95b8604baabf00b169e72acd6",
+    "size": 1218
+   },
+   {
+    "path": "system/apps/menu/awards/compass-needle.png",
+    "sha": "f3a9efe44458f50024d433d0fdeea868a50a3335",
+    "size": 2765
+   },
+   {
+    "path": "system/apps/menu/awards/compass-shadow.png",
+    "sha": "86bb026672064db6140b1c6167625646cca18a27",
+    "size": 608
+   },
+   {
+    "path": "system/apps/menu/awards/compass.png",
+    "sha": "346d77c94151d2d014327ee221b8f608fd3933f3",
+    "size": 13255
+   },
+   {
+    "path": "system/apps/menu/awards/diner-small.png",
+    "sha": "7584ba2c8c116869f2e0cfc9709746b29e4fd505",
+    "size": 6311
+   },
+   {
+    "path": "system/apps/menu/awards/diner.png",
+    "sha": "b5f1c667097a8b9e9cbe139ad67022162d259b49",
+    "size": 17949
+   },
+   {
+    "path": "system/apps/menu/awards/frying-pan-small.png",
+    "sha": "43b996ac86e9ddf1083ffb02e477b64b087faae4",
+    "size": 6806
+   },
+   {
+    "path": "system/apps/menu/awards/frying-pan.png",
+    "sha": "fec68f9107b8e6d90207e3db47b203775126ab6b",
+    "size": 16727
+   },
+   {
+    "path": "system/apps/menu/awards/keycap-small.png",
+    "sha": "31f4c30cdfbddd7c32aa91ad02fd21c1f6cae5ce",
+    "size": 7292
+   },
+   {
+    "path": "system/apps/menu/awards/keycap.png",
+    "sha": "0cb5bcfa8add9f8f77a1345d9231e04d7200787b",
+    "size": 18202
+   },
+   {
+    "path": "system/apps/menu/awards/up-arrow-small.png",
+    "sha": "25deb440c380eb6b6df11fcb48d05468bc51bdf1",
+    "size": 1462
+   },
+   {
+    "path": "system/apps/menu/awards/up-arrow.png",
+    "sha": "3a199f98e4c82345ada03b65dfa0b29cda79bb4c",
+    "size": 2343
+   },
+   {
+    "path": "system/apps/menu/awards/vinyl-small.png",
+    "sha": "971442c4a05d18cff28322dbb17be4b4f77d6808",
+    "size": 6208
+   },
+   {
+    "path": "system/apps/menu/awards/vinyl.png",
+    "sha": "5714ce460887743e1123bb50a17d60a0e6864c15",
+    "size": 18167
+   },
+   {
+    "path": "system/apps/menu/celebration.py",
+    "sha": "1d9c97bfdc1ca6eaa654f350f168d7edb782ffb4",
+    "size": 6770
+   },
+   {
+    "path": "system/apps/menu/gallery.py",
+    "sha": "b3f7e96faaf22d4e3ebcfb59046fbccebcc16f8b",
+    "size": 3837
+   },
+   {
+    "path": "system/apps/menu/icons.mpy",
+    "sha": "8b41d1bf569384f31352140e4d11fcb9789fa5e0",
+    "size": 17943
+   },
+   {
+    "path": "system/apps/menu/mona.mpy",
+    "sha": "3d848d230bdd40e61c51af512f043cc0c2acf74f",
+    "size": 1568
+   },
+   {
+    "path": "system/apps/menu/mona3d.mpy",
+    "sha": "ef3367ccea159ed693d17a4a4f0deaabf1b0bcb7",
+    "size": 3600
+   },
+   {
+    "path": "system/apps/menu/mona_menu.p3d",
+    "sha": "c47c6a6f781b78fad6ff369a5bd5de19f94c5ac6",
+    "size": 24308
+   },
+   {
+    "path": "system/apps/menu/opening.mpy",
+    "sha": "0f977222ac8c9ddde43250113e262bb310a66386",
+    "size": 1135
+   },
+   {
+    "path": "system/apps/menu/photos/ducky-profile.png",
+    "sha": "831cb1bfe30667e1bd95577a20cf9465bf7e8f3a",
+    "size": 24228
+   },
+   {
+    "path": "system/apps/menu/photos/ducky-quilt.png",
+    "sha": "ee6ea52ef3cb6812589a4e47c0f635da53557284",
+    "size": 23706
+   },
+   {
+    "path": "system/apps/menu/photos/mona-centered.png",
+    "sha": "7df498106312bfa1995f2192122d4dc4235025e7",
+    "size": 27600
+   },
+   {
+    "path": "system/apps/menu/photos/mona-ducky-blue.png",
+    "sha": "10191fd7a973c72ce37d999f410e34b7986d7ed0",
+    "size": 33810
+   },
+   {
+    "path": "system/apps/menu/photos/mona-quilt.png",
+    "sha": "08a6a197e22e04473510834a32a3db7970b09b61",
+    "size": 18523
+   },
+   {
+    "path": "system/apps/menu/photos/tiles/ducky-profile.png",
+    "sha": "b569df776152b36fc2d70453c4d1a8672c7799cb",
+    "size": 7975
+   },
+   {
+    "path": "system/apps/menu/photos/tiles/ducky-quilt.png",
+    "sha": "435834e8ad5d481da91faf1ec7c08328c304494d",
+    "size": 13456
+   },
+   {
+    "path": "system/apps/menu/photos/tiles/mona-centered.png",
+    "sha": "dc7e444010c34ce0a9ead7ced10c66306bb412a7",
+    "size": 19976
+   },
+   {
+    "path": "system/apps/menu/photos/tiles/mona-ducky-blue.png",
+    "sha": "a7ce0798f95e1f913feb1af156e4f3840ce2f5d2",
+    "size": 14276
+   },
+   {
+    "path": "system/apps/menu/photos/tiles/mona-quilt.png",
+    "sha": "eb98a2455473624ac701eea2c43195406c27644a",
+    "size": 8944
+   },
+   {
+    "path": "system/apps/menu/silhouettes.py",
+    "sha": "ddbff5eef1560d80e0c47448af542371f739be6b",
+    "size": 3281
+   },
+   {
+    "path": "system/apps/menu/src/icons.py",
+    "sha": "b8956eb898d41bd946a356cad304c675742898c1",
+    "size": 18575
+   },
+   {
+    "path": "system/apps/menu/src/mona.py",
+    "sha": "6bf33407c757c29bb941c7fe9946f70ad510d9ff",
+    "size": 2952
+   },
+   {
+    "path": "system/apps/menu/src/mona3d.py",
+    "sha": "d8b188a37d5bf2caa71acacdce25086709ed879c",
+    "size": 10232
+   },
+   {
+    "path": "system/apps/menu/src/opening.py",
+    "sha": "119d03f6218f6d8824f6ba6eb671c9232fa81582",
+    "size": 1898
+   },
+   {
+    "path": "system/apps/menu/src/ui.py",
+    "sha": "4f439d6a19faf806cfca73203fc6d91709ff6cbf",
+    "size": 3622
+   },
+   {
+    "path": "system/apps/menu/ui.mpy",
+    "sha": "e02f56c5e146013da6ce4694462353a5d54febdd",
+    "size": 2012
+   },
+   {
+    "path": "system/apps/merge_conflict/__init__.py",
+    "sha": "f98e43b35f8a88a1610c5ac7968ac4cf020ab520",
+    "size": 31124
+   },
+   {
+    "path": "system/apps/merge_conflict/games.py",
+    "sha": "6068aef2c95cf142c2f936fda6ed786b072644b4",
+    "size": 71059
+   },
+   {
+    "path": "system/apps/merge_conflict/mona-code.png",
+    "sha": "dfaca4131b2c5b9d5eb5ed90b8d22453a434de33",
+    "size": 869
+   },
+   {
+    "path": "system/apps/merge_conflict/mona-dance.png",
+    "sha": "7c701daa542804567fd6aca1d3e0e08ee9818fd7",
+    "size": 716
+   },
+   {
+    "path": "system/apps/merge_conflict/mona-dead.png",
+    "sha": "dc2d29865160c11be96a8909cd63762b7c5e6ec9",
+    "size": 685
+   },
+   {
+    "path": "system/apps/merge_conflict/mona-default.png",
+    "sha": "8688d9d2488a255f869fdf43a7aee039e4bf38ad",
+    "size": 886
+   },
+   {
+    "path": "system/apps/merge_conflict/mona-eating.png",
+    "sha": "0d1f6edb972a32e5f89c482fe938daa9153ac49b",
+    "size": 922
+   },
+   {
+    "path": "system/apps/merge_conflict/mona-heart.png",
+    "sha": "8c3a6f2885c2daf4f926ab9bf772a32324897b6a",
+    "size": 1123
+   },
+   {
+    "path": "system/apps/merge_conflict/mona-notify.png",
+    "sha": "7d8c88d1b1927a1368378a35ae540533ea1ae353",
+    "size": 949
+   },
+   {
+    "path": "system/apps/merge_conflict/replay.py",
+    "sha": "f24d19e4c1bec92e31844645af4fd1d13f67115d",
+    "size": 17928
+   },
+   {
+    "path": "system/apps/merge_conflict/ui.py",
+    "sha": "dbb63be3b6f02846c0a404b7d807d7a5d98ca315",
+    "size": 15446
+   },
+   {
+    "path": "system/apps/mona_paint/__init__.py",
+    "sha": "35e82222995fde9d76bb5261d82a7fdb2d994498",
+    "size": 17448
+   },
+   {
+    "path": "system/apps/mona_paint/ui.py",
+    "sha": "88d0f4659507556f6c8cc8210a06b8652b5c0f86",
+    "size": 10843
+   },
+   {
+    "path": "system/apps/mona_pet/__init__.py",
+    "sha": "09e88b3c0e6fb31a6a36193a35d29eb305721a4e",
+    "size": 7548
+   },
+   {
+    "path": "system/apps/mona_pet/assets/background/background_day.png",
+    "sha": "ad1e50d25797973a67aa7425d7e1e89168252167",
+    "size": 2176
+   },
+   {
+    "path": "system/apps/mona_pet/assets/background/background_dusk.png",
+    "sha": "287f3d699f99db69aa13307ddd35150f6fcf8599",
+    "size": 953
+   },
+   {
+    "path": "system/apps/mona_pet/assets/background/background_night.png",
+    "sha": "8c3a4c250e73a4c81ff6777845f99c79ec48791e",
+    "size": 961
+   },
+   {
+    "path": "system/apps/mona_pet/assets/mona-sprites/mona-code.png",
+    "sha": "e0b3f5e165853411f7cd9bc054cf5b6cfa62e7b4",
+    "size": 542
+   },
+   {
+    "path": "system/apps/mona_pet/assets/mona-sprites/mona-dance.png",
+    "sha": "3af6902edbb1dc7960df6b28b97e1a7266b78f37",
+    "size": 461
+   },
+   {
+    "path": "system/apps/mona_pet/assets/mona-sprites/mona-dead.png",
+    "sha": "7b8a6179cbbe3daa44900199bdcd115530c53a38",
+    "size": 500
+   },
+   {
+    "path": "system/apps/mona_pet/assets/mona-sprites/mona-default.png",
+    "sha": "2de5c752e1816fdb7dab644669e85704b7804694",
+    "size": 577
+   },
+   {
+    "path": "system/apps/mona_pet/assets/mona-sprites/mona-eating.png",
+    "sha": "f2968fdffb7f92ca2d90bf0d0806e529f372fb90",
+    "size": 594
+   },
+   {
+    "path": "system/apps/mona_pet/assets/mona-sprites/mona-heart.png",
+    "sha": "c14ec7edd9750248f89a38bf824a04c788ee2c0d",
+    "size": 726
+   },
+   {
+    "path": "system/apps/mona_pet/assets/mona-sprites/mona-love.png",
+    "sha": "c14ec7edd9750248f89a38bf824a04c788ee2c0d",
+    "size": 726
+   },
+   {
+    "path": "system/apps/mona_pet/assets/mona-sprites/mona-notify.png",
+    "sha": "116a183aac7def68f730822b2321a1816580fc6c",
+    "size": 541
+   },
+   {
+    "path": "system/apps/mona_pet/assets/mona-sprites/mona-sleep.png",
+    "sha": "99eb5e8b32c6790e40fc9a3d4234938509f054d7",
+    "size": 1133
+   },
+   {
+    "path": "system/apps/mona_pet/assets/ui/buttons.png",
+    "sha": "8570eb1d499b9c136117a3204fead1c2bd81a8d4",
+    "size": 704
+   },
+   {
+    "path": "system/apps/mona_pet/assets/ui/frame.png",
+    "sha": "4b6fc9d62e0a6b6906837ed4b954eb7670b8d279",
+    "size": 499
+   },
+   {
+    "path": "system/apps/mona_pet/clock.py",
+    "sha": "07dce2ddf9931625a1fe8a09710f53b4b9494289",
+    "size": 1921
+   },
+   {
+    "path": "system/apps/mona_pet/food.py",
+    "sha": "c349b477959e9a45d9fb0aba863125b946deadfe",
+    "size": 1616
+   },
+   {
+    "path": "system/apps/mona_pet/icons.py",
+    "sha": "812255b066a0c3cda3becd164667d728691198de",
+    "size": 471
+   },
+   {
+    "path": "system/apps/mona_pet/match.py",
+    "sha": "3552186add4a666f14abf35e6a74efa6d04252fc",
+    "size": 5941
+   },
+   {
+    "path": "system/apps/mona_pet/tufty.py",
+    "sha": "61d9528a9327aed48b1c3fd90d74e0a849f0fb9d",
+    "size": 5302
+   },
+   {
+    "path": "system/apps/mona_pet/ui.py",
+    "sha": "86b5e09177405f58a45b8318f222f3ae45ca964a",
+    "size": 3481
+   },
+   {
+    "path": "system/apps/pong/__init__.py",
+    "sha": "2709306da29b570a9504950b0178eb93d8cc488a",
+    "size": 20234
+   },
+   {
+    "path": "system/apps/rogue/__init__.py",
+    "sha": "811a39df30f5c7b92085ef0692dd28c3e5ce95d3",
+    "size": 8196
+   },
+   {
+    "path": "system/apps/rogue/build.py",
+    "sha": "da4ed1c44b953ab96e3d9996db88b0d10713d3d1",
+    "size": 19517
+   },
+   {
+    "path": "system/apps/rogue/content.py",
+    "sha": "352836483b230046e435cd8311798949f9a0a924",
+    "size": 1088
+   },
+   {
+    "path": "system/apps/rogue/game.py",
+    "sha": "fc2f7bb25b70f733493773f60283b1b6c81c114e",
+    "size": 14477
+   },
+   {
+    "path": "system/apps/rogue/items.py",
+    "sha": "f59feff38d28070398bc0d96b702196dd77657f2",
+    "size": 5729
+   },
+   {
+    "path": "system/apps/rogue/monsters.py",
+    "sha": "28d601012bfc759a0ed7392f6b16505f8a276cc3",
+    "size": 7166
+   },
+   {
+    "path": "system/apps/rogue/render.py",
+    "sha": "aefbdb96d431ea1aef613c364ff0356c02a93f46",
+    "size": 20993
+   },
+   {
+    "path": "system/apps/rogue/rings.py",
+    "sha": "18454915c8242d11d42a1f4b4719778a5f7ee555",
+    "size": 1547
+   },
+   {
+    "path": "system/apps/rogue/save.py",
+    "sha": "45c7c15558d0cba5344891e1cdf960024ca77752",
+    "size": 4700
+   },
+   {
+    "path": "system/apps/rogue/scrolls.py",
+    "sha": "52b4fbd1538fbef70c19dde5da40c8c9965bb5b1",
+    "size": 4493
+   },
+   {
+    "path": "system/apps/rogue/world.py",
+    "sha": "6a21fafdd843f29ddbec62b1ef190ecd74363cd9",
+    "size": 8627
+   },
+   {
+    "path": "system/apps/settings/__init__.py",
+    "sha": "5b4b34195a7bdd5f719682685b10e514b1d63547",
+    "size": 13292
+   },
+   {
+    "path": "system/apps/show/__init__.py",
+    "sha": "839b193757ac8187ea4b8883752af1ed0ba36531",
+    "size": 126
+   },
+   {
+    "path": "system/apps/snake/__init__.py",
+    "sha": "84d2c85d1f152c5e622c55befe8b213cca917427",
+    "size": 13408
+   },
+   {
+    "path": "system/assets/armmark.svg",
+    "sha": "c507f6fcdfde43d3466c74a683804d37fb461091",
+    "size": 1653
+   },
+   {
+    "path": "system/assets/background.png",
+    "sha": "6833dc776747e2e4327db075808761c2b53b2313",
+    "size": 12038
+   },
+   {
+    "path": "system/assets/cards.png",
+    "sha": "33cd9b16f7accb1cf6cde00e02a1310ccd1a5816",
+    "size": 5877
+   },
+   {
+    "path": "system/assets/fonts/DynaPuff-Medium.af",
+    "sha": "5a935f3fa34df238fb51d6e8bd62edf6db4b3478",
+    "size": 9688
+   },
+   {
+    "path": "system/assets/fonts/IndieFlower-Regular.af",
+    "sha": "957a457142c99ae82a18d6254c16eb9a629236be",
+    "size": 9756
+   },
+   {
+    "path": "system/assets/fonts/MonaSans-Medium.af",
+    "sha": "a6c8ed2f74a7dba61bb5711415587752df308e62",
+    "size": 66270
+   },
+   {
+    "path": "system/assets/fonts/lato-400.af",
+    "sha": "e64bd5beea793ba2a875b2f29cd574590d062c82",
+    "size": 21922
+   },
+   {
+    "path": "system/assets/fonts/lato-900.af",
+    "sha": "7ffd4812634a221ef4c9f87ad8f08f5c78cb23e6",
+    "size": 21660
+   },
+   {
+    "path": "system/assets/fonts/licences/OFL.txt",
+    "sha": "98383e3d835a5c5aea988a74b569193a30dcbcec",
+    "size": 4407
+   },
+   {
+    "path": "system/assets/icons.png",
+    "sha": "a46a3f4d6b52545320292ac522f4647861cf87c9",
+    "size": 1844
+   },
+   {
+    "path": "system/assets/skull.png",
+    "sha": "82244dbe195a9ccf41f6cc40d9b3af929a96e70e",
+    "size": 469
+   },
+   {
+    "path": "system/assets/sparkle/invertocat.png",
+    "sha": "7cc5b848ad506f6d6e2e7df2144cab8033bb7ced",
+    "size": 5437
+   },
+   {
+    "path": "system/assets/squirrel-sprites/background.png",
+    "sha": "a592aba0124fcf216fa2e613f749c0a2b881e282",
+    "size": 4589
+   },
+   {
+    "path": "system/assets/squirrel-sprites/clean.png",
+    "sha": "c363da67081a064cddf0d26703165fe0caf719c4",
+    "size": 703
+   },
+   {
+    "path": "system/assets/squirrel-sprites/dance.png",
+    "sha": "c363da67081a064cddf0d26703165fe0caf719c4",
+    "size": 703
+   },
+   {
+    "path": "system/assets/squirrel-sprites/dead.png",
+    "sha": "ca16b4cef49c3b434a48f492a747e067beea4653",
+    "size": 733
+   },
+   {
+    "path": "system/assets/squirrel-sprites/default.png",
+    "sha": "57a9cd8cf9facb279970ea137c63aba1b93407f3",
+    "size": 709
+   },
+   {
+    "path": "system/assets/squirrel-sprites/dig.png",
+    "sha": "24a279000e77b90e6bead3f8ec1e691e4c1426fa",
+    "size": 680
+   },
+   {
+    "path": "system/assets/squirrel-sprites/eating.png",
+    "sha": "c88f5b24db3fe6d653fb83d21c530ce3a3eb4228",
+    "size": 457
+   },
+   {
+    "path": "system/assets/squirrel-sprites/notify.png",
+    "sha": "abcc81cfd5acbb969f0ec3db1bf85de948b0066a",
+    "size": 805
+   },
+   {
+    "path": "system/assets/squirrel-sprites/running.png",
+    "sha": "25dce291b48d8821561a881a2d16d6b9435f2ccc",
+    "size": 1111
+   },
+   {
+    "path": "system/assets/squirrel-sprites/sleep.png",
+    "sha": "fc3f7897416a3167857d86b4302ad770edc441ad",
+    "size": 567
+   },
+   {
+    "path": "system/assets/squirrel.gif",
+    "sha": "382e012279a391c596992d676fd7b8e4b52dea28",
+    "size": 1156
+   },
+   {
+    "path": "system/assets/tufty.png",
+    "sha": "1c0240cedea6f8c4e56573b920735046019a18b1",
+    "size": 34957
+   },
+   {
+    "path": "system/assets/world.geo.json",
+    "sha": "2dca606a0697494c89313dad473432e32f08b44f",
+    "size": 215029
+   },
+   {
+    "path": "system/main.py",
+    "sha": "4c2765ba38167f4bf7406f44113b21c362dd7b0e",
+    "size": 1652
+   },
+   {
+    "path": "system/startup/__init__.py",
+    "sha": "499dad9814bdf7a992a43abee014621c06a114f0",
+    "size": 2802
+   },
+   {
+    "path": "system/startup/animation.bin",
+    "sha": "dd6b57bb9cd32a9cbf633ccf0015ff46b4fc4320",
+    "size": 172210
+   }
+  ],
+  "Akiyo974/badger@main:system": [
+   {
+    "path": "system/apps/badge/README.md",
+    "sha": "f3ecf91a727c4596a1bf06c7c8d5ab9ab56023ba",
+    "size": 1793
+   },
+   {
+    "path": "system/apps/badge/__init__.py",
+    "sha": "5d6b16033d34e7ce09ebc249b6417779b0b0da2a",
+    "size": 33839
+   },
+   {
+    "path": "system/apps/badge/icon.png",
+    "sha": "0c71cfd8322ed528668280820e73886b8172dd18",
+    "size": 818
+   },
+   {
+    "path": "system/apps/badge/qr_github.png",
+    "sha": "120ec818cf783528552c93a3c7a002c8375ac868",
+    "size": 874
+   },
+   {
+    "path": "system/apps/badge/qr_linkedin.png",
+    "sha": "de32dcc7b2473c291199aaa3330e2633d6a1174e",
+    "size": 955
+   },
+   {
+    "path": "system/apps/badge/qr_site.png",
+    "sha": "ef91ee3f765583392bcaf4a729451337cefda64a",
+    "size": 877
+   },
+   {
+    "path": "system/apps/brattal/__init__.py",
+    "sha": "b6ae079373e7a3bb1128bbe76d34b70fa6e1eb20",
+    "size": 23803
+   },
+   {
+    "path": "system/apps/contacts/README.md",
+    "sha": "e1256e04025f6771b00b96961d607998e316cb88",
+    "size": 304
+   },
+   {
+    "path": "system/apps/contacts/__init__.py",
+    "sha": "9477ec34c0a900b9d102be1290728902bf67ec78",
+    "size": 22433
+   },
+   {
+    "path": "system/apps/duck_maze/README.md",
+    "sha": "a0b58f1de44a19de97a2bde943c5017660b89c79",
+    "size": 394
+   },
+   {
+    "path": "system/apps/duck_maze/__init__.py",
+    "sha": "121331b8407937c7e4d8104ea7b60135655cc140",
+    "size": 17934
+   },
+   {
+    "path": "system/apps/duck_maze/duck.png",
+    "sha": "dcfcd56f7cb31a0fc13b5654e64421dddbcdc24a",
+    "size": 248
+   },
+   {
+    "path": "system/apps/duck_maze/icon.png",
+    "sha": "72ac64c005cd7295c070c884816e53ba1a620659",
+    "size": 304
+   },
+   {
+    "path": "system/apps/duck_maze/levels.py",
+    "sha": "710e6d325a728f377a3bd2c91895419c61f611ec",
+    "size": 2960
+   },
+   {
+    "path": "system/apps/flappy_mona/__init__.py",
+    "sha": "49accc72cb5fb6e7178ab314e711f6e3d68591ba",
+    "size": 3608
+   },
+   {
+    "path": "system/apps/flappy_mona/assets/background.png",
+    "sha": "0d2b1ac78508a534ed779f83b2dd651b7550cc88",
+    "size": 1486
+   },
+   {
+    "path": "system/apps/flappy_mona/assets/cloud.png",
+    "sha": "be37581db47225383403f1e4abd54dc9e255465b",
+    "size": 1647
+   },
+   {
+    "path": "system/apps/flappy_mona/assets/grass.png",
+    "sha": "5a4df1305f304ada129d6a6b9951cb2898c0129d",
+    "size": 1532
+   },
+   {
+    "path": "system/apps/flappy_mona/assets/mona.png",
+    "sha": "8a927590c023290935bd23cdf6a4eb4b55892983",
+    "size": 2612
+   },
+   {
+    "path": "system/apps/flappy_mona/assets/obstacles.png",
+    "sha": "d86ff151a8a4f3481eeb6af215e7dae5755da298",
+    "size": 702
+   },
+   {
+    "path": "system/apps/flappy_mona/mona.py",
+    "sha": "f062b404732d6f2918914840ed6ea9f7b0258ea4",
+    "size": 2521
+   },
+   {
+    "path": "system/apps/flappy_mona/obstacle.py",
+    "sha": "038d1495ec295ecced986838bd39509c5b96f4b9",
+    "size": 1559
+   },
+   {
+    "path": "system/apps/iss/__init__.py",
+    "sha": "79c7d999d926f14db18e5b9f4866f4550d3b53b6",
+    "size": 23342
+   },
+   {
+    "path": "system/apps/iss/world.geo.json",
+    "sha": "2dca606a0697494c89313dad473432e32f08b44f",
+    "size": 215029
+   },
+   {
+    "path": "system/apps/life/__init__.py",
+    "sha": "6e832adbc6df6820915f179f14a34fff8b71a92d",
+    "size": 7310
+   },
+   {
+    "path": "system/apps/mass_storage/__init__.py",
+    "sha": "c1d59810e397b00014efb7c9de7a72df0b19038c",
+    "size": 915
+   },
+   {
+    "path": "system/apps/menu/__init__.py",
+    "sha": "c7c80ca0c7b0b1acffdc16695c3fdeb1fdd00d38",
+    "size": 5677
+   },
+   {
+    "path": "system/apps/menu/achievements.py",
+    "sha": "a9245406b043414138920c68e397d9373362b72b",
+    "size": 22621
+   },
+   {
+    "path": "system/apps/menu/anim/badge.bin",
+    "sha": "c63b9a24ba8a02729d14c1d4e91ca7653bcd6d24",
+    "size": 25684
+   },
+   {
+    "path": "system/apps/menu/anim/brattal.bin",
+    "sha": "e6631ab83e3a5f8c22923422ae14b205a5a1a0b6",
+    "size": 12247
+   },
+   {
+    "path": "system/apps/menu/anim/contacts.bin",
+    "sha": "f0f42c489530a6045cb7a9f6cc1dfa1ecec8e51c",
+    "size": 30864
+   },
+   {
+    "path": "system/apps/menu/anim/default.bin",
+    "sha": "fb89191f0f75ea395e4f23430903077c6402953a",
+    "size": 55234
+   },
+   {
+    "path": "system/apps/menu/anim/flappy_mona.bin",
+    "sha": "82d97a1174818f9e06cacb9cc794d46e501326d7",
+    "size": 29711
+   },
+   {
+    "path": "system/apps/menu/anim/iss.bin",
+    "sha": "a11ccea4683be48e34fc03946fe19314f242110d",
+    "size": 36682
+   },
+   {
+    "path": "system/apps/menu/anim/life.bin",
+    "sha": "d4dbaafb787725db2f1b8caf2da9e7bb7f6fe5a5",
+    "size": 19004
+   },
+   {
+    "path": "system/apps/menu/anim/mass_storage.bin",
+    "sha": "6b17af9c18f0602684091fd5480e4de8fcf6e3ad",
+    "size": 19395
+   },
+   {
+    "path": "system/apps/menu/anim/merge_conflict.bin",
+    "sha": "bfca10218091a2c57e4fa781bcc0058de519d44b",
+    "size": 6078
+   },
+   {
+    "path": "system/apps/menu/anim/mona_paint.bin",
+    "sha": "9e55f97272f5acbd6871823d8dcded8595ea70a5",
+    "size": 52886
+   },
+   {
+    "path": "system/apps/menu/anim/mona_pet.bin",
+    "sha": "93e7c5236cfadb870483d44c4a78846a50743ddc",
+    "size": 38688
+   },
+   {
+    "path": "system/apps/menu/anim/pong.bin",
+    "sha": "972635dc5536a9e91c66be58533215f2757ea9fe",
+    "size": 38544
+   },
+   {
+    "path": "system/apps/menu/anim/rogue.bin",
+    "sha": "df2cdb71caf8bb72f4235c2b1f642dd3bb31f6ce",
+    "size": 47349
+   },
+   {
+    "path": "system/apps/menu/anim/settings.bin",
+    "sha": "aa89449afcb2358bb31f855ea19dc3ad49fffb87",
+    "size": 33268
+   },
+   {
+    "path": "system/apps/menu/anim/show.bin",
+    "sha": "6a76b00ef30857ebb2792952498c9d952ca14251",
+    "size": 8944
+   },
+   {
+    "path": "system/apps/menu/anim/snake.bin",
+    "sha": "716cd8b496a669ebcb487e9bf797cd590e4a3d2d",
+    "size": 18616
+   },
+   {
+    "path": "system/apps/menu/app.py",
+    "sha": "e1e76be96374fbf797f5986f15939a7b0e908c4f",
+    "size": 22883
+   },
+   {
+    "path": "system/apps/menu/awards/ascii-donut-small.png",
+    "sha": "0bcc40ee3f5cb404d07ca3660693fd4a069a83fb",
+    "size": 2992
+   },
+   {
+    "path": "system/apps/menu/awards/ascii-donut.png",
+    "sha": "7565a25c2082f3f4620f19cd66cfc5f8db5d676b",
+    "size": 10405
+   },
+   {
+    "path": "system/apps/menu/awards/ascii-mona-small.png",
+    "sha": "39e5019ef8eb705f3d54d57056e34b373efe6952",
+    "size": 6015
+   },
+   {
+    "path": "system/apps/menu/awards/ascii-mona.png",
+    "sha": "d9d45227e8c6451726fd8e5472f74456824849d0",
+    "size": 19385
+   },
+   {
+    "path": "system/apps/menu/awards/cab-small.png",
+    "sha": "dfc79aaf85cc107e378f2056d65c9260c6768d58",
+    "size": 5207
+   },
+   {
+    "path": "system/apps/menu/awards/cab.png",
+    "sha": "e57a5c86fc8c099a9a1b2610af1e8c6003bdbebd",
+    "size": 11440
+   },
+   {
+    "path": "system/apps/menu/awards/cabana-small.png",
+    "sha": "d984abf32bbe682ca0d91ce036ddd3b3d91f76ea",
+    "size": 708
+   },
+   {
+    "path": "system/apps/menu/awards/cabana.png",
+    "sha": "a0b86895bcec6ca95b8604baabf00b169e72acd6",
+    "size": 1218
+   },
+   {
+    "path": "system/apps/menu/awards/compass-needle.png",
+    "sha": "f3a9efe44458f50024d433d0fdeea868a50a3335",
+    "size": 2765
+   },
+   {
+    "path": "system/apps/menu/awards/compass-shadow.png",
+    "sha": "86bb026672064db6140b1c6167625646cca18a27",
+    "size": 608
+   },
+   {
+    "path": "system/apps/menu/awards/compass.png",
+    "sha": "346d77c94151d2d014327ee221b8f608fd3933f3",
+    "size": 13255
+   },
+   {
+    "path": "system/apps/menu/awards/diner-small.png",
+    "sha": "7584ba2c8c116869f2e0cfc9709746b29e4fd505",
+    "size": 6311
+   },
+   {
+    "path": "system/apps/menu/awards/diner.png",
+    "sha": "b5f1c667097a8b9e9cbe139ad67022162d259b49",
+    "size": 17949
+   },
+   {
+    "path": "system/apps/menu/awards/frying-pan-small.png",
+    "sha": "43b996ac86e9ddf1083ffb02e477b64b087faae4",
+    "size": 6806
+   },
+   {
+    "path": "system/apps/menu/awards/frying-pan.png",
+    "sha": "fec68f9107b8e6d90207e3db47b203775126ab6b",
+    "size": 16727
+   },
+   {
+    "path": "system/apps/menu/awards/keycap-small.png",
+    "sha": "31f4c30cdfbddd7c32aa91ad02fd21c1f6cae5ce",
+    "size": 7292
+   },
+   {
+    "path": "system/apps/menu/awards/keycap.png",
+    "sha": "0cb5bcfa8add9f8f77a1345d9231e04d7200787b",
+    "size": 18202
+   },
+   {
+    "path": "system/apps/menu/awards/up-arrow-small.png",
+    "sha": "25deb440c380eb6b6df11fcb48d05468bc51bdf1",
+    "size": 1462
+   },
+   {
+    "path": "system/apps/menu/awards/up-arrow.png",
+    "sha": "3a199f98e4c82345ada03b65dfa0b29cda79bb4c",
+    "size": 2343
+   },
+   {
+    "path": "system/apps/menu/awards/vinyl-small.png",
+    "sha": "971442c4a05d18cff28322dbb17be4b4f77d6808",
+    "size": 6208
+   },
+   {
+    "path": "system/apps/menu/awards/vinyl.png",
+    "sha": "5714ce460887743e1123bb50a17d60a0e6864c15",
+    "size": 18167
+   },
+   {
+    "path": "system/apps/menu/celebration.py",
+    "sha": "1d9c97bfdc1ca6eaa654f350f168d7edb782ffb4",
+    "size": 6770
+   },
+   {
+    "path": "system/apps/menu/dizzy.py",
+    "sha": "4dfb8ce606fa56242f82d7bbe27830ea2fd9ca4c",
+    "size": 4820
+   },
+   {
+    "path": "system/apps/menu/duck.png",
+    "sha": "c1998512a8b5d9216da36b80f250b308c353d134",
+    "size": 260
+   },
+   {
+    "path": "system/apps/menu/gallery.py",
+    "sha": "b3f7e96faaf22d4e3ebcfb59046fbccebcc16f8b",
+    "size": 3837
+   },
+   {
+    "path": "system/apps/menu/icons.mpy",
+    "sha": "8b41d1bf569384f31352140e4d11fcb9789fa5e0",
+    "size": 17943
+   },
+   {
+    "path": "system/apps/menu/mona-dizzy.png",
+    "sha": "123130c7ea98509a443485346c7a82b529e31bd3",
+    "size": 371
+   },
+   {
+    "path": "system/apps/menu/mona.mpy",
+    "sha": "3d848d230bdd40e61c51af512f043cc0c2acf74f",
+    "size": 1568
+   },
+   {
+    "path": "system/apps/menu/mona3d.mpy",
+    "sha": "ef3367ccea159ed693d17a4a4f0deaabf1b0bcb7",
+    "size": 3600
+   },
+   {
+    "path": "system/apps/menu/mona_menu.p3d",
+    "sha": "c47c6a6f781b78fad6ff369a5bd5de19f94c5ac6",
+    "size": 24308
+   },
+   {
+    "path": "system/apps/menu/opening.mpy",
+    "sha": "0f977222ac8c9ddde43250113e262bb310a66386",
+    "size": 1135
+   },
+   {
+    "path": "system/apps/menu/photos/ducky-profile.png",
+    "sha": "831cb1bfe30667e1bd95577a20cf9465bf7e8f3a",
+    "size": 24228
+   },
+   {
+    "path": "system/apps/menu/photos/ducky-quilt.png",
+    "sha": "ee6ea52ef3cb6812589a4e47c0f635da53557284",
+    "size": 23706
+   },
+   {
+    "path": "system/apps/menu/photos/mona-centered.png",
+    "sha": "7df498106312bfa1995f2192122d4dc4235025e7",
+    "size": 27600
+   },
+   {
+    "path": "system/apps/menu/photos/mona-ducky-blue.png",
+    "sha": "10191fd7a973c72ce37d999f410e34b7986d7ed0",
+    "size": 33810
+   },
+   {
+    "path": "system/apps/menu/photos/mona-quilt.png",
+    "sha": "08a6a197e22e04473510834a32a3db7970b09b61",
+    "size": 18523
+   },
+   {
+    "path": "system/apps/menu/photos/tiles/ducky-profile.png",
+    "sha": "b569df776152b36fc2d70453c4d1a8672c7799cb",
+    "size": 7975
+   },
+   {
+    "path": "system/apps/menu/photos/tiles/ducky-quilt.png",
+    "sha": "435834e8ad5d481da91faf1ec7c08328c304494d",
+    "size": 13456
+   },
+   {
+    "path": "system/apps/menu/photos/tiles/mona-centered.png",
+    "sha": "dc7e444010c34ce0a9ead7ced10c66306bb412a7",
+    "size": 19976
+   },
+   {
+    "path": "system/apps/menu/photos/tiles/mona-ducky-blue.png",
+    "sha": "a7ce0798f95e1f913feb1af156e4f3840ce2f5d2",
+    "size": 14276
+   },
+   {
+    "path": "system/apps/menu/photos/tiles/mona-quilt.png",
+    "sha": "eb98a2455473624ac701eea2c43195406c27644a",
+    "size": 8944
+   },
+   {
+    "path": "system/apps/menu/silhouettes.py",
+    "sha": "ddbff5eef1560d80e0c47448af542371f739be6b",
+    "size": 3281
+   },
+   {
+    "path": "system/apps/menu/src/icons.py",
+    "sha": "b8956eb898d41bd946a356cad304c675742898c1",
+    "size": 18575
+   },
+   {
+    "path": "system/apps/menu/src/mona.py",
+    "sha": "6bf33407c757c29bb941c7fe9946f70ad510d9ff",
+    "size": 2952
+   },
+   {
+    "path": "system/apps/menu/src/mona3d.py",
+    "sha": "d8b188a37d5bf2caa71acacdce25086709ed879c",
+    "size": 10232
+   },
+   {
+    "path": "system/apps/menu/src/opening.py",
+    "sha": "119d03f6218f6d8824f6ba6eb671c9232fa81582",
+    "size": 1898
+   },
+   {
+    "path": "system/apps/menu/src/ui.py",
+    "sha": "4f439d6a19faf806cfca73203fc6d91709ff6cbf",
+    "size": 3622
+   },
+   {
+    "path": "system/apps/menu/ui.mpy",
+    "sha": "e02f56c5e146013da6ce4694462353a5d54febdd",
+    "size": 2012
+   },
+   {
+    "path": "system/apps/merge_conflict/__init__.py",
+    "sha": "f98e43b35f8a88a1610c5ac7968ac4cf020ab520",
+    "size": 31124
+   },
+   {
+    "path": "system/apps/merge_conflict/games.py",
+    "sha": "6068aef2c95cf142c2f936fda6ed786b072644b4",
+    "size": 71059
+   },
+   {
+    "path": "system/apps/merge_conflict/mona-code.png",
+    "sha": "dfaca4131b2c5b9d5eb5ed90b8d22453a434de33",
+    "size": 869
+   },
+   {
+    "path": "system/apps/merge_conflict/mona-dance.png",
+    "sha": "7c701daa542804567fd6aca1d3e0e08ee9818fd7",
+    "size": 716
+   },
+   {
+    "path": "system/apps/merge_conflict/mona-dead.png",
+    "sha": "dc2d29865160c11be96a8909cd63762b7c5e6ec9",
+    "size": 685
+   },
+   {
+    "path": "system/apps/merge_conflict/mona-default.png",
+    "sha": "8688d9d2488a255f869fdf43a7aee039e4bf38ad",
+    "size": 886
+   },
+   {
+    "path": "system/apps/merge_conflict/mona-eating.png",
+    "sha": "0d1f6edb972a32e5f89c482fe938daa9153ac49b",
+    "size": 922
+   },
+   {
+    "path": "system/apps/merge_conflict/mona-heart.png",
+    "sha": "8c3a6f2885c2daf4f926ab9bf772a32324897b6a",
+    "size": 1123
+   },
+   {
+    "path": "system/apps/merge_conflict/mona-notify.png",
+    "sha": "7d8c88d1b1927a1368378a35ae540533ea1ae353",
+    "size": 949
+   },
+   {
+    "path": "system/apps/merge_conflict/replay.py",
+    "sha": "f24d19e4c1bec92e31844645af4fd1d13f67115d",
+    "size": 17928
+   },
+   {
+    "path": "system/apps/merge_conflict/ui.py",
+    "sha": "dbb63be3b6f02846c0a404b7d807d7a5d98ca315",
+    "size": 15446
+   },
+   {
+    "path": "system/apps/mona_paint/__init__.py",
+    "sha": "35e82222995fde9d76bb5261d82a7fdb2d994498",
+    "size": 17448
+   },
+   {
+    "path": "system/apps/mona_paint/ui.py",
+    "sha": "88d0f4659507556f6c8cc8210a06b8652b5c0f86",
+    "size": 10843
+   },
+   {
+    "path": "system/apps/mona_pet/README.md",
+    "sha": "25145354dec7d2d8e32c038d6f85f60b0e46a830",
+    "size": 170
+   },
+   {
+    "path": "system/apps/mona_pet/__init__.py",
+    "sha": "4c2b6ded72a2dc8b6a009d365220e74e2edee6cd",
+    "size": 8161
+   },
+   {
+    "path": "system/apps/mona_pet/assets/background/background_day.png",
+    "sha": "ad1e50d25797973a67aa7425d7e1e89168252167",
+    "size": 2176
+   },
+   {
+    "path": "system/apps/mona_pet/assets/background/background_dusk.png",
+    "sha": "287f3d699f99db69aa13307ddd35150f6fcf8599",
+    "size": 953
+   },
+   {
+    "path": "system/apps/mona_pet/assets/background/background_night.png",
+    "sha": "8c3a4c250e73a4c81ff6777845f99c79ec48791e",
+    "size": 961
+   },
+   {
+    "path": "system/apps/mona_pet/assets/mona-sprites/mona-code.png",
+    "sha": "e0b3f5e165853411f7cd9bc054cf5b6cfa62e7b4",
+    "size": 542
+   },
+   {
+    "path": "system/apps/mona_pet/assets/mona-sprites/mona-dance.png",
+    "sha": "3af6902edbb1dc7960df6b28b97e1a7266b78f37",
+    "size": 461
+   },
+   {
+    "path": "system/apps/mona_pet/assets/mona-sprites/mona-dead.png",
+    "sha": "7b8a6179cbbe3daa44900199bdcd115530c53a38",
+    "size": 500
+   },
+   {
+    "path": "system/apps/mona_pet/assets/mona-sprites/mona-default.png",
+    "sha": "2de5c752e1816fdb7dab644669e85704b7804694",
+    "size": 577
+   },
+   {
+    "path": "system/apps/mona_pet/assets/mona-sprites/mona-eating.png",
+    "sha": "f2968fdffb7f92ca2d90bf0d0806e529f372fb90",
+    "size": 594
+   },
+   {
+    "path": "system/apps/mona_pet/assets/mona-sprites/mona-heart.png",
+    "sha": "c14ec7edd9750248f89a38bf824a04c788ee2c0d",
+    "size": 726
+   },
+   {
+    "path": "system/apps/mona_pet/assets/mona-sprites/mona-love.png",
+    "sha": "c14ec7edd9750248f89a38bf824a04c788ee2c0d",
+    "size": 726
+   },
+   {
+    "path": "system/apps/mona_pet/assets/mona-sprites/mona-notify.png",
+    "sha": "116a183aac7def68f730822b2321a1816580fc6c",
+    "size": 541
+   },
+   {
+    "path": "system/apps/mona_pet/assets/mona-sprites/mona-sleep.png",
+    "sha": "99eb5e8b32c6790e40fc9a3d4234938509f054d7",
+    "size": 1133
+   },
+   {
+    "path": "system/apps/mona_pet/assets/ui/buttons.png",
+    "sha": "8570eb1d499b9c136117a3204fead1c2bd81a8d4",
+    "size": 704
+   },
+   {
+    "path": "system/apps/mona_pet/assets/ui/frame.png",
+    "sha": "4b6fc9d62e0a6b6906837ed4b954eb7670b8d279",
+    "size": 499
+   },
+   {
+    "path": "system/apps/mona_pet/clock.py",
+    "sha": "07dce2ddf9931625a1fe8a09710f53b4b9494289",
+    "size": 1921
+   },
+   {
+    "path": "system/apps/mona_pet/food.py",
+    "sha": "c349b477959e9a45d9fb0aba863125b946deadfe",
+    "size": 1616
+   },
+   {
+    "path": "system/apps/mona_pet/icons.py",
+    "sha": "812255b066a0c3cda3becd164667d728691198de",
+    "size": 471
+   },
+   {
+    "path": "system/apps/mona_pet/match.py",
+    "sha": "3552186add4a666f14abf35e6a74efa6d04252fc",
+    "size": 5941
+   },
+   {
+    "path": "system/apps/mona_pet/tufty.py",
+    "sha": "61d9528a9327aed48b1c3fd90d74e0a849f0fb9d",
+    "size": 5302
+   },
+   {
+    "path": "system/apps/mona_pet/ui.py",
+    "sha": "8054c5143c28642e1475020fd19b2efdb64876a6",
+    "size": 2717
+   },
+   {
+    "path": "system/apps/mona_pet/walk.py",
+    "sha": "d066c60d4360d9f025f30ba5ac6f0ba2bf0a689c",
+    "size": 3597
+   },
+   {
+    "path": "system/apps/pedometer/README.md",
+    "sha": "9ff5d820d047f7bf96a48dee6194b81f683ee2e9",
+    "size": 285
+   },
+   {
+    "path": "system/apps/pedometer/__init__.py",
+    "sha": "73a705985acdb02772f94d094e6cfb3129683d63",
+    "size": 6688
+   },
+   {
+    "path": "system/apps/pedometer/icon.png",
+    "sha": "453f514302aa39636f59ea5d888155e96b37141a",
+    "size": 130
+   },
+   {
+    "path": "system/apps/pong/__init__.py",
+    "sha": "2709306da29b570a9504950b0178eb93d8cc488a",
+    "size": 20234
+   },
+   {
+    "path": "system/apps/radar/README.md",
+    "sha": "9a9f8c2997a8508727c381fb7e94bc5c6fc2964d",
+    "size": 4283
+   },
+   {
+    "path": "system/apps/radar/__init__.py",
+    "sha": "ecb854bfe1fd05154721b99ab285c36fa2db8465",
+    "size": 35792
+   },
+   {
+    "path": "system/apps/radar/icon.png",
+    "sha": "ae25594d76daa0b7a620169c8b653b1dacf28c68",
+    "size": 224
+   },
+   {
+    "path": "system/apps/rogue/__init__.py",
+    "sha": "811a39df30f5c7b92085ef0692dd28c3e5ce95d3",
+    "size": 8196
+   },
+   {
+    "path": "system/apps/rogue/build.py",
+    "sha": "da4ed1c44b953ab96e3d9996db88b0d10713d3d1",
+    "size": 19517
+   },
+   {
+    "path": "system/apps/rogue/content.py",
+    "sha": "352836483b230046e435cd8311798949f9a0a924",
+    "size": 1088
+   },
+   {
+    "path": "system/apps/rogue/game.py",
+    "sha": "fc2f7bb25b70f733493773f60283b1b6c81c114e",
+    "size": 14477
+   },
+   {
+    "path": "system/apps/rogue/items.py",
+    "sha": "f59feff38d28070398bc0d96b702196dd77657f2",
+    "size": 5729
+   },
+   {
+    "path": "system/apps/rogue/monsters.py",
+    "sha": "28d601012bfc759a0ed7392f6b16505f8a276cc3",
+    "size": 7166
+   },
+   {
+    "path": "system/apps/rogue/render.py",
+    "sha": "aefbdb96d431ea1aef613c364ff0356c02a93f46",
+    "size": 20993
+   },
+   {
+    "path": "system/apps/rogue/rings.py",
+    "sha": "18454915c8242d11d42a1f4b4719778a5f7ee555",
+    "size": 1547
+   },
+   {
+    "path": "system/apps/rogue/save.py",
+    "sha": "45c7c15558d0cba5344891e1cdf960024ca77752",
+    "size": 4700
+   },
+   {
+    "path": "system/apps/rogue/scrolls.py",
+    "sha": "52b4fbd1538fbef70c19dde5da40c8c9965bb5b1",
+    "size": 4493
+   },
+   {
+    "path": "system/apps/rogue/world.py",
+    "sha": "6a21fafdd843f29ddbec62b1ef190ecd74363cd9",
+    "size": 8627
+   },
+   {
+    "path": "system/apps/settings/__init__.py",
+    "sha": "5b4b34195a7bdd5f719682685b10e514b1d63547",
+    "size": 13292
+   },
+   {
+    "path": "system/apps/show/__init__.py",
+    "sha": "839b193757ac8187ea4b8883752af1ed0ba36531",
+    "size": 126
+   },
+   {
+    "path": "system/apps/snake/__init__.py",
+    "sha": "84d2c85d1f152c5e622c55befe8b213cca917427",
+    "size": 13408
+   },
+   {
+    "path": "system/assets/armmark.svg",
+    "sha": "c507f6fcdfde43d3466c74a683804d37fb461091",
+    "size": 1653
+   },
+   {
+    "path": "system/assets/background.png",
+    "sha": "6833dc776747e2e4327db075808761c2b53b2313",
+    "size": 12038
+   },
+   {
+    "path": "system/assets/cards.png",
+    "sha": "33cd9b16f7accb1cf6cde00e02a1310ccd1a5816",
+    "size": 5877
+   },
+   {
+    "path": "system/assets/fonts/DynaPuff-Medium.af",
+    "sha": "5a935f3fa34df238fb51d6e8bd62edf6db4b3478",
+    "size": 9688
+   },
+   {
+    "path": "system/assets/fonts/IndieFlower-Regular.af",
+    "sha": "957a457142c99ae82a18d6254c16eb9a629236be",
+    "size": 9756
+   },
+   {
+    "path": "system/assets/fonts/MonaSans-Medium.af",
+    "sha": "a6c8ed2f74a7dba61bb5711415587752df308e62",
+    "size": 66270
+   },
+   {
+    "path": "system/assets/fonts/lato-400.af",
+    "sha": "e64bd5beea793ba2a875b2f29cd574590d062c82",
+    "size": 21922
+   },
+   {
+    "path": "system/assets/fonts/lato-900.af",
+    "sha": "7ffd4812634a221ef4c9f87ad8f08f5c78cb23e6",
+    "size": 21660
+   },
+   {
+    "path": "system/assets/fonts/licences/OFL.txt",
+    "sha": "98383e3d835a5c5aea988a74b569193a30dcbcec",
+    "size": 4407
+   },
+   {
+    "path": "system/assets/icons.png",
+    "sha": "a46a3f4d6b52545320292ac522f4647861cf87c9",
+    "size": 1844
+   },
+   {
+    "path": "system/assets/skull.png",
+    "sha": "82244dbe195a9ccf41f6cc40d9b3af929a96e70e",
+    "size": 469
+   },
+   {
+    "path": "system/assets/sparkle/invertocat.png",
+    "sha": "7cc5b848ad506f6d6e2e7df2144cab8033bb7ced",
+    "size": 5437
+   },
+   {
+    "path": "system/assets/squirrel-sprites/background.png",
+    "sha": "a592aba0124fcf216fa2e613f749c0a2b881e282",
+    "size": 4589
+   },
+   {
+    "path": "system/assets/squirrel-sprites/clean.png",
+    "sha": "c363da67081a064cddf0d26703165fe0caf719c4",
+    "size": 703
+   },
+   {
+    "path": "system/assets/squirrel-sprites/dance.png",
+    "sha": "c363da67081a064cddf0d26703165fe0caf719c4",
+    "size": 703
+   },
+   {
+    "path": "system/assets/squirrel-sprites/dead.png",
+    "sha": "ca16b4cef49c3b434a48f492a747e067beea4653",
+    "size": 733
+   },
+   {
+    "path": "system/assets/squirrel-sprites/default.png",
+    "sha": "57a9cd8cf9facb279970ea137c63aba1b93407f3",
+    "size": 709
+   },
+   {
+    "path": "system/assets/squirrel-sprites/dig.png",
+    "sha": "24a279000e77b90e6bead3f8ec1e691e4c1426fa",
+    "size": 680
+   },
+   {
+    "path": "system/assets/squirrel-sprites/eating.png",
+    "sha": "c88f5b24db3fe6d653fb83d21c530ce3a3eb4228",
+    "size": 457
+   },
+   {
+    "path": "system/assets/squirrel-sprites/notify.png",
+    "sha": "abcc81cfd5acbb969f0ec3db1bf85de948b0066a",
+    "size": 805
+   },
+   {
+    "path": "system/assets/squirrel-sprites/running.png",
+    "sha": "25dce291b48d8821561a881a2d16d6b9435f2ccc",
+    "size": 1111
+   },
+   {
+    "path": "system/assets/squirrel-sprites/sleep.png",
+    "sha": "fc3f7897416a3167857d86b4302ad770edc441ad",
+    "size": 567
+   },
+   {
+    "path": "system/assets/squirrel.gif",
+    "sha": "382e012279a391c596992d676fd7b8e4b52dea28",
+    "size": 1156
+   },
+   {
+    "path": "system/assets/tufty.png",
+    "sha": "1c0240cedea6f8c4e56573b920735046019a18b1",
+    "size": 34957
+   },
+   {
+    "path": "system/assets/world.geo.json",
+    "sha": "2dca606a0697494c89313dad473432e32f08b44f",
+    "size": 215029
+   },
+   {
+    "path": "system/main.py",
+    "sha": "e60680967982fba46a6150c4a6bb27871694a8b6",
+    "size": 2055
+   },
+   {
+    "path": "system/remote.py",
+    "sha": "610fd545f7aa158dba8deef295e0a23c12edb60a",
+    "size": 10413
+   },
+   {
+    "path": "system/startup/__init__.py",
+    "sha": "499dad9814bdf7a992a43abee014621c06a114f0",
+    "size": 2802
+   },
+   {
+    "path": "system/startup/animation.bin",
+    "sha": "dd6b57bb9cd32a9cbf633ccf0015ff46b4fc4320",
+    "size": 172210
+   }
+  ],
   "Akiyo974/badger@main:system/apps": [
    {
     "path": "system/apps/badge/README.md",

@@ -15,24 +15,29 @@ import json
 import subprocess
 import tempfile
 
-# Same sources as SOURCES in docs/site.js and docs/studio/studio.js
+# Same sources as SOURCES in docs/site.js and REPAIR_SOURCES in
+# docs/studio/studio.js. A branch, or a commit for a fixed reference
 SOURCES = (
     ("badger/home", "main", "badge/apps"),
     ("Akiyo974/badger", "main", "system/apps"),
+    # Repair: the whole drive, as shipped (first commit) and with this repo's changes
+    ("Akiyo974/badger", "6912f14355e5603f5793e61baf7acbe1889146c0", "system"),
+    ("Akiyo974/badger", "main", "system"),
 )
 OUTPUT = "docs/catalog.json"
 
 
-def tree(repo, branch, base):
+def tree(repo, ref, base):
     with tempfile.TemporaryDirectory() as folder:
-        # No checkout: only the file list is needed
-        subprocess.run(
-            ["git", "clone", "--quiet", "--depth", "1", "--no-checkout",
-             "--branch", branch, f"https://github.com/{repo}.git", folder],
-            check=True,
-        )
+        # Only the one commit, no checkout: the file list is all that is needed.
+        # fetch (not clone --branch) also takes a commit id
+        for command in (
+            ["init", "--quiet"],
+            ["fetch", "--quiet", "--depth", "1", f"https://github.com/{repo}.git", ref],
+        ):
+            subprocess.run(["git", "-C", folder, *command], check=True)
         listing = subprocess.run(
-            ["git", "-C", folder, "ls-tree", "-r", "-l", "HEAD", "--", base],
+            ["git", "-C", folder, "ls-tree", "-r", "-l", "FETCH_HEAD", "--", base],
             check=True, capture_output=True, text=True,
         ).stdout
     entries = []

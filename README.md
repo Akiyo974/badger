@@ -92,6 +92,7 @@ To try a pull request: `git checkout <branch>` then `./tools/deploy.ps1`.
 | **Apps** | Store of the official badge apps ([badger/home](https://github.com/badger/home)) and of this repo: install, update, reinstall, uninstall, details with the README. Apps go to the writable `/apps` folder (the badge cannot write to `/system`); every file is checked (size and CRC) after it is written |
 | **Home screen** | Drag the apps into the order you want, choose the ones under **CUSTOM**, hide the others. Saved in `/state/menu_layout.json` |
 | **Extensions** | Compares the built-in apps with the versions in this repo and installs the ones you want: the badge switches to USB drive mode, you pick the drive's `apps` folder once, and every app replaced is **backed up** in `apps/.studio-backups` first, with a Restore button |
+| **Repair** | Compares the whole BADGER drive with a healthy copy and puts back the missing or different files. See [Repairing the badge](#repairing-the-badge) |
 | **Settings** | Wi-Fi, GitHub name, contact card, NFC, Radar status, steps goal, watch remote. Saved through the firmware's own `secrets` module; the Wi-Fi password is never shown |
 | **Screenshot** | The screen, or any app after a few seconds, as a PNG |
 | **Console** | The MicroPython REPL |
@@ -312,6 +313,33 @@ New apps, fixes and ideas are welcome, with or without a badge. [CONTRIBUTING.md
 - Every PR adds its line to `CHANGELOG.md`, under "Unreleased".
 
 Code under the [MIT License](LICENSE); the stock badge software in `system/` belongs to its authors.
+
+## Repairing the badge
+
+A folder deleted by mistake, an app that no longer starts, a menu that crashes on boot: the **Repair** tab of [Badge Studio](https://akiyo974.github.io/badger/studio/) puts the badge's files back, in Chrome or Edge on a computer.
+
+1. **Get to the drive.** Connect the badge in Badge Studio and press **Switch to USB drive mode**. If the badge no longer starts, **double-tap its RESET button**: it shows up as a USB drive named **BADGER** either way.
+2. **Pick the BADGER drive** itself, the folder that holds `main.py` and `apps` (not the `apps` folder; on firmware where they sit in `BADGER/system`, picking the drive is enough). Chrome asks once for permission to edit it. Never pick the drive named **RP2350**: that is the chip's bootloader, and Repair refuses it.
+3. **Choose the reference** in *Compare with*:
+   - **Factory: MonaOS 4.0 as shipped**: the drive exactly as the badge came, kept in this repo's [first commit](https://github.com/Akiyo974/badger/tree/6912f14355e5603f5793e61baf7acbe1889146c0/system). The safe choice for a broken badge.
+   - **Factory + the changes of Akiyo974/badger**: the same with this repo's apps and changes (`system/` on `main`), like `tools/deploy.ps1` installs.
+4. **Read the comparison**: one line per app or folder, with the missing and the different files.
+5. **Repair**:
+   - **Put back missing files** only adds what is missing. Files you changed stay as they are.
+   - **Repair all** also replaces the different files. They are copied to `.studio-repair-backups/` on the drive first; the **Put these files back** button under *Backups made by Repair* undoes it.
+6. Press **Restart the badge** (or eject the drive and press RESET).
+
+What Repair never does:
+
+- delete a file: extra files on the drive (your photos, notes, other apps in `/system/apps`) stay;
+- touch `secrets.py` (your Wi-Fi and name), `/state` (saves, contacts, achievements) or the apps installed from the store (`/apps`): those are not on the BADGER drive;
+- write a file that did not download exactly: every file is checked against its git id before anything is written, so a network error stops the repair before the drive is touched.
+
+Repair can be run again at any time: when everything matches, it says so and does nothing. The file lists come from GitHub, or from `docs/catalog.json` when the API rate limit is reached.
+
+From a PC without Badge Studio: `./tools/deploy.ps1` copies this repo's `system/` (factory + changes), or copy the [factory files](https://github.com/Akiyo974/badger/tree/6912f14355e5603f5793e61baf7acbe1889146c0/system) onto the BADGER drive by hand.
+
+If no BADGER drive shows up after a double-tap of RESET (or only the RP2350 drive), Repair cannot help: the firmware itself needs reflashing, see [pimoroni/tufty2350](https://github.com/pimoroni/tufty2350) and [badger/home](https://github.com/badger/home).
 
 ## Good to know
 
