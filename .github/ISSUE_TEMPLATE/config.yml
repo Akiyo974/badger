@@ -6,3 +6,6 @@ contact_links:
   - name: Badge Studio
     url: https://akiyo974.github.io/badger/studio/
     about: Install apps on your badge from the browser.
+  - name: Report a security problem
+    url: https://github.com/Akiyo974/badger/security/advisories/new
+    about: Privately, please. Never paste your secrets.py.

@@ -98,4 +98,6 @@ Then open <http://localhost:8765/> (home page) and <http://localhost:8765/studio
 
 Everyone here is welcome, whatever their level. Please read the [Code of Conduct](CODE_OF_CONDUCT.md).
 
+Found a security problem? Report it privately, see [SECURITY.md](SECURITY.md). Never commit `secrets.py` or paste it in an issue.
+
 By contributing, you agree that your contributions are licensed under the [MIT License](LICENSE).
