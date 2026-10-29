@@ -29,7 +29,7 @@ On Windows, `./tools/deploy.ps1` from a clone of the repo does the same in one g
 
 ## Your settings
 
-Most apps read your details from `secrets.py` on the badge. Set them in the **Settings** tab of Badge Studio, or edit `/system/secrets.py` on the BADGER drive (start from [`secrets.example.py`](https://github.com/Akiyo974/badger/blob/main/secrets.example.py)):
+Most apps read your details from `secrets.py` on the badge. Set them in the **Settings** tab of Badge Studio, or edit `secrets.py` on the BADGER drive, next to `main.py` (at the root of the drive, or in its `system` folder on some firmware); start from [`secrets.example.py`](https://github.com/Akiyo974/badger/blob/main/secrets.example.py):
 
 | Setting | Used by |
 |---|---|

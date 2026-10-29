@@ -4,6 +4,10 @@ Notable changes to this repo. Format based on [Keep a Changelog](https://keepach
 
 ## Unreleased
 
+### Fixed
+- Repair: on drives that keep `/system` in a `system` folder, that folder is repaired even when `main.py` and `apps` are both gone; **Pick another drive** opens the picker; changing the reference during a comparison can no longer leave the older result; files that appeared or changed after the comparison are never overwritten by *Put back missing files*, and are backed up by *Repair all*; picking another drive waits for a running repair, which always writes to the drive it compared.
+- Guides: a slow guide no longer replaces the one picked after it; the start page says where `secrets.py` is on the drive.
+
 ### Added
 - **Guides** for every app made or changed here (Badge, Contacts, Radar, Duck Maze, Pedometer, Mona Pet, Menu, Badger Remote) and a start page on installing and settings, in `docs/guides/*.md`. The site shows them at `/guides/` (rendered from the same Markdown, so GitHub and the site never disagree), with a Guides section and header link on the home page.
 - Badge Studio **Repair** tab: compares the whole BADGER drive with the factory files (this repo's first commit) or with this repo's `system/`, lists what is missing or different per app and folder, and puts back only the missing files or everything. Replaced files are backed up to `.studio-repair-backups/` and can be put back; `secrets.py` is never written and nothing is deleted. Every download is checked against its git id before anything is written. Documented in the README ("Repairing the badge"); both references are in `docs/catalog.json`, and `tests/test_catalog.py` checks the factory one is the first commit.
