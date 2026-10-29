@@ -100,6 +100,49 @@ To try a pull request: `git checkout <branch>` then `./tools/deploy.ps1`.
 - Only badges are shown, never phones or other Bluetooth devices.
 - Repeated announcements are coalesced and unrelated traffic is filtered before the detection queue. See [Radar's controls and behavior](system/apps/radar/README.md).
 
+## Built-in sensors
+
+Besides its buttons, the badge has a motion sensor, a light sensor and battery monitoring. The values below were read on my badge over the serial console; MicroPython apps reach them through the global `badge` object. Call `badge.update()` once per frame (`run()` does it for you), so readings and events stay fresh.
+
+| Sensor | Call | What it returns |
+|---|---|---|
+| Motion (LSM6DS3 accelerometer + gyroscope) | `badge.imu()` | `(ax, ay, az, gx, gy, gz)`, raw signed 16-bit values. Accelerometer range is ±2 g, so **16384 ≈ 1 g**: flat on a table it reads about `(0, 0, -16384, …)`. The gyroscope saturates at ±32767 when shaken hard. |
+| Motion events | `badge.imu_event()` | A tuple of the events detected since the last frame, empty most of the time (see below). |
+| Orientation | `badge.imu_upright()`, `badge.upside_down()` | The calibrated "upright" gravity vector, e.g. `(0, 16384, 0)`, and whether the badge is held upside down. The firmware also has `badge.autorotate()` and `badge.rotate_180()` to turn the screen around. |
+| Ambient light | `badge.light_level()` | A raw integer, from **0** with the sensor covered to about **670** under a phone flashlight; about 540 in a lit room. |
+| Buttons as "touch" | `badge.touch()`, `badge.touch_map()` | The indexes (0–7) of the buttons currently held, and the map from index to button pin (index 4 is `BUTTON_MENU`, 7 is `BUTTON_BACK`). This board has no capacitive touch channels, so "touch" means the buttons. |
+| Battery | `badge.battery_level()`, `badge.is_charging()`, `badge.usb_connected()` | Percentage (e.g. `96`), charging and USB states. |
+
+### Motion events
+
+Event codes come from the firmware's `lsm6ds3` driver (`EVENT_*` constants) and can arrive together, e.g. `(8, 16)`:
+
+| Code | Event | What triggered it in my tests |
+|---|---|---|
+| `1` | Single tap | Tapping the screen or the case |
+| `2` | Double tap | Two quick taps, often reported right after a `1` |
+| `4` | Free fall | Not seen (I did not drop the badge) |
+| `8` | Tilt | Tilting the badge or turning it over |
+| `16` | Significant motion | Shaking |
+| `32` | *(no constant in the driver)* | Turning the badge upside down, at the same moment `upside_down()` became `True` |
+
+The driver can also count steps (`get_step_count()` on the `lsm6ds3.LSM6DS3` object), but no app uses it.
+
+```python
+# Inside an app's update(), with run(update) calling badge.update() each frame
+for event in badge.imu_event():
+    if event == 2:        # double tap
+        open_contact_card()
+    elif event == 16:     # shake
+        start_radar()
+
+ax, ay, az = badge.imu()[:3]
+tilt_left = ax < -6000    # roughly 20° of tilt
+dark = badge.light_level() < 50
+```
+
+Already used by the stock software: the menu and the Badge app shift their tiles and graph with the motion sensor (a small parallax effect when you tilt the badge).
+
 ## Hardware add-ons (Qw/ST port)
 
 The badge has a Qw/ST (Qwiic / STEMMA QT) I²C connector. Badge and Radar look for these boards when they start; each one is optional and can be plugged in or out between launches. Without them, the apps work as before.

@@ -27,6 +27,7 @@ Notable changes to this repo. Format based on [Keep a Changelog](https://keepach
 - `CHANGELOG.md`.
 
 ### Changed
+- README: new "Built-in sensors" section (motion sensor and its events, orientation, light, buttons, battery), with values measured on the badge.
 - README: `tests/` listed in the repo contents; hardware table updated for the Radar changes (fading and Hot / Cold on the matrix, merged arrival vibrations and Hot / Cold pulses); Radar README mentions the DRV2605L.
 - Radar: **Very near / Near / Far** replace metre estimates; labelled rings explicitly represent signal strength, not direction. Badges fade from 4 to 12 seconds without a signal, including matrix and case-light feedback.
 - Radar detection: filter unrelated packets before queuing, coalesce repeat announcements, prioritise identities under load, preserve address types, and smooth RSSI with a median, time-based filter and hysteresis.
