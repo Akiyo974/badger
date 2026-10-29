@@ -12,6 +12,7 @@ const BUILT_IN_ROOT = "/system/apps";
 const WRITE_CHUNK = 1536;
 const SHOT_CHUNK = 3072;
 const MAX_APP_BYTES = 600 * 1024;
+const SAFE_NAME = /^[A-Za-z0-9_-]+$/;
 const SKIP_APPS = new Set(["menu", "startup", "system", "mass_storage", "settings"]);
 const SOURCES = [
   { id: "official", label: "Official badge apps (badger/home)", repo: "badger/home", branch: "main", base: "badge/apps" },
@@ -565,7 +566,8 @@ async function loadCatalogue(source) {
     apps[slug].files.push({ path: rest.join("/"), sha: entry.sha, size: entry.size || 0 });
     apps[slug].size += entry.size || 0;
   }
-  const list = Object.values(apps).filter((app) => app.files.some((f) => f.path === "__init__.py"));
+  // Folder names end up in HTML, URLs and badge paths: plain names only
+  const list = Object.values(apps).filter((app) => SAFE_NAME.test(app.slug) && app.files.some((f) => f.path === "__init__.py"));
   for (const app of list) app.version = await appVersion(app.files);
   catalogues[source.id] = list.sort((a, b) => a.slug.localeCompare(b.slug));
   return catalogues[source.id];
@@ -750,7 +752,10 @@ async function installNow(source, app, card) {
 }
 
 async function installFromMeta(app) {
-  const source = SOURCES.find((s) => s.repo === app.meta.repo) || { id: "custom-" + app.meta.repo, repo: app.meta.repo, branch: app.meta.branch || "main", base: app.meta.base };
+  // The same repository, branch and folder the app came from
+  const { repo, branch = "main", base } = app.meta;
+  const source = SOURCES.find((s) => s.repo === repo && s.branch === branch && s.base === base)
+    || { id: `repo:${repo}@${branch}:${base}`, label: repo, repo, branch, base };
   const list = await loadCatalogue(source);
   const entry = list.find((a) => a.slug === app.slug);
   if (!entry) { toast("This app is no longer in " + source.repo + ".", 5000); return; }

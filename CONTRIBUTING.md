@@ -50,7 +50,7 @@ The template draws a square you move with the arrows: change it into your idea.
 Plug the badge in over USB and switch it on.
 
 - **Windows**: `./tools/deploy.ps1 -Only apps/my_app` copies the app and reboots the badge. Your app is in the menu.
-- **Any computer**: push your branch, open [Badge Studio](https://akiyo974.github.io/badger/studio/) in Chrome or Edge, connect the badge, pick **Another repository…** in the store and type `<you>/badger@feat/my-app`. Install your app from there.
+- **Any computer**: commit your app and push your branch (the commands are in step 4), then open [Badge Studio](https://akiyo974.github.io/badger/studio/) in Chrome or Edge, connect the badge, pick **Another repository…** in the store and type `<you>/badger@feat/my-app`. Install your app from there.
 - **By hand**: switch the badge to USB drive mode (Mass Storage app), copy your folder into the drive's `apps` folder, eject, restart.
 
 Errors are printed on the serial console: Badge Studio's **Console** tab shows them.

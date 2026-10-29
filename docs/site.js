@@ -54,7 +54,7 @@ async function catalogue(source) {
     if (rest.some((part) => part.startsWith(".") || part === "__pycache__")) continue;
     (apps[slug] ||= { slug, files: [] }).files.push({ path: rest.join("/"), sha: entry.sha });
   }
-  const list = Object.values(apps).filter((app) => app.files.some((f) => f.path === "__init__.py"));
+  const list = Object.values(apps).filter((app) => /^[A-Za-z0-9_-]+$/.test(app.slug) && app.files.some((f) => f.path === "__init__.py"));
   for (const app of list) {
     app.icon = app.files.some((f) => f.path === "icon.png") ? rawUrl(source, app.slug + "/icon.png") : null;
     app.readme = app.files.find((f) => f.path.toLowerCase() === "readme.md");
