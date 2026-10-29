@@ -67,6 +67,7 @@ dependencies {
 
     implementation(libs.health.services.client)
     implementation(libs.androidx.concurrent.futures.ktx)
+    implementation(libs.guava)
 
     testImplementation(libs.junit)
 

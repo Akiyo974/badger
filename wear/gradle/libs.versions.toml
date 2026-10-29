@@ -8,6 +8,7 @@ wearCompose = "1.4.1"
 junit = "4.13.2"
 healthServices = "1.1.0"
 concurrentFutures = "1.2.0"
+guava = "33.3.1-android"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -21,6 +22,8 @@ wear-compose-foundation = { group = "androidx.wear.compose", name = "compose-fou
 wear-compose-ui-tooling = { group = "androidx.wear.compose", name = "compose-ui-tooling", version.ref = "wearCompose" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 health-services-client = { group = "androidx.health", name = "health-services-client", version.ref = "healthServices" }
+# Health Services returns Guava futures but only ships Guava at runtime
+guava = { group = "com.google.guava", name = "guava", version.ref = "guava" }
 androidx-concurrent-futures-ktx = { group = "androidx.concurrent", name = "concurrent-futures-ktx", version.ref = "concurrentFutures" }
 
 [plugins]
