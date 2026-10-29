@@ -78,7 +78,7 @@ To try a pull request: `git checkout <branch>` then `./tools/deploy.ps1`.
 
 ### From the browser: Badge Studio
 
-**[akiyo974.github.io/badger/studio](https://akiyo974.github.io/badger/studio/)**, in Chrome or Edge on a computer (Web Serial). Plug the badge in, press **Connect badge**:
+**[akiyo974.github.io/badger/studio](https://akiyo974.github.io/badger/studio/)**, in Chrome or Edge on a computer (Web Serial). The [home page](https://akiyo974.github.io/badger/) lists every app of the store; a [20-second video](docs/media/badge-studio.mp4) shows it. Plug the badge in, press **Connect badge**:
 
 | Tab | What it does |
 |---|---|

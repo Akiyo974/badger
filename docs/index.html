@@ -5,6 +5,14 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Badger Apps</title>
 <meta name="description" content="Apps and tools for the GitHub Universe badge (Badger 2350), and Badge Studio to manage it from the browser.">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Badge Studio: hack your GitHub Universe badge from the browser">
+<meta property="og:description" content="An app store, a home screen editor and more for the Badger 2350 badge. Plug it in over USB, open Chrome, install apps.">
+<meta property="og:url" content="https://akiyo974.github.io/badger/">
+<meta property="og:image" content="https://akiyo974.github.io/badger/media/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><rect width='24' height='24' rx='5' fill='%230d1117'/><rect x='4' y='4' width='7' height='7' rx='1.5' fill='%2339d353'/><rect x='13' y='4' width='7' height='7' rx='1.5' fill='%23006d32'/><rect x='4' y='13' width='7' height='7' rx='1.5' fill='%2326a641'/><circle cx='16.5' cy='16.5' r='3.5' fill='%23d3fa37'/></svg>">
 <style>
   :root {
@@ -38,10 +46,30 @@
   .feature { background: var(--panel); border: 1px solid var(--line); border-radius: 12px; padding: 16px; }
   .feature b { display: block; margin-bottom: 4px; }
   .feature span { color: var(--dim); font-size: 14px; }
-  .gallery { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 12px; }
-  .gallery figure { margin: 0; }
-  .gallery img { width: 100%; display: block; border-radius: 8px; border: 1px solid var(--line); image-rendering: pixelated; aspect-ratio: 4 / 3; background: #000; }
-  .gallery figcaption { color: var(--dim); font-size: 13px; margin-top: 5px; }
+  .steps { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; counter-reset: step; }
+  .step { position: relative; padding: 16px 16px 16px 58px; background: var(--panel); border: 1px solid var(--line); border-radius: 12px; }
+  .step::before { counter-increment: step; content: counter(step); position: absolute; left: 16px; top: 15px; width: 28px; height: 28px; border-radius: 8px; background: var(--g2); color: var(--accent); font-weight: 700; display: grid; place-items: center; }
+  .step b { display: block; } .step span { color: var(--dim); font-size: 14px; }
+  .market-head { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; margin-bottom: 14px; }
+  .market-head h2 { margin: 0; flex: 1; min-width: 180px; }
+  .chips { display: flex; gap: 6px; flex-wrap: wrap; }
+  .chips button, .market-head input { font: inherit; font-size: 14px; color: var(--text); background: var(--panel-2); border: 1px solid var(--line); border-radius: 999px; padding: 6px 13px; cursor: pointer; }
+  .chips button.on { background: var(--accent); border-color: var(--accent); color: #0d1117; font-weight: 600; }
+  .market-head input { border-radius: 10px; cursor: text; width: 200px; max-width: 100%; }
+  .market { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 14px; }
+  .app { display: flex; flex-direction: column; background: var(--panel); border: 1px solid var(--line); border-radius: 12px; overflow: hidden; color: var(--text); text-decoration: none; transition: border-color .15s, transform .15s; }
+  .app:hover { border-color: var(--g3); transform: translateY(-2px); }
+  .app .shot { width: 100%; aspect-ratio: 4 / 3; display: block; image-rendering: pixelated; background: #000; border-bottom: 1px solid var(--line); }
+  .app .tile { display: grid; place-items: center; background: radial-gradient(circle at 50% 45%, #1a2a1f, #0b0f14 70%); }
+  .app .tile img { width: 72px; height: 72px; image-rendering: pixelated; }
+  .app .tile span { width: 72px; height: 72px; border-radius: 14px; background: var(--g1); color: var(--g4); font-size: 34px; font-weight: 700; display: grid; place-items: center; }
+  .app .body { padding: 12px 14px 14px; display: flex; flex-direction: column; gap: 4px; flex: 1; }
+  .app .name { font-weight: 650; }
+  .app .desc { color: var(--dim); font-size: 13px; flex: 1; }
+  .app .go { color: var(--accent); font-size: 13px; font-weight: 600; margin-top: 6px; }
+  .tag { font-size: 11px; font-weight: 600; padding: 1px 7px; border-radius: 999px; margin-left: 7px; vertical-align: 2px; }
+  .tag.new { background: #d3fa3722; color: var(--accent); } .tag.mod { background: #26a64133; color: var(--g4); }
+  .muted { color: var(--dim); }
   footer { color: var(--dim); font-size: 13px; padding: 40px 0 30px; border-top: 1px solid var(--line); margin-top: 44px; }
 </style>
 </head>
@@ -73,19 +101,28 @@
     <div class="feature"><b>Settings, screenshots, console</b><span>Wi-Fi, GitHub name, contact card and NFC; screenshots of any app as PNG; the MicroPython REPL.</span></div>
   </div>
 
-  <h2>Apps</h2>
-  <div class="gallery">
-    <figure><img loading="lazy" src="screenshots/badge.png" alt=""><figcaption>Badge, with GitHub stats</figcaption></figure>
-    <figure><img loading="lazy" src="screenshots/badge-qr.png" alt=""><figcaption>QR codes and NFC</figcaption></figure>
-    <figure><img loading="lazy" src="screenshots/radar.png" alt=""><figcaption>Radar: badges met nearby</figcaption></figure>
-    <figure><img loading="lazy" src="screenshots/duck-maze.png" alt=""><figcaption>Duck Maze: tilt to play</figcaption></figure>
-    <figure><img loading="lazy" src="screenshots/contacts.png" alt=""><figcaption>Contacts</figcaption></figure>
-    <figure><img loading="lazy" src="screenshots/pedometer.png" alt=""><figcaption>Pedometer</figcaption></figure>
-    <figure><img loading="lazy" src="screenshots/mona_pet.png" alt=""><figcaption>Mona Pet</figcaption></figure>
-    <figure><img loading="lazy" src="screenshots/menu-dizzy.png" alt=""><figcaption>Shake it: Mona gets dizzy</figcaption></figure>
+  <h2>How it works</h2>
+  <div class="steps">
+    <div class="step"><b>Plug the badge in</b><span>USB-C to your computer, badge switched on.</span></div>
+    <div class="step"><b>Open Badge Studio</b><span>In Chrome or Edge, press Connect badge and pick it in the list.</span></div>
+    <div class="step"><b>Install, arrange, hack</b><span>Apps land in a second, the menu shows them under INSTALLED.</span></div>
   </div>
+
+  <section id="store" style="margin-top: 36px">
+    <div class="market-head">
+      <h2>App store · <span id="market-count">…</span> apps</h2>
+      <div class="chips" id="market-filter">
+        <button class="on" data-filter="all">All</button>
+        <button data-filter="here">Made or modded here</button>
+        <button data-filter="official">Official</button>
+      </div>
+      <input id="market-search" type="search" placeholder="Search apps" aria-label="Search apps">
+    </div>
+    <div class="market" id="market"><p class="muted">Loading the apps from GitHub…</p></div>
+  </section>
 
   <footer>Not affiliated with GitHub or Pimoroni. Badge Studio talks to the badge over Web Serial, from your browser. Apps come from GitHub; your settings never leave your computer.</footer>
 </div>
+<script src="site.js?v=3"></script>
 </body>
 </html>

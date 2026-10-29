@@ -82,6 +82,7 @@
   #shot-canvas { width: 100%; max-width: 640px; image-rendering: pixelated; border-radius: 12px; border: 1px solid var(--line); background: #010409; display: block; }
   .notice { border-left: 3px solid var(--accent); background: var(--panel); padding: 10px 14px; border-radius: 6px; color: var(--dim); margin: 0 0 16px; }
   .notice.warn { border-left-color: var(--amber); } .notice.err { border-left-color: var(--red); color: var(--text); }
+  [hidden] { display: none !important; }
   .hero { display: grid; place-items: center; text-align: center; padding: 60px 20px; gap: 12px; }
   .hero h1 { margin: 0; font-size: 34px; letter-spacing: -0.02em; }
   .hero p { color: var(--dim); max-width: 560px; margin: 0; }
@@ -104,6 +105,7 @@
   .applist li .grip { color: var(--dim); }
   .applist li .label { flex: 1; }
   .applist li button { padding: 2px 7px; font-size: 12px; }
+  .applist li select { width: auto; padding: 2px 4px; font-size: 12px; }
   .applist li .src { font-size: 11px; color: var(--dim); }
   dialog { background: var(--panel); color: var(--text); border: 1px solid var(--line); border-radius: 14px; width: min(720px, 94vw); max-height: 86vh; padding: 18px; }
   dialog::backdrop { background: #010409cc; }
@@ -268,6 +270,6 @@
   <div class="toolbar" id="detail-actions" style="margin: 14px 0 0"></div>
 </dialog>
 <div id="toast"></div>
-<script src="studio.js"></script>
+<script src="studio.js?v=3"></script>
 </body>
 </html>
