@@ -27,6 +27,19 @@ APP_ORDER = (
     "show",
 )
 
+# The apps this repo changed or added come first, under a CUSTOM band; the
+# stock ones follow under STOCK
+CUSTOM_APPS = (
+    "badge",
+    "contacts",
+    "radar",
+    "mona_pet",
+    "pedometer",
+)
+BAND = 14
+BAND_FONT = font.ark
+BAND_LINE = color.rgb(255, 255, 255, 50)
+
 GAP = 4
 GRID_WIDTH = 312
 TILE = (GRID_WIDTH - (TILES_PER_ROW - 1) * GAP) // TILES_PER_ROW
@@ -163,12 +176,14 @@ class Tile:
     column = 0
     row = 0
     drop = 0
+    # room taken above it by the section bands
+    band = 0
 
     def place(self):
         self.width = self.columns * TILE + (self.columns - 1) * GAP
         self.height = self.rows * TILE + (self.rows - 1) * GAP
         self.left = GRID_LEFT + self.column * (TILE + GAP)
-        self.top = GRID_TOP + self.row * ROW_PITCH
+        self.top = GRID_TOP + self.row * ROW_PITCH + self.band
 
     def bounds(self, scroll):
         # whole pixels, so the gaps between tiles hold while the scroll eases
@@ -332,6 +347,7 @@ class Apps:
         animated = animated_slugs()
         folders = [entry[0] for entry in os.ilistdir(root) if entry[1] == 0x4000]
         tiles = []
+        custom = []
         for slug in sorted(folders, key=order):
             path = f"{root}/{slug}"
             if slug == "menu":
@@ -340,7 +356,9 @@ class Apps:
                 continue
             name = " ".join([capitalize(word) for word in slug.split("_")])
             icon_key = slug if slug in ICONS else "default"
-            tiles.append(App(len(tiles), name, slug, path, icon_key in animated))
+            app = App(len(tiles) + len(custom), name, slug, path, icon_key in animated)
+            (custom if slug in CUSTOM_APPS else tiles).append(app)
+        custom.sort(key=lambda app: CUSTOM_APPS.index(app.slug))
 
         from achievements import POSITION, Achievements, AchievementsTile
         self.achievements = Achievements()
@@ -352,7 +370,14 @@ class Apps:
             if file_exists(tile_path(name)):
                 tiles.insert(min(position, len(tiles)), Photo(name, columns, rows, frame))
 
-        self.apps = self.pack(tiles)
+        # the achievements and the photos keep their places among the stock apps
+        self.sections = []
+        stock_row = 0
+        if custom:
+            stock_row = self.pack(custom, 0, BAND)
+            self.sections = [("CUSTOM", 0, BAND), ("STOCK", stock_row, BAND * 2)]
+        self.pack(tiles, stock_row, BAND * 2 if custom else 0)
+        self.apps = self.number(custom + tiles)
         boundary = self.achievements_tile.row + self.achievements_tile.rows
         # (tile, first row, row after its last, below the picker) for the draw loop
         self.layout = [(tile, tile.row, tile.row + tile.rows, tile.row >= boundary) for tile in self.apps]
@@ -378,10 +403,12 @@ class Apps:
                 return
 
     @staticmethod
-    def pack(tiles):
+    def pack(tiles, first_row, band):
+        """Places one section's tiles from first_row down; returns the row after it."""
         taken = set()
+        end = first_row
         for tile in tiles:
-            row = 0
+            row = first_row
             placed = False
             while not placed:
                 for column in range(TILES_PER_ROW - tile.columns + 1):
@@ -389,15 +416,28 @@ class Apps:
                     if not any(cell in taken for cell in cells):
                         tile.column = column
                         tile.row = row
+                        tile.band = band
                         taken.update(cells)
+                        end = max(end, row + tile.rows)
                         placed = True
                         break
                 row += 1
+        return end
+
+    @staticmethod
+    def number(tiles):
         tiles.sort(key=lambda tile: (tile.row, tile.column))
         for index, tile in enumerate(tiles):
             tile.index = index
             tile.place()
         return tiles
+
+    def section_start(self, tile):
+        """The band above the tile's row, if its row starts a section."""
+        for _label, row, _band in self.sections:
+            if tile.row == row:
+                return BAND
+        return 0
 
     @property
     def active(self):
@@ -463,9 +503,11 @@ class Apps:
         return left + width / 2, top + height / 2
 
     def update_scroll(self):
-        row = self.active.row
-        lowest = (row + self.active.rows - VISIBLE_ROWS) * ROW_PITCH
-        highest = row * ROW_PITCH
+        active = self.active
+        top = active.top - GRID_TOP
+        lowest = top + (active.rows - VISIBLE_ROWS) * ROW_PITCH
+        # the first row of a section brings its band into view with it
+        highest = top - self.section_start(active)
         if self.picker is not None and self.picker.is_open:
             self.target = max(0, self.picker.focus_scroll())
         else:
@@ -488,9 +530,11 @@ class Apps:
         drop = picker.height() if picker is not None else 0
         selected = self.active_index if picker is None or not picker.is_open else None
         scroll = self.scroll
-        # rows in view, with a GAP of slack for the opening's overshoot
-        first_row = (scroll - GAP) / ROW_PITCH
-        last_row = (scroll + GRID_BOTTOM - GRID_TOP + GAP) / ROW_PITCH
+        # rows in view, with a GAP of slack for the opening's overshoot and
+        # room for the bands, which push the rows down
+        slack = GAP + BAND * len(self.sections)
+        first_row = (scroll - slack) / ROW_PITCH
+        last_row = (scroll + GRID_BOTTOM - GRID_TOP + slack) / ROW_PITCH
         dropped_first = first_row - drop / ROW_PITCH
         dropped_last = last_row - drop / ROW_PITCH
         for app, row, end, dropped in self.layout:
@@ -508,9 +552,24 @@ class Apps:
                     continue
             scale = opening.tile_scale(app) if opening else 1.0
             app.draw(self.scroll, tilt, app.index == selected, scale)
+        self.draw_bands(scroll)
         if picker is not None:
             picker.draw(self.scroll, tilt)
         screen.clip = rect(0, 0, screen.width, screen.height)
+
+    def draw_bands(self, scroll):
+        screen.font = BAND_FONT
+        for label, row, band in self.sections:
+            top = GRID_TOP + row * ROW_PITCH + band - BAND - round(scroll)
+            if top + BAND < GRID_TOP or top > GRID_BOTTOM:
+                continue
+            screen.clip = rect(0, GRID_TOP, screen.width, GRID_BOTTOM - GRID_TOP)
+            width, height = screen.measure_text(label)
+            text_top = top + (BAND - GAP - height) / 2
+            screen.pen = ui.dim_white
+            screen.text(label, GRID_LEFT, text_top)
+            screen.pen = BAND_LINE
+            screen.rectangle(GRID_LEFT + width + 6, text_top + height / 2, GRID_WIDTH - width - 6, 1)
 
     def __len__(self):
         return len(self.apps)

@@ -22,20 +22,20 @@ Screenshots taken straight from the badge with `tools/screenshot.ps1`.
 | Radar: Hot / Cold game | Radar: encounter history | Pedometer |
 |---|---|---|
 | ![Hot / Cold](docs/screenshots/radar-game.png) | ![Encounters](docs/screenshots/radar-history.png) | ![Pedometer](docs/screenshots/pedometer.png) |
+| **Mona Pet** | **Menu: CUSTOM first** | |
+| ![Mona Pet](docs/screenshots/mona_pet.png) | ![Menu](docs/screenshots/menu.png) | |
 
 The badges on the Radar screenshots are simulated (I only have one badge), and so are the steps on the Pedometer one.
 
 ### Stock apps
 
-| Menu | Snake | Pong |
+| Snake | Pong | Merge Conflict |
 |---|---|---|
-| ![Menu](docs/screenshots/menu.png) | ![Snake](docs/screenshots/snake.png) | ![Pong](docs/screenshots/pong.png) |
-| **Merge Conflict** | **Flappy Mona** | **Mona Pet** |
-| ![Merge Conflict](docs/screenshots/merge_conflict.png) | ![Flappy Mona](docs/screenshots/flappy_mona.png) | ![Mona Pet](docs/screenshots/mona_pet.png) |
-| **Mona Paint** | **Rogue** | **Brattal** |
-| ![Mona Paint](docs/screenshots/mona_paint.png) | ![Rogue](docs/screenshots/rogue.png) | ![Brattal](docs/screenshots/brattal.png) |
-| **Life** | **ISS** | |
-| ![Life](docs/screenshots/life.png) | ![ISS](docs/screenshots/iss.png) | |
+| ![Snake](docs/screenshots/snake.png) | ![Pong](docs/screenshots/pong.png) | ![Merge Conflict](docs/screenshots/merge_conflict.png) |
+| **Flappy Mona** | **Mona Paint** | **Rogue** |
+| ![Flappy Mona](docs/screenshots/flappy_mona.png) | ![Mona Paint](docs/screenshots/mona_paint.png) | ![Rogue](docs/screenshots/rogue.png) |
+| **Brattal** | **Life** | **ISS** |
+| ![Brattal](docs/screenshots/brattal.png) | ![Life](docs/screenshots/life.png) | ![ISS](docs/screenshots/iss.png) |
 
 ## What's inside
 
@@ -89,7 +89,7 @@ To try a pull request: `git checkout <branch>` then `./tools/deploy.ps1`.
 | **Radar** (new) | Nearby badges with signal-based proximity, fading, encounter history and an opt-in Hot / Cold game; optional matrix and haptic feedback |
 | **Pedometer** (new) | The day's steps from the watch, hour by hour, distance and a 6,000-step goal |
 | **Mona Pet** | Steps from the watch feed Mona (500 steps = 1 meal) and lift her mood; Down shows her walk |
-| **Menu** | Shows an app's `icon.png` when it has no built-in icon (Radar ships one; Badge keeps its built-in icon) |
+| **Menu** | Shows an app's `icon.png` when it has no built-in icon (Radar ships one; Badge keeps its built-in icon); the apps this repo changed come first, under a **CUSTOM** band, then the stock ones under **STOCK** |
 
 ### Radar
 
