@@ -1760,6 +1760,8 @@ const restoreRepair = (...args) => exclusive(() => restoreRepairNow(...args));
 
 async function repairNow(all) {
   if (!repairRoot || !repairScan || repairScan.root !== repairRoot || repairScan.source !== repairSource()) return;
+  // The drive the comparison was made on, whatever is picked meanwhile
+  const root = repairRoot;
   const { source } = repairScan;
   const files = all ? [...repairScan.missing, ...repairScan.changed] : [...repairScan.missing];
   const replaced = all ? repairScan.changed : [];
@@ -1782,7 +1784,7 @@ async function repairNow(all) {
     // Put back missing files never replaces a file; Repair all backs up every file it replaces
     const writes = [], keep = [];
     for (const file of downloads) {
-      const handle = await fileAt(repairRoot, file.path);
+      const handle = await fileAt(root, file.path);
       if (!handle) { writes.push(file); continue; }
       const bytes = new Uint8Array(await (await handle.getFile()).arrayBuffer());
       if ((await gitBlobSha(bytes)) === (await gitBlobSha(file.bytes))) continue;
@@ -1794,7 +1796,7 @@ async function repairNow(all) {
     if (keep.length) {
       state.textContent = "Backing up the different files…";
       saved = `repair-${stamp()}`;
-      const target = await folder(repairRoot, `${REPAIR_BACKUPS}/${saved}`, true);
+      const target = await folder(root, `${REPAIR_BACKUPS}/${saved}`, true);
       for (const file of keep) await writeOnDrive(target, file.path, file.bytes);
       // Written last: without it the backup did not finish
       await writeOnDrive(target, ".studio-backup.json", encoder.encode(JSON.stringify({
@@ -1804,7 +1806,7 @@ async function repairNow(all) {
     let done = 0;
     for (const file of writes) {
       state.textContent = `Writing ${++done} of ${writes.length}: ${file.path}`;
-      await writeOnDrive(repairRoot, file.path, file.bytes);
+      await writeOnDrive(root, file.path, file.bytes);
     }
     toast(`${writes.length} file${writes.length === 1 ? "" : "s"} repaired${saved ? ", the replaced ones are backed up" : ""}. Restart the badge when you are done.`, 7000);
   } catch (error) {
@@ -1852,8 +1854,9 @@ async function loadRepairBackups() {
 async function restoreRepairNow(item) {
   if (!confirm("Put back the files as they were before this repair?")) return;
   try {
-    const from = await (await repairRoot.getDirectoryHandle(REPAIR_BACKUPS)).getDirectoryHandle(item.name);
-    await copyFolder(from, repairRoot, (path) => path === ".studio-backup.json");
+    const root = repairRoot;
+    const from = await (await root.getDirectoryHandle(REPAIR_BACKUPS)).getDirectoryHandle(item.name);
+    await copyFolder(from, root, (path) => path === ".studio-backup.json");
     toast("Files put back. Restart the badge when you are done.", 6000);
   } catch (error) {
     toast("Could not put them back: " + error.message, 8000);
@@ -2012,11 +2015,12 @@ function wire() {
   $("#ext-finish").onclick = finishDrive;
   $("#repair-source").innerHTML = REPAIR_SOURCES.map((r) => `<option value="${escapeHtml(r.id)}">${escapeHtml(r.label)}</option>`).join("");
   $("#repair-source").onchange = scanRepair;
-  $("#repair-drive").onclick = pickRepairDrive;
+  // Picking a drive or restarting waits for a running repair, and blocks one meanwhile
+  $("#repair-drive").onclick = () => exclusive(pickRepairDrive);
   $("#repair-check").onclick = scanRepair;
   $("#repair-missing").onclick = () => repair(false);
   $("#repair-all").onclick = () => repair(true);
-  $("#repair-finish").onclick = async () => { await finishDrive(); repairRoot = null; repairScan = null; renderRepair(); };
+  $("#repair-finish").onclick = () => exclusive(async () => { await finishDrive(); repairRoot = null; repairScan = null; renderRepair(); });
   $("#detail-close").onclick = () => $("#detail").close();
   $("#detail").onclick = (e) => { if (e.target === $("#detail")) $("#detail").close(); };
   renderDrive();

@@ -5,7 +5,7 @@ Notable changes to this repo. Format based on [Keep a Changelog](https://keepach
 ## Unreleased
 
 ### Fixed
-- Repair: on drives that keep `/system` in a `system` folder, that folder is repaired even when `main.py` and `apps` are both gone; **Pick another drive** opens the picker; changing the reference during a comparison can no longer leave the older result; files that appeared or changed after the comparison are never overwritten by *Put back missing files*, and are backed up by *Repair all*.
+- Repair: on drives that keep `/system` in a `system` folder, that folder is repaired even when `main.py` and `apps` are both gone; **Pick another drive** opens the picker; changing the reference during a comparison can no longer leave the older result; files that appeared or changed after the comparison are never overwritten by *Put back missing files*, and are backed up by *Repair all*; picking another drive waits for a running repair, which always writes to the drive it compared.
 - Guides: a slow guide no longer replaces the one picked after it; the start page says where `secrets.py` is on the drive.
 
 ### Added
