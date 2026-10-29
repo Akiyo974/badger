@@ -5,6 +5,7 @@ Notable changes to this repo. Format based on [Keep a Changelog](https://keepach
 ## Unreleased
 
 ### Added
+- **Duck Maze** app: tilt the badge to roll a marble through 6 levels drawn like a contribution graph, collecting rubber ducks and avoiding bug holes; best times and unlocked levels saved; listed under CUSTOM in the menu. Level checks in `tests/test_duck_maze.py` (run in CI) and art drawn by `tools/make_maze_art.py`.
 - Menu: the apps this repo changed or added (Badge, Contacts, Radar, Mona Pet, Pedometer) come first under a **CUSTOM** band, the stock ones follow under **STOCK** (`CUSTOM_APPS` in `menu/app.py`).
 - **Steps from the watch**: Badger Remote reads the day's steps from Health Services (total and per hour, recorded in the background) and sends them to the badge on a second characteristic; `remote.py` keeps the last ones in `/state/watch_steps`. The badge can count steps with its own LSM6DS3 too, but it is not used: worn around the neck, it does not count reliably.
 - **Pedometer** app: the day's steps from the watch, GitHub Universe day, hourly squares, distance, goal (`STEPS_GOAL`) and sync time.

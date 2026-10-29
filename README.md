@@ -22,8 +22,8 @@ Screenshots taken straight from the badge with `tools/screenshot.ps1`.
 | Radar: Hot / Cold game | Radar: encounter history | Pedometer |
 |---|---|---|
 | ![Hot / Cold](docs/screenshots/radar-game.png) | ![Encounters](docs/screenshots/radar-history.png) | ![Pedometer](docs/screenshots/pedometer.png) |
-| **Mona Pet** | **Menu: CUSTOM first** | |
-| ![Mona Pet](docs/screenshots/mona_pet.png) | ![Menu](docs/screenshots/menu.png) | |
+| **Mona Pet** | **Menu: CUSTOM first** | **Duck Maze** |
+| ![Mona Pet](docs/screenshots/mona_pet.png) | ![Menu](docs/screenshots/menu.png) | ![Duck Maze](docs/screenshots/duck-maze.png) |
 
 The badges on the Radar screenshots are simulated (I only have one badge), and so are the steps on the Pedometer one.
 
@@ -88,6 +88,7 @@ To try a pull request: `git checkout <branch>` then `./tools/deploy.ps1`.
 | **Contacts** | Received links are checked, website field, delete a contact, export to the PC |
 | **Radar** (new) | Nearby badges with signal-based proximity, fading, encounter history and an opt-in Hot / Cold game; optional matrix and haptic feedback |
 | **Pedometer** (new) | The day's steps from the watch, hour by hour, distance and a 6,000-step goal |
+| **Duck Maze** (new) | Tilt the badge to roll a marble through 6 mazes: collect the rubber ducks, avoid the bug holes, reach the merge |
 | **Mona Pet** | Steps from the watch feed Mona (500 steps = 1 meal) and lift her mood; Down shows her walk |
 | **Menu** | Shows an app's `icon.png` when it has no built-in icon (Radar ships one; Badge keeps its built-in icon); the apps this repo changed come first, under a **CUSTOM** band, then the stock ones under **STOCK** |
 
@@ -144,6 +145,22 @@ dark = badge.light_level() < 50
 ```
 
 Already used by the stock software: the menu and the Badge app shift their tiles and graph with the motion sensor (a small parallax effect when you tilt the badge).
+
+### Duck Maze
+
+<p align="center">
+  <img src="docs/screenshots/duck-maze-title.png" width="320" alt="Duck Maze title screen">
+  <img src="docs/screenshots/duck-maze.png" width="320" alt="Duck Maze level 3, bug hunt">
+</p>
+
+A tilt game in the CUSTOM band of the menu. Tilt the badge to roll the marble; walls are drawn like a contribution graph.
+
+- **Goal**: collect every rubber duck (they open the merge), then roll into the merge. A bug hole sends you back to the start of the level.
+- **6 levels**: hello, world · first commit · bug hunt · merge conflict · hotfix · ship it, from no holes to twelve. Finishing a level unlocks the next; unlocked levels and best times are kept in `/state/duck_maze.json`.
+- **Controls**: on the title screen, ← / → choose a level and **Select** starts it. The position you hold the badge in when you press Select counts as flat, so it plays as well held flat as tilted towards you. **Back** returns to the title.
+- **How it rolls**: acceleration follows the tilt (side to side from the accelerometer's X axis, forwards and back from the angle around the screen's horizontal axis), with drag, bounces off the walls and sub-steps so a fast marble cannot pass through a wall.
+- **Smooth on the badge**: walls and holes are drawn once per level into an off-screen image, and each frame only restores and redraws the spots that move (marble, trail, ducks, merge). That takes the game from 15 to about 29 frames per second on the hardest level.
+- Levels live in `system/apps/duck_maze/levels.py` as text grids; `tests/test_duck_maze.py` checks their size and that every duck and the merge can be reached without crossing a hole. The duck and the icon are drawn by `tools/make_maze_art.py`.
 
 ## Hardware add-ons (Qw/ST port)
 
@@ -231,6 +248,7 @@ Reads the cards swapped with the **Contacts** app (in `/state`, outside the USB 
 py tests/test_contacts_compat.py
 py tests/test_radar.py
 py tests/test_watch_steps.py
+py tests/test_duck_maze.py
 ```
 
 Simulates card swaps between the stock Contacts app (read from the first commit) and the version in this repo, to check that swapping with an unmodified badge still works.
@@ -238,6 +256,8 @@ Simulates card swaps between the stock Contacts app (read from the first commit)
 The Radar tests simulate BLE traffic, proximity/fading, the opt-in game and persistent encounter history without requiring hardware.
 
 The watch steps tests feed the bytes the watch app builds to `remote.py`, then check what the Pedometer shows and how many meals Mona gets (once per meal, new day, no sync yet).
+
+The Duck Maze tests check every level: size, closed border, one start and one merge, difficulty that only grows, and a path to every duck and to the merge that never crosses a bug hole.
 
 GitHub Actions (`.github/workflows/ci.yml`) runs these tests, checks the syntax of `system/`, and builds, tests and lints the watch app on every pull request. Pushing a `wear-v*` tag publishes a signed APK (`wear-release.yml`, needs the `SIGNING_KEYSTORE_BASE64`, `SIGNING_PASSWORD` and `SIGNING_KEY_ALIAS` secrets).
 
