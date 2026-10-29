@@ -5,6 +5,7 @@ Notable changes to this repo. Format based on [Keep a Changelog](https://keepach
 ## Unreleased
 
 ### Added
+- Badge Studio **Repair** tab: compares the whole BADGER drive with the factory files (this repo's first commit) or with this repo's `system/`, lists what is missing or different per app and folder, and puts back only the missing files or everything. Replaced files are backed up to `.studio-repair-backups/` and can be put back; `secrets.py` is never written and nothing is deleted. Every download is checked against its git id before anything is written. Documented in the README ("Repairing the badge"); both references are in `docs/catalog.json`, and `tests/test_catalog.py` checks the factory one is the first commit.
 - Store fallback: when the GitHub API rate limit is reached (shared Wi-Fi), the home page and Badge Studio read `docs/catalog.json`, the same app list made by `tools/make_catalog.py` from git and refreshed hourly by `.github/workflows/catalog.yml`; `tests/test_catalog.py` checks every built-in source is in it.
 - Home page and Badge Studio: on a phone or tablet, a note says Badge Studio needs a computer, with a button to share or copy the link. The home page search also matches app descriptions.
 - Links to the official [badge simulator](https://badger.github.io/editor) for trying an app without a badge, and to the official site's store in the README.

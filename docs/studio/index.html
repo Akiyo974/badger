@@ -119,6 +119,10 @@
   .readme code { background: var(--panel-2); padding: 1px 5px; border-radius: 5px; }
   .readme p, .readme ul { margin: 6px 0; color: var(--dim); }
   details { margin-top: 12px; } details ul { font-size: 12px; columns: 2; }
+  #repair-source { width: auto; max-width: 100%; }
+  .repair-list { margin: 10px 0 0; padding-left: 20px; columns: 2; font-size: 14px; color: var(--dim); }
+  @media (max-width: 700px) { .repair-list { columns: 1; } }
+  .steps { margin: 0 0 16px; padding-left: 20px; color: var(--dim); }
   .state-same { color: var(--green); } .state-diff { color: var(--amber); } .state-missing { color: var(--blue); }
 </style>
 </head>
@@ -134,6 +138,7 @@
   <button data-tab="apps">Apps</button>
   <button data-tab="home">Home screen</button>
   <button data-tab="extensions">Extensions</button>
+  <button data-tab="repair">Repair</button>
   <button data-tab="settings">Settings</button>
   <button data-tab="shot">Screenshot</button>
   <button data-tab="console">Console</button>
@@ -219,6 +224,32 @@
     <div class="grid" id="ext-backups"><p class="muted">Pick the BADGER drive to see the backups.</p></div>
   </section>
 
+  <section id="tab-repair">
+    <h2>Repair</h2>
+    <p class="lead">A folder went missing, an app no longer starts, the menu crashes? Repair compares every file of the badge's <b>BADGER</b> drive (<code>/system</code>) with a healthy copy and puts back the ones that are missing or different. Files are only added or replaced, never deleted. Your settings (<code>secrets.py</code>) and the apps you installed from the store (in <code>/apps</code>, another part of the memory) are never touched.</p>
+    <ol class="steps">
+      <li>Press <b>Switch to USB drive mode</b> with the badge connected. If the badge no longer starts, <b>double-tap its RESET button</b> instead: it shows up as a USB drive named BADGER.</li>
+      <li>Press <b>Pick the BADGER drive</b> and choose the drive itself (the folder that holds <code>main.py</code> and <code>apps</code>).</li>
+      <li>Read the comparison, then press <b>Put back missing files</b> (safe: your own changes stay) or <b>Repair all</b> (different files are backed up, then replaced).</li>
+      <li>Press <b>Restart the badge</b>.</li>
+    </ol>
+    <div class="toolbar">
+      <label class="muted" for="repair-source">Compare with</label>
+      <select id="repair-source"></select>
+      <button id="repair-drive" disabled>Pick the BADGER drive</button>
+      <button id="repair-check" disabled>Compare again</button>
+      <span class="muted" id="repair-state"></span>
+    </div>
+    <div id="repair-result"><p class="muted">Pick the BADGER drive to compare it.</p></div>
+    <div class="toolbar" style="margin-top: 14px">
+      <button id="repair-missing" class="primary" disabled>Put back missing files</button>
+      <button id="repair-all" disabled>Repair all</button>
+      <button id="repair-finish" hidden>Restart the badge</button>
+    </div>
+    <h3>Backups made by Repair</h3>
+    <div class="grid" id="repair-backups"><p class="muted">Pick the BADGER drive to see the backups.</p></div>
+  </section>
+
   <section id="tab-settings">
     <h2>Settings</h2>
     <p class="lead">The badge's <code>secrets.py</code>. Changes are saved on the badge and apply after a reboot.</p>
@@ -270,6 +301,6 @@
   <div class="toolbar" id="detail-actions" style="margin: 14px 0 0"></div>
 </dialog>
 <div id="toast"></div>
-<script src="studio.js?v=5"></script>
+<script src="studio.js?v=6"></script>
 </body>
 </html>

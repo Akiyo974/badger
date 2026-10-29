@@ -7,7 +7,7 @@ on:
     - cron: '23 * * * *'
   push:
     branches: [main]
-    paths: ['system/apps/**', 'tools/make_catalog.py']
+    paths: ['system/**', 'tools/make_catalog.py']
   workflow_dispatch:
 
 permissions:

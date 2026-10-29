@@ -368,14 +368,16 @@ badge.onState = (kind, text) => {
   }
   renderHome();
   renderDrive();
+  renderRepair();
   if (kind === "err") {
     device = null;
     if (badge.toDrive) {
       // Switched to USB drive mode on purpose
+      const tab = badge.toDrive === "repair" ? "repair" : "extensions";
       badge.toDrive = false;
       $("#hero").hidden = false;
       $("#device").hidden = true;
-      document.querySelector('#tabs [data-tab="extensions"]').click();
+      document.querySelector(`#tabs [data-tab="${tab}"]`).click();
     } else if (badge.expectReset) {
       badge.expectReset = false;
       reconnect();
@@ -548,8 +550,8 @@ function snapshot() {
   return snapshotPromise;
 }
 
-async function loadCatalogue(source) {
-  if (catalogues[source.id]) return catalogues[source.id];
+// The files under source.base, from the GitHub API or, when it refuses, from catalog.json
+async function loadTree(source) {
   const cacheKey = "studio-tree-" + source.id;
   let tree = null;
   try {
@@ -569,6 +571,12 @@ async function loadCatalogue(source) {
       if (!tree) throw error;
     }
   }
+  return tree;
+}
+
+async function loadCatalogue(source) {
+  if (catalogues[source.id]) return catalogues[source.id];
+  const tree = await loadTree(source);
   const apps = {};
   for (const entry of tree) {
     const [slug, ...rest] = entry.path.slice(source.base.length + 1).split("/");
@@ -1220,14 +1228,14 @@ let drive = null;
 let extensions = null;
 
 // The picked folder is kept in IndexedDB, so it is only picked once
-function idb(action, value) {
+function idb(action, value, key = "apps") {
   return new Promise((resolve, reject) => {
     const open = indexedDB.open("badge-studio", 1);
     open.onupgradeneeded = () => open.result.createObjectStore("handles");
     open.onerror = () => reject(open.error);
     open.onsuccess = () => {
       const store = open.result.transaction("handles", action === "get" ? "readonly" : "readwrite").objectStore("handles");
-      const request = action === "get" ? store.get("apps") : store.put(value, "apps");
+      const request = action === "get" ? store.get(key) : store.put(value, key);
       request.onsuccess = () => resolve(request.result);
       request.onerror = () => reject(request.error);
     };
@@ -1579,6 +1587,265 @@ async function finishDrive() {
   }
 }
 
+// ---------- repair ----------
+
+// What a healthy BADGER drive holds. The first commit of the repo is the
+// badge's drive as it shipped; main is the same with this repo's changes
+const REPAIR_SOURCES = [
+  { id: "repair-factory", label: "Factory: MonaOS 4.0 as shipped", repo: "Akiyo974/badger", branch: "6912f14355e5603f5793e61baf7acbe1889146c0", base: "system" },
+  { id: "repair-repo", label: "Factory + the changes of Akiyo974/badger", repo: "Akiyo974/badger", branch: "main", base: "system" },
+];
+const REPAIR_BACKUPS = ".studio-repair-backups";
+// Never part of a reference, never written: the owner's settings
+const REPAIR_KEEP = new Set(["secrets.py"]);
+let repairRoot = null;
+let repairScan = null;
+
+function repairSource() {
+  return REPAIR_SOURCES.find((s) => s.id === $("#repair-source").value) || REPAIR_SOURCES[0];
+}
+
+async function fileAt(root, path) {
+  const parts = path.split("/");
+  const name = parts.pop();
+  try {
+    return await (await folder(root, parts.join("/"), false)).getFileHandle(name);
+  } catch (_) {
+    return null;
+  }
+}
+
+async function useRepairRoot(handle) {
+  if ((await handle.queryPermission({ mode: "readwrite" })) !== "granted"
+      && (await handle.requestPermission({ mode: "readwrite" })) !== "granted") {
+    throw new Error("Write access to the drive was not allowed.");
+  }
+  // Fails when the drive is not plugged in any more
+  const names = new Set();
+  for await (const [name] of handle.entries()) names.add(name);
+  if (names.has("INFO_UF2.TXT")) {
+    throw new Error("This is the RP2350 drive (the chip's bootloader), not BADGER: unplug and press RESET, or double-tap RESET.");
+  }
+  // On some firmware the drive holds /system in a system folder
+  if (!names.has("main.py") && !names.has("apps") && names.has("system")) {
+    const inner = await handle.getDirectoryHandle("system");
+    if ((await hasEntry(inner, "apps", "directory")) || (await hasEntry(inner, "main.py", "file"))) {
+      handle = inner;
+      names.clear();
+      for await (const [name] of handle.entries()) names.add(name);
+    }
+  }
+  if (names.has("menu") && !names.has("apps")) {
+    throw new Error("This is the apps folder: pick the BADGER drive itself, one level up.");
+  }
+  if (!["main.py", "apps", "assets", "secrets.py"].some((n) => names.has(n))
+      && !confirm(`“${handle.name}” does not look like the BADGER drive (no main.py, apps or assets). Repair it anyway?`)) {
+    return;
+  }
+  repairRoot = handle;
+  try { await idb("put", handle, "root"); } catch (_) {}
+  renderRepair();
+  await loadRepairBackups();
+  await scanRepair();
+}
+
+async function pickRepairDrive() {
+  if (badge.connected) {
+    if (!confirm("The badge restarts as a USB drive named BADGER, then you pick that drive here. Continue?")) return;
+    badge.toDrive = "repair";
+    await badge.write("\x03");
+    await sleep(200);
+    await badge.write("import powman; powman.reset_into_msc()\r");
+    $("#repair-state").textContent = "Wait for the BADGER drive to show up, then press Pick the BADGER drive.";
+    return;
+  }
+  try {
+    const saved = await idb("get", undefined, "root").catch(() => null);
+    if (saved) {
+      try { await useRepairRoot(saved); return; } catch (_) {}
+    }
+    await useRepairRoot(await window.showDirectoryPicker({ id: "badger-root", mode: "readwrite" }));
+  } catch (error) {
+    if (error.name !== "AbortError") toast(error.message, 7000);
+  }
+}
+
+function renderRepair() {
+  const supported = "showDirectoryPicker" in window;
+  const button = $("#repair-drive");
+  button.disabled = !supported;
+  button.textContent = badge.connected ? "Switch to USB drive mode" : repairRoot ? "Pick another drive" : "Pick the BADGER drive";
+  $("#repair-check").disabled = !repairRoot;
+  const missing = repairScan ? repairScan.missing.length : 0;
+  const changed = repairScan ? repairScan.changed.length : 0;
+  $("#repair-missing").disabled = !repairRoot || !missing;
+  $("#repair-missing").textContent = missing ? `Put back ${missing} missing file${missing > 1 ? "s" : ""}` : "Put back missing files";
+  $("#repair-all").disabled = !repairRoot || !(missing + changed);
+  $("#repair-all").textContent = missing + changed ? `Repair all ${missing + changed} file${missing + changed > 1 ? "s" : ""}` : "Repair all";
+  $("#repair-finish").hidden = !repairRoot || badge.connected;
+  if (!supported) {
+    $("#repair-state").textContent = "This browser cannot write to a drive. Use Chrome or Edge on a computer.";
+  }
+}
+
+// Compares every file of the reference with the drive, by git blob id
+async function scanRepair() {
+  if (!repairRoot) return;
+  const source = repairSource();
+  const box = $("#repair-result");
+  box.innerHTML = `<p class="muted">Comparing…</p>`;
+  repairScan = null;
+  renderRepair();
+  try {
+    const tree = (await loadTree(source)).filter((e) => !REPAIR_KEEP.has(e.path.slice(source.base.length + 1)));
+    const missing = [], changed = [];
+    let done = 0;
+    for (const entry of tree) {
+      const path = entry.path.slice(source.base.length + 1);
+      const handle = await fileAt(repairRoot, path);
+      if (!handle) missing.push({ path, sha: entry.sha, size: entry.size });
+      else if ((await gitBlobSha(new Uint8Array(await (await handle.getFile()).arrayBuffer()))) !== entry.sha) {
+        changed.push({ path, sha: entry.sha, size: entry.size });
+      }
+      if (++done % 20 === 0) $("#repair-state").textContent = `Checked ${done} of ${tree.length} files…`;
+    }
+    repairScan = { source, total: tree.length, missing, changed };
+  } catch (error) {
+    box.innerHTML = `<div class="notice err">Could not compare: ${escapeHtml(error.message)}</div>`;
+    $("#repair-state").textContent = "";
+    renderRepair();
+    return;
+  }
+  $("#repair-state").textContent = "";
+  renderRepairScan();
+  renderRepair();
+}
+
+function renderRepairScan() {
+  const box = $("#repair-result");
+  const { total, missing, changed, source } = repairScan;
+  if (!missing.length && !changed.length) {
+    box.innerHTML = `<div class="notice">All ${total} files match <b>${escapeHtml(source.label)}</b>. Nothing to repair.</div>`;
+    return;
+  }
+  // One line per app or folder, so a missing app reads as one line
+  const groups = new Map();
+  for (const [kind, list] of [["missing", missing], ["changed", changed]]) {
+    for (const file of list) {
+      const parts = file.path.split("/");
+      const group = parts[0] === "apps" && parts.length > 2 ? "apps/" + parts[1] : parts.length > 1 ? parts[0] : file.path;
+      const g = groups.get(group) || { missing: 0, changed: 0 };
+      g[kind]++;
+      groups.set(group, g);
+    }
+  }
+  const rows = [...groups].sort((a, b) => a[0].localeCompare(b[0])).map(([group, g]) => {
+    const what = [g.missing && `<span class="state-missing">${g.missing} missing</span>`, g.changed && `<span class="state-diff">${g.changed} different</span>`].filter(Boolean).join(", ");
+    return `<li><code>${escapeHtml(group)}</code> · ${what}</li>`;
+  }).join("");
+  box.innerHTML = `
+    <div class="notice warn">Compared with <b>${escapeHtml(source.label)}</b>: ${missing.length} missing and ${changed.length} different, out of ${total} files.
+      Different files can be your own changes: <b>Put back missing files</b> leaves them alone, <b>Repair all</b> backs them up, then replaces them.</div>
+    <ul class="repair-list">${rows}</ul>`;
+}
+
+const repair = (...args) => exclusive(() => repairNow(...args));
+const restoreRepair = (...args) => exclusive(() => restoreRepairNow(...args));
+
+async function repairNow(all) {
+  if (!repairRoot || !repairScan) return;
+  const { source } = repairScan;
+  const files = all ? [...repairScan.missing, ...repairScan.changed] : [...repairScan.missing];
+  const replaced = all ? repairScan.changed : [];
+  if (!files.length) return;
+  if (!confirm(`Write ${files.length} file${files.length > 1 ? "s" : ""} from “${source.label}” to the drive?`
+      + (replaced.length ? ` The ${replaced.length} different file${replaced.length > 1 ? "s are" : " is"} backed up first.` : ""))) return;
+  const state = $("#repair-state");
+  try {
+    // Download and check everything first: a network error never leaves the drive half repaired
+    const downloads = [];
+    for (const file of files) {
+      state.textContent = `Downloading ${downloads.length + 1} of ${files.length}…`;
+      const response = await fetch(rawUrl(source, file.path));
+      if (!response.ok) throw new Error(`Download failed for ${file.path} (${response.status})`);
+      const bytes = new Uint8Array(await response.arrayBuffer());
+      if ((await gitBlobSha(bytes)) !== file.sha) throw new Error(`${file.path} did not download correctly`);
+      downloads.push({ path: file.path, bytes });
+    }
+    let saved = null;
+    if (replaced.length) {
+      state.textContent = "Backing up the different files…";
+      saved = `repair-${stamp()}`;
+      const target = await folder(repairRoot, `${REPAIR_BACKUPS}/${saved}`, true);
+      for (const file of replaced) {
+        const handle = await fileAt(repairRoot, file.path);
+        if (handle) await writeOnDrive(target, file.path, new Uint8Array(await (await handle.getFile()).arrayBuffer()));
+      }
+      // Written last: without it the backup did not finish
+      await writeOnDrive(target, ".studio-backup.json", encoder.encode(JSON.stringify({
+        source: source.label, at: new Date().toISOString(), files: replaced.map((f) => f.path),
+      })));
+    }
+    let done = 0;
+    for (const file of downloads) {
+      state.textContent = `Writing ${++done} of ${downloads.length}: ${file.path}`;
+      await writeOnDrive(repairRoot, file.path, file.bytes);
+    }
+    toast(`${downloads.length} file${downloads.length > 1 ? "s" : ""} repaired${saved ? ", the replaced ones are backed up" : ""}. Restart the badge when you are done.`, 7000);
+  } catch (error) {
+    toast("Repair stopped: " + error.message + ". Nothing was deleted; run Repair again.", 9000);
+  }
+  state.textContent = "";
+  await loadRepairBackups();
+  await scanRepair();
+}
+
+async function loadRepairBackups() {
+  const box = $("#repair-backups");
+  if (!repairRoot) return;
+  const backups = [];
+  if (await hasEntry(repairRoot, REPAIR_BACKUPS, "directory")) {
+    for await (const [name, handle] of (await repairRoot.getDirectoryHandle(REPAIR_BACKUPS)).entries()) {
+      if (handle.kind !== "directory") continue;
+      let meta = { complete: false };
+      try { meta = { ...JSON.parse(await (await (await handle.getFileHandle(".studio-backup.json")).getFile()).text()), complete: true }; } catch (_) {}
+      backups.push({ name, meta });
+    }
+  }
+  backups.sort((a, b) => b.name.localeCompare(a.name));
+  box.innerHTML = backups.length ? "" : `<p class="muted">No backup yet. One is made every time Repair all replaces files.</p>`;
+  for (const item of backups) {
+    const card = document.createElement("div");
+    card.className = "card app";
+    const when = item.meta.at ? new Date(item.meta.at).toLocaleString() : item.name;
+    const count = item.meta.files ? `${item.meta.files.length} file${item.meta.files.length > 1 ? "s" : ""}` : "";
+    card.innerHTML = `
+      <div class="top"><div class="noicon"></div><div><div class="name">Before repair</div>
+        <div class="meta">${escapeHtml(when)}${count ? " · " + count : ""}${item.meta.source ? " · " + escapeHtml(item.meta.source) : ""}</div></div></div>
+      <div class="actions">${item.meta.complete ? `<button class="small" data-act="restore">Put these files back</button>` : `<span class="muted" style="font-size:13px">Incomplete copy</span>`}<button class="small danger" data-act="delete">Delete</button></div>`;
+    const restore = card.querySelector('[data-act="restore"]');
+    if (restore) restore.onclick = () => restoreRepair(item);
+    card.querySelector('[data-act="delete"]').onclick = async () => {
+      if (!confirm("Delete this backup?")) return;
+      await (await repairRoot.getDirectoryHandle(REPAIR_BACKUPS)).removeEntry(item.name, { recursive: true });
+      await loadRepairBackups();
+    };
+    box.appendChild(card);
+  }
+}
+
+async function restoreRepairNow(item) {
+  if (!confirm("Put back the files as they were before this repair?")) return;
+  try {
+    const from = await (await repairRoot.getDirectoryHandle(REPAIR_BACKUPS)).getDirectoryHandle(item.name);
+    await copyFolder(from, repairRoot, (path) => path === ".studio-backup.json");
+    toast("Files put back. Restart the badge when you are done.", 6000);
+  } catch (error) {
+    toast("Could not put them back: " + error.message, 8000);
+  }
+  await scanRepair();
+}
+
 // ---------- app details ----------
 
 // Just enough Markdown for the apps' READMEs
@@ -1728,9 +1995,17 @@ function wire() {
   $("#ext-check").onclick = compareExtensions;
   $("#ext-drive").onclick = pickDrive;
   $("#ext-finish").onclick = finishDrive;
+  $("#repair-source").innerHTML = REPAIR_SOURCES.map((r) => `<option value="${escapeHtml(r.id)}">${escapeHtml(r.label)}</option>`).join("");
+  $("#repair-source").onchange = scanRepair;
+  $("#repair-drive").onclick = pickRepairDrive;
+  $("#repair-check").onclick = scanRepair;
+  $("#repair-missing").onclick = () => repair(false);
+  $("#repair-all").onclick = () => repair(true);
+  $("#repair-finish").onclick = async () => { await finishDrive(); repairRoot = null; repairScan = null; renderRepair(); };
   $("#detail-close").onclick = () => $("#detail").close();
   $("#detail").onclick = (e) => { if (e.target === $("#detail")) $("#detail").close(); };
   renderDrive();
+  renderRepair();
   $("#console-send").onclick = sendConsole;
   $("#console-line").onkeydown = (e) => { if (e.key === "Enter") sendConsole(); };
   $("#console-ctrlc").onclick = () => badge.write("\x03");
