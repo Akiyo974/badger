@@ -39,7 +39,7 @@ class CatalogTest(unittest.TestCase):
         except (OSError, subprocess.CalledProcessError):
             self.skipTest("no git history")
         if subprocess.run(["git", "rev-parse", "--is-shallow-repository"], cwd=ROOT,
-                          capture_output=True, text=True).stdout.strip() == "true":
+                          capture_output=True, text=True, check=False).stdout.strip() == "true":
             self.skipTest("shallow clone")
         self.assertIn(factory, roots)
 
