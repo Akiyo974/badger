@@ -97,6 +97,29 @@ def _st_secrets():
     import secrets
     os.chdir(here)
     return secrets
+# An install writes the new version in /.studio-staging/<slug> and moves the
+# old one to /.studio-staging/<slug>.old while it swaps them
+def _st_promote(staging, target, old):
+    _st_rm(old)
+    if _st_isdir(target):
+        os.rename(target, old)
+    try:
+        os.rename(staging, target)
+    except Exception:
+        if _st_isdir(old) and not _st_isdir(target):
+            os.rename(old, target)
+        raise
+    _st_rm(old)
+# After a reset or unplug in the middle of an install: put back any app that
+# was being swapped, then drop the partial copies
+def _st_recover(staging_root, install_root):
+    for name, folder in _st_ls(staging_root):
+        if folder and name.endswith(".old"):
+            target = install_root + "/" + name[:-4]
+            if not _st_isdir(target):
+                _st_mkdirs(install_root)
+                os.rename(staging_root + "/" + name, target)
+    _st_rm(staging_root)
 `;
 
 // ---------- small utilities ----------
@@ -217,7 +240,7 @@ class Badge {
   async readLoop() {
     const decoder = new TextDecoder();
     try {
-      while (this.port.readable) {
+      while (this.port.readable && !this.closing) {
         this.reader = this.port.readable.getReader();
         try {
           while (true) {
@@ -460,6 +483,7 @@ const catalogues = {};
 
 async function loadInstalled() {
   installed = await badge.json(`
+_st_recover("${STAGING_ROOT}", "${INSTALL_ROOT}")
 _apps = []
 for _n, _d in _st_ls("${INSTALL_ROOT}"):
     if not _d:
@@ -665,6 +689,9 @@ async function installNow(source, app, card) {
   const target = INSTALL_ROOT + "/" + app.slug;
   // The new version is written apart; the old one stays until it is complete
   const staging = STAGING_ROOT + "/" + app.slug;
+  // A copy left by an interrupted install takes space: free it first
+  await badge.run(`_st_recover(${pyString(STAGING_ROOT)}, ${pyString(INSTALL_ROOT)})`);
+  await loadDevice();
   if (device && app.size + 16 * 1024 > device.root_free) {
     toast(`Not enough space: ${formatBytes(app.size)} needed, ${formatBytes(device.root_free)} free.`, 6000);
     return;
@@ -709,7 +736,7 @@ async function installNow(source, app, card) {
     }
     const meta = { repo: source.repo, branch: source.branch, base: source.base, source: source.id, version: app.version, installed: new Date().toISOString() };
     await badge.run(`f = open(${pyString(staging + "/.studio.json")}, "w"); f.write(${pyString(JSON.stringify(meta))}); f.close()`);
-    await badge.run(`_st_mkdirs(${pyString(INSTALL_ROOT)})\n_st_rm(${pyString(target)})\nos.rename(${pyString(staging)}, ${pyString(target)})`);
+    await badge.run(`_st_mkdirs(${pyString(INSTALL_ROOT)})\n_st_promote(${pyString(staging)}, ${pyString(target)}, ${pyString(staging + ".old")})`);
     toast(`${titleCase(app.slug)} installed.`);
     $("#apps-reboot").hidden = !installed.menu;
   } catch (error) {
