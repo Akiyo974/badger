@@ -53,6 +53,9 @@ jobs:
       - name: Watch steps tests
         run: python tests/test_watch_steps.py
 
+      - name: Duck Maze level checks
+        run: python tests/test_duck_maze.py
+
   wear:
     name: Wear OS app (build, tests, lint)
     runs-on: ubuntu-latest

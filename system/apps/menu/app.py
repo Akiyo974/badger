@@ -35,6 +35,7 @@ CUSTOM_APPS = (
     "radar",
     "mona_pet",
     "pedometer",
+    "duck_maze",
 )
 BAND = 14
 BAND_FONT = font.ark
