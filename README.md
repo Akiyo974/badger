@@ -184,6 +184,7 @@ The badge hangs around the neck, so its own step counter (`get_step_count()` of 
 - **Pedometer**: big number of the day's steps, "GitHub Universe '26 · Day 1 / 2" (from the watch's date, Universe being on October 28–29, 2026), one square per hour recorded by the watch (the brighter, the more steps), distance (0.75 m per step), progress to the goal (`STEPS_GOAL` in `secrets.py`, 6 000 by default) and the sync time. Without an hourly history, it shows "synced 14:32 from Galaxy Watch" instead of the squares.
 - **Mona Pet**: every 500 steps of the day is a meal (+15 food, +5 fun), given when Mona Pet opens or the watch syncs; each meal is given once, even to a new Mona. **Down** shows her walk: steps today, food / fun / clean, meals of the day and her mood, which rises with the steps (sleepy, perking up, happy, very happy, over the moon).
 - The badge has no clock of its own: "today" means the day the watch synced.
+- **First day**: on the Galaxy Watch, Health Services only counts the day's steps from the moment an app starts listening (checked on a Galaxy Watch: 32 steps for Health Services against 10 247 in Samsung Health on the evening of the install). From the next midnight on, the total covers the whole day, as long as the app stays installed. Samsung Health does not share its own count with other apps on the watch.
 
 ### Installing on the watch
 
