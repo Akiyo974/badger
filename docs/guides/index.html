@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Badge Guides</title>
+<meta name="description" content="Step-by-step guides for the custom apps of the GitHub Universe badge: Badge, Contacts, Radar, Duck Maze, Pedometer, Mona Pet, Menu and Badger Remote.">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Guides: the custom apps of the GitHub Universe badge">
+<meta property="og:description" content="How to install, use and set up Badge, Contacts, Radar, Duck Maze, Pedometer, Mona Pet, the Menu and the Badger Remote watch app.">
+<meta property="og:url" content="https://akiyo974.github.io/badger/guides/">
+<meta property="og:image" content="https://akiyo974.github.io/badger/media/og.png">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><rect width='24' height='24' rx='5' fill='%230d1117'/><rect x='4' y='4' width='7' height='7' rx='1.5' fill='%2339d353'/><rect x='13' y='4' width='7' height='7' rx='1.5' fill='%23006d32'/><rect x='4' y='13' width='7' height='7' rx='1.5' fill='%2326a641'/><circle cx='16.5' cy='16.5' r='3.5' fill='%23d3fa37'/></svg>">
+<style>
+  :root {
+    --bg: #0d1117; --panel: #161b22; --panel-2: #1c2330; --line: #30363d;
+    --text: #e6edf3; --dim: #8b949e; --accent: #d3fa37;
+    --g1: #0e4429; --g2: #006d32; --g3: #26a641; --g4: #39d353;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--text); font: 16px/1.6 "Mona Sans", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif; }
+  a { color: var(--accent); }
+  .wrap { max-width: 1040px; margin: 0 auto; padding: 0 16px; }
+  header { display: flex; align-items: center; gap: 10px; padding: 18px 0; font-weight: 700; }
+  header a.home { color: var(--text); text-decoration: none; display: flex; align-items: center; gap: 10px; }
+  header .spacer { flex: 1; }
+  header a.plain { color: var(--dim); text-decoration: none; font-weight: 500; font-size: 14px; }
+  .mark { width: 22px; height: 22px; display: grid; grid-template-columns: 1fr 1fr; gap: 2px; }
+  .mark i:nth-child(1) { background: var(--g4); } .mark i:nth-child(2) { background: var(--g2); }
+  .mark i:nth-child(3) { background: var(--g3); } .mark i:nth-child(4) { background: var(--accent); border-radius: 50%; }
+  .mark i { border-radius: 2px; }
+  .layout { display: grid; grid-template-columns: 210px 1fr; gap: 36px; padding: 18px 0 40px; }
+  nav { position: sticky; top: 16px; align-self: start; display: flex; flex-direction: column; gap: 2px; }
+  nav a { color: var(--dim); text-decoration: none; padding: 7px 12px; border-radius: 8px; font-size: 15px; }
+  nav a:hover { color: var(--text); background: var(--panel); }
+  nav a.on { color: #0d1117; background: var(--accent); font-weight: 600; }
+  nav .label { font-size: 12px; text-transform: uppercase; letter-spacing: .08em; color: var(--dim); padding: 0 12px 6px; }
+  @media (max-width: 760px) {
+    .layout { grid-template-columns: 1fr; gap: 18px; }
+    nav { position: static; flex-direction: row; flex-wrap: wrap; gap: 6px; }
+    nav .label { display: none; }
+    nav a { border: 1px solid var(--line); border-radius: 999px; padding: 5px 12px; font-size: 14px; }
+  }
+  article { min-width: 0; }
+  article h1 { font-size: clamp(30px, 5vw, 42px); line-height: 1.1; margin: 0 0 12px; letter-spacing: -0.02em; }
+  article h2 { font-size: 22px; margin: 34px 0 10px; padding-top: 6px; }
+  article h3 { font-size: 18px; margin: 24px 0 8px; }
+  article p, article li { color: #c9d1d9; }
+  article img { display: block; max-width: min(100%, 480px); border-radius: 10px; border: 1px solid var(--line); margin: 16px 0; image-rendering: pixelated; }
+  article code { font: 14px ui-monospace, SFMono-Regular, Menlo, monospace; background: var(--panel-2); border: 1px solid var(--line); border-radius: 5px; padding: 1px 5px; }
+  article pre { background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 14px 16px; overflow-x: auto; }
+  article pre code { background: none; border: 0; padding: 0; }
+  .table { overflow-x: auto; margin: 14px 0; }
+  table { border-collapse: collapse; width: 100%; font-size: 15px; }
+  th, td { text-align: left; padding: 8px 12px; border-bottom: 1px solid var(--line); vertical-align: top; }
+  th { color: var(--dim); font-weight: 600; font-size: 13px; text-transform: uppercase; letter-spacing: .04em; }
+  .pager { display: flex; justify-content: space-between; gap: 12px; margin-top: 40px; padding-top: 18px; border-top: 1px solid var(--line); }
+  .pager a { text-decoration: none; }
+  .muted { color: var(--dim); }
+  footer { color: var(--dim); font-size: 13px; padding: 30px 0; border-top: 1px solid var(--line); }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <a class="home" href="../"><span class="mark" aria-hidden="true"><i></i><i></i><i></i><i></i></span> badger apps</a>
+    <span class="spacer"></span>
+    <a class="plain" href="../studio/">Badge Studio</a>
+    <a class="plain" href="https://github.com/Akiyo974/badger/tree/main/docs/guides">GitHub</a>
+  </header>
+  <div class="layout">
+    <nav id="nav" aria-label="Guides"><div class="label">Guides</div></nav>
+    <article id="guide"><p class="muted">Loading the guide…</p></article>
+  </div>
+  <footer>The guides are the Markdown files of <a href="https://github.com/Akiyo974/badger/tree/main/docs/guides">docs/guides</a>: fixes and new guides are welcome as pull requests.</footer>
+</div>
+<script src="guides.js?v=1"></script>
+</body>
+</html>

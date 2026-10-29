@@ -49,6 +49,10 @@
   .feature { background: var(--panel); border: 1px solid var(--line); border-radius: 12px; padding: 16px; }
   .feature b { display: block; margin-bottom: 4px; }
   .feature span { color: var(--dim); font-size: 14px; }
+  a.feature { color: var(--text); text-decoration: none; transition: border-color .15s; }
+  a.feature:hover { border-color: var(--g3); }
+  .guides-head { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; }
+  .guides-head a { font-size: 14px; }
   .steps { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; counter-reset: step; }
   .step { position: relative; padding: 16px 16px 16px 58px; background: var(--panel); border: 1px solid var(--line); border-radius: 12px; }
   .step::before { counter-increment: step; content: counter(step); position: absolute; left: 16px; top: 15px; width: 28px; height: 28px; border-radius: 8px; background: var(--g2); color: var(--accent); font-weight: 700; display: grid; place-items: center; }
@@ -86,6 +90,7 @@
   <header>
     <span class="mark" aria-hidden="true"><i></i><i></i><i></i><i></i></span> badger apps
     <span class="spacer"></span>
+    <a class="plain" href="guides/">Guides</a>
     <a class="plain" href="https://github.com/Akiyo974/badger">GitHub</a>
   </header>
 
@@ -120,6 +125,20 @@
     <div class="step"><b>Open Badge Studio</b><span>In Chrome or Edge, press Connect badge and pick it in the list.</span></div>
     <div class="step"><b>Install, arrange, hack</b><span>Apps land in a second, the menu shows them under INSTALLED.</span></div>
   </div>
+
+  <section id="guides">
+    <div class="guides-head"><h2>Guides</h2><a href="guides/">All guides →</a></div>
+    <div class="features">
+      <a class="feature" href="guides/#badge"><b>Badge</b><span>Your GitHub profile, QR codes, an NFC contact card and an LED matrix graph.</span></a>
+      <a class="feature" href="guides/#contacts"><b>Contacts</b><span>Swap contact cards by holding two badges back to back.</span></a>
+      <a class="feature" href="guides/#radar"><b>Radar</b><span>See the badges around you, and play Hot / Cold to find someone.</span></a>
+      <a class="feature" href="guides/#duck_maze"><b>Duck Maze</b><span>Tilt the badge to roll a marble through six mazes.</span></a>
+      <a class="feature" href="guides/#pedometer"><b>Pedometer</b><span>The day's steps from your watch, hour by hour.</span></a>
+      <a class="feature" href="guides/#mona_pet"><b>Mona Pet</b><span>Look after Mona; your steps feed her.</span></a>
+      <a class="feature" href="guides/#menu"><b>Menu</b><span>The CUSTOM band, installed apps, and a dizzy Mona.</span></a>
+      <a class="feature" href="guides/#badger_remote"><b>Badger Remote</b><span>Use a Wear OS watch as the badge's buttons.</span></a>
+    </div>
+  </section>
 
   <section id="store" style="margin-top: 36px">
     <div class="market-head">
