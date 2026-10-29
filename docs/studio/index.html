@@ -1,0 +1,273 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Badge Studio</title>
+<meta name="description" content="Manage a GitHub Universe badge from the browser over Web Serial: apps, settings, screenshots and a console.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><rect width='24' height='24' rx='5' fill='%230d1117'/><rect x='4' y='4' width='7' height='7' rx='1.5' fill='%2339d353'/><rect x='13' y='4' width='7' height='7' rx='1.5' fill='%23006d32'/><rect x='4' y='13' width='7' height='7' rx='1.5' fill='%2326a641'/><circle cx='16.5' cy='16.5' r='3.5' fill='%23d3fa37'/></svg>">
+<style>
+  :root {
+    --bg: #0d1117; --panel: #161b22; --panel-2: #1c2128; --line: #30363d;
+    --text: #e6edf3; --dim: #8b949e; --accent: #d3fa37; --green: #39d353;
+    --green-2: #26a641; --red: #f85149; --blue: #58a6ff; --amber: #d29922;
+    --radius: 10px;
+    font-family: "Mona Sans", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--text); line-height: 1.45; }
+  a { color: var(--blue); }
+  code, pre, .mono { font-family: ui-monospace, SFMono-Regular, Consolas, monospace; }
+  header {
+    display: flex; align-items: center; gap: 14px; flex-wrap: wrap;
+    padding: 14px 20px; border-bottom: 1px solid var(--line); background: var(--panel);
+    position: sticky; top: 0; z-index: 5;
+  }
+  .logo { display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 18px; letter-spacing: -0.01em; }
+  .logo .squares { display: grid; grid-template-columns: repeat(3, 8px); gap: 3px; }
+  .logo .squares i { width: 8px; height: 8px; border-radius: 2px; background: var(--green); }
+  .logo .squares i:nth-child(2n) { background: #006d32; }
+  .logo .squares i:nth-child(3n) { background: var(--green-2); }
+  .logo small { color: var(--dim); font-weight: 400; font-size: 13px; }
+  .spacer { flex: 1; }
+  .pill { display: inline-flex; align-items: center; gap: 7px; padding: 4px 10px; border-radius: 999px; background: var(--panel-2); border: 1px solid var(--line); color: var(--dim); font-size: 13px; }
+  .pill::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: var(--dim); }
+  .pill.ok { color: var(--text); } .pill.ok::before { background: var(--green); box-shadow: 0 0 8px var(--green); }
+  .pill.busy::before { background: var(--amber); }
+  .pill.err::before { background: var(--red); }
+  button {
+    font: inherit; font-size: 14px; color: var(--text); background: var(--panel-2); border: 1px solid var(--line);
+    border-radius: 8px; padding: 7px 14px; cursor: pointer;
+  }
+  button:hover:not(:disabled) { border-color: var(--dim); }
+  button:disabled { opacity: .45; cursor: not-allowed; }
+  button.primary { background: var(--accent); color: #0d1117; border-color: var(--accent); font-weight: 600; }
+  button.danger { color: var(--red); }
+  button.small { padding: 4px 10px; font-size: 13px; }
+  nav { display: flex; gap: 4px; padding: 0 20px; border-bottom: 1px solid var(--line); background: var(--panel); overflow-x: auto; }
+  nav button { background: none; border: 0; border-bottom: 2px solid transparent; border-radius: 0; padding: 11px 12px; color: var(--dim); }
+  nav button.active { color: var(--text); border-bottom-color: var(--accent); }
+  main { max-width: 1080px; margin: 0 auto; padding: 22px 20px 60px; }
+  section { display: none; } section.active { display: block; }
+  h2 { font-size: 20px; margin: 0 0 4px; } h3 { font-size: 15px; margin: 22px 0 10px; color: var(--dim); font-weight: 600; text-transform: uppercase; letter-spacing: .06em; }
+  p.lead { color: var(--dim); margin: 0 0 18px; }
+  .card { background: var(--panel); border: 1px solid var(--line); border-radius: var(--radius); padding: 16px; }
+  .grid { display: grid; gap: 12px; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); }
+  .stat .label { color: var(--dim); font-size: 12px; text-transform: uppercase; letter-spacing: .06em; }
+  .stat .value { font-size: 20px; font-weight: 600; margin-top: 2px; word-break: break-word; }
+  .app { display: flex; flex-direction: column; gap: 10px; }
+  .app .top { display: flex; gap: 12px; align-items: center; }
+  .app img, .app .noicon { width: 48px; height: 48px; image-rendering: pixelated; border-radius: 8px; background: var(--panel-2); border: 1px solid var(--line); flex: none; }
+  .app .name { font-weight: 600; }
+  .app .meta { color: var(--dim); font-size: 12px; }
+  .app .desc { color: var(--dim); font-size: 13px; min-height: 38px; }
+  .app .actions { display: flex; gap: 8px; flex-wrap: wrap; margin-top: auto; }
+  .tag { display: inline-block; font-size: 11px; padding: 1px 7px; border-radius: 999px; border: 1px solid var(--line); color: var(--dim); margin-left: 6px; vertical-align: 2px; }
+  .tag.installed { color: var(--green); border-color: #2ea04366; }
+  .tag.update { color: var(--amber); border-color: #d2992266; }
+  .tag.builtin { color: var(--blue); border-color: #58a6ff55; }
+  .toolbar { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; margin-bottom: 14px; }
+  input[type=text], input[type=password], input[type=number], select, textarea {
+    font: inherit; color: var(--text); background: var(--bg); border: 1px solid var(--line); border-radius: 8px; padding: 8px 10px; width: 100%;
+  }
+  input:focus, select:focus, textarea:focus { outline: 2px solid #d3fa3755; border-color: var(--accent); }
+  .field { display: grid; grid-template-columns: 220px 1fr; gap: 12px; align-items: center; padding: 10px 0; border-bottom: 1px solid var(--line); }
+  .field:last-child { border-bottom: 0; }
+  .field .hint { color: var(--dim); font-size: 12px; }
+  .field.locked input { opacity: .6; }
+  @media (max-width: 640px) { .field { grid-template-columns: 1fr; gap: 6px; } }
+  #console-out { height: 420px; overflow: auto; white-space: pre-wrap; background: #010409; border: 1px solid var(--line); border-radius: var(--radius); padding: 12px; font-size: 13px; margin: 0; }
+  .console-in { display: flex; gap: 8px; margin-top: 10px; }
+  .console-in input { font-family: ui-monospace, SFMono-Regular, Consolas, monospace; }
+  #shot-canvas { width: 100%; max-width: 640px; image-rendering: pixelated; border-radius: 12px; border: 1px solid var(--line); background: #010409; display: block; }
+  .notice { border-left: 3px solid var(--accent); background: var(--panel); padding: 10px 14px; border-radius: 6px; color: var(--dim); margin: 0 0 16px; }
+  .notice.warn { border-left-color: var(--amber); } .notice.err { border-left-color: var(--red); color: var(--text); }
+  .hero { display: grid; place-items: center; text-align: center; padding: 60px 20px; gap: 12px; }
+  .hero h1 { margin: 0; font-size: 34px; letter-spacing: -0.02em; }
+  .hero p { color: var(--dim); max-width: 560px; margin: 0; }
+  .progress { height: 6px; background: var(--panel-2); border-radius: 999px; overflow: hidden; margin-top: 6px; }
+  .progress i { display: block; height: 100%; width: 0; background: var(--accent); transition: width .15s; }
+  #toast { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); background: var(--panel-2); border: 1px solid var(--line); padding: 10px 16px; border-radius: 10px; opacity: 0; transition: opacity .2s; pointer-events: none; max-width: 90vw; }
+  #toast.show { opacity: 1; }
+  .muted { color: var(--dim); }
+  .row { display: flex; gap: 14px; flex-wrap: wrap; align-items: flex-start; }
+  .app .name { cursor: pointer; }
+  .app .name:hover { color: var(--accent); }
+  .columns { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+  @media (max-width: 820px) { .columns { grid-template-columns: 1fr; } }
+  .column { background: var(--panel); border: 1px solid var(--line); border-radius: var(--radius); padding: 12px; min-height: 160px; }
+  .column-title { font-weight: 600; margin-bottom: 8px; }
+  .applist { list-style: none; margin: 0; padding: 0; min-height: 110px; display: flex; flex-direction: column; gap: 6px; }
+  .applist.over { outline: 2px dashed #d3fa3766; outline-offset: 4px; border-radius: 8px; }
+  .applist li { display: flex; align-items: center; gap: 8px; background: var(--panel-2); border: 1px solid var(--line); border-radius: 8px; padding: 6px 8px; cursor: grab; user-select: none; }
+  .applist li.dragging { opacity: .4; }
+  .applist li .grip { color: var(--dim); }
+  .applist li .label { flex: 1; }
+  .applist li button { padding: 2px 7px; font-size: 12px; }
+  .applist li .src { font-size: 11px; color: var(--dim); }
+  dialog { background: var(--panel); color: var(--text); border: 1px solid var(--line); border-radius: 14px; width: min(720px, 94vw); max-height: 86vh; padding: 18px; }
+  dialog::backdrop { background: #010409cc; }
+  .detail-head { display: flex; gap: 12px; align-items: center; margin-bottom: 12px; }
+  .detail-head img { width: 56px; height: 56px; image-rendering: pixelated; border-radius: 10px; border: 1px solid var(--line); background: var(--panel-2); }
+  .detail-head .name { font-weight: 700; font-size: 18px; }
+  .readme { color: var(--text); font-size: 14px; }
+  .readme h1, .readme h2, .readme h3 { font-size: 15px; margin: 14px 0 6px; color: var(--text); text-transform: none; letter-spacing: 0; }
+  .readme pre { background: var(--panel-2); padding: 10px; border-radius: 8px; overflow: auto; font-size: 12px; }
+  .readme pre code { background: none; padding: 0; }
+  .readme code { background: var(--panel-2); padding: 1px 5px; border-radius: 5px; }
+  .readme p, .readme ul { margin: 6px 0; color: var(--dim); }
+  details { margin-top: 12px; } details ul { font-size: 12px; columns: 2; }
+  .state-same { color: var(--green); } .state-diff { color: var(--amber); } .state-missing { color: var(--blue); }
+</style>
+</head>
+<body>
+<header>
+  <div class="logo"><span class="squares"><i></i><i></i><i></i><i></i><i></i><i></i></span> badge studio <small>for the GitHub Universe badge</small></div>
+  <div class="spacer"></div>
+  <span id="status" class="pill">not connected</span>
+  <button id="connect" class="primary">Connect badge</button>
+</header>
+<nav id="tabs">
+  <button data-tab="device" class="active">Device</button>
+  <button data-tab="apps">Apps</button>
+  <button data-tab="home">Home screen</button>
+  <button data-tab="extensions">Extensions</button>
+  <button data-tab="settings">Settings</button>
+  <button data-tab="shot">Screenshot</button>
+  <button data-tab="console">Console</button>
+</nav>
+<main>
+  <div id="unsupported" class="notice err" hidden>
+    This browser has no Web Serial. Open Badge Studio in <b>Chrome</b> or <b>Edge</b> on a computer.
+  </div>
+
+  <section id="tab-device" class="active">
+    <div id="hero" class="hero">
+      <h1>Plug in your badge</h1>
+      <p>Badge Studio talks to the badge over USB, straight from the browser: install and remove apps, change its settings, take screenshots and open a MicroPython console. Nothing to install.</p>
+      <p class="muted">Connect it with a USB-C cable, then press <b>Connect badge</b> and pick it in the list.</p>
+    </div>
+    <div id="device" hidden>
+      <h2 id="device-name">Badge</h2>
+      <p class="lead" id="device-sub"></p>
+      <div class="grid" id="device-stats"></div>
+      <h3>Actions</h3>
+      <div class="toolbar">
+        <button id="reboot">Reboot the badge</button>
+        <button id="disk-mode">USB drive mode</button>
+      </div>
+    </div>
+  </section>
+
+  <section id="tab-apps">
+    <h2>Apps</h2>
+    <p class="lead">Install apps from the official badge repository and from this one. They go to <code>/apps</code> on the badge, the part it can write to, and can be removed at any time. Built-in apps live in <code>/system</code>, which only USB drive mode can change.</p>
+    <div id="apps-menu-note" class="notice" hidden></div>
+    <div class="toolbar">
+      <select id="apps-source" style="max-width: 280px"></select>
+      <input id="apps-search" type="text" placeholder="Search apps" style="max-width: 260px">
+      <select id="apps-filter" style="max-width: 170px">
+        <option value="all">All apps</option>
+        <option value="available">Not installed</option>
+        <option value="installed">Installed</option>
+        <option value="updates">Updates</option>
+      </select>
+      <span class="spacer"></span>
+      <span class="muted" id="apps-space"></span>
+      <button id="apps-refresh" class="small">Refresh</button>
+    </div>
+    <div id="apps-reboot" class="notice warn" hidden>
+      The menu lists apps when the badge starts. <button id="apps-reboot-now" class="small">Reboot now</button> to see the changes.
+    </div>
+    <h3>Installed from Badge Studio</h3>
+    <div class="grid" id="apps-installed"><p class="muted">Connect the badge to see its apps.</p></div>
+    <h3>Store</h3>
+    <div class="grid" id="apps-store"><p class="muted">Loading the catalogue…</p></div>
+  </section>
+
+  <section id="tab-home">
+    <h2>Home screen</h2>
+    <p class="lead">Choose the order of the apps in the badge's menu, which ones go under the <b>CUSTOM</b> band at the top, and which ones are hidden. Drag the apps, or use the arrows. Saved in <code>/state/menu_layout.json</code>, applied at the next start.</p>
+    <div id="home-note" class="notice warn" hidden></div>
+    <div class="columns" id="home-columns">
+      <div class="column"><div class="column-title">Custom <span class="muted">top band</span></div><ol class="applist" data-list="custom"></ol></div>
+      <div class="column"><div class="column-title">Apps <span class="muted">installed, then stock</span></div><ol class="applist" data-list="order"></ol></div>
+      <div class="column"><div class="column-title">Hidden <span class="muted">not in the menu</span></div><ol class="applist" data-list="hidden"></ol></div>
+    </div>
+    <div class="toolbar" style="margin-top: 14px">
+      <button id="home-save" class="primary" disabled>Save and reboot</button>
+      <button id="home-reset" disabled>Back to the default layout</button>
+      <span class="muted" id="home-state"></span>
+    </div>
+  </section>
+
+  <section id="tab-extensions">
+    <h2>Extensions</h2>
+    <p class="lead">Modified versions of the badge's own apps, and the apps that ship in <code>/system</code> in <a href="https://github.com/Akiyo974/badger">Akiyo974/badger</a>: Badge with QR codes and NFC, Contacts with link checks, Radar, Duck Maze, the menu with the CUSTOM band and this home screen layout… Built-in apps live in <code>/system</code>, which only the USB drive can change: the badge switches to USB drive mode, you pick the <b>apps</b> folder of its <b>BADGER</b> drive once, and the current version is <b>backed up</b> on the drive before it is replaced, so it can be restored.</p>
+    <div id="ext-note" class="notice" hidden></div>
+    <div class="toolbar">
+      <button id="ext-check" disabled>Compare with the badge</button>
+      <button id="ext-drive" disabled>Pick the apps folder</button>
+      <button id="ext-finish" class="primary" hidden>Restart the badge</button>
+      <span class="muted" id="ext-state"></span>
+    </div>
+    <h3>Available</h3>
+    <div class="grid" id="ext-list"><p class="muted">Connect the badge, then press Compare with the badge.</p></div>
+    <h3>Backups on the drive</h3>
+    <div class="grid" id="ext-backups"><p class="muted">Pick the BADGER drive to see the backups.</p></div>
+  </section>
+
+  <section id="tab-settings">
+    <h2>Settings</h2>
+    <p class="lead">The badge's <code>secrets.py</code>. Changes are saved on the badge and apply after a reboot.</p>
+    <div class="notice">Settings marked 🔒 are set in <code>/system/secrets.py</code> on the USB drive, which takes priority: change those in USB drive mode, or with the badge's Settings app.</div>
+    <div class="card" id="settings-form"><p class="muted">Connect the badge to read its settings.</p></div>
+    <div class="toolbar" style="margin-top: 14px">
+      <button id="settings-save" class="primary" disabled>Save changes</button>
+      <button id="settings-reboot" disabled>Save and reboot</button>
+      <span class="muted" id="settings-state"></span>
+    </div>
+  </section>
+
+  <section id="tab-shot">
+    <h2>Screenshot</h2>
+    <p class="lead">Grab what is on the badge's screen, or start an app and capture it after a few seconds. Images are checked chunk by chunk and saved as PNG.</p>
+    <div class="toolbar">
+      <button id="shot-now" class="primary" disabled>Capture the screen</button>
+      <select id="shot-app" style="max-width: 220px" disabled></select>
+      <input id="shot-seconds" type="number" min="1" max="20" value="3" style="width: 80px" title="Seconds before the capture">
+      <button id="shot-app-go" disabled>Start app and capture</button>
+      <a id="shot-download" class="muted" hidden download="badge.png">Download PNG</a>
+    </div>
+    <div class="progress" id="shot-progress" hidden><i></i></div>
+    <p class="muted" id="shot-state"></p>
+    <canvas id="shot-canvas" width="640" height="480"></canvas>
+  </section>
+
+  <section id="tab-console">
+    <h2>Console</h2>
+    <p class="lead">The badge's MicroPython REPL. Ctrl-C stops the running app.</p>
+    <pre id="console-out"></pre>
+    <div class="console-in">
+      <input id="console-line" type="text" placeholder="print('hello badge')" autocomplete="off" spellcheck="false">
+      <button id="console-send" disabled>Send</button>
+      <button id="console-ctrlc" disabled title="Interrupt">Ctrl-C</button>
+      <button id="console-clear">Clear</button>
+    </div>
+  </section>
+</main>
+<dialog id="detail">
+  <div class="detail-head">
+    <img id="detail-icon" alt="">
+    <div><div class="name" id="detail-name"></div><div class="meta" id="detail-meta"></div></div>
+    <span class="spacer"></span>
+    <button id="detail-close" class="small" aria-label="Close">Close</button>
+  </div>
+  <div id="detail-readme" class="readme"></div>
+  <details><summary class="muted">Files</summary><ul id="detail-files" class="mono muted"></ul></details>
+  <div class="toolbar" id="detail-actions" style="margin: 14px 0 0"></div>
+</dialog>
+<div id="toast"></div>
+<script src="studio.js"></script>
+</body>
+</html>

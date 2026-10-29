@@ -1,3 +1,4 @@
+import json
 import math
 import os
 import struct
@@ -38,6 +39,8 @@ CUSTOM_APPS = (
     "duck_maze",
 )
 BAND = 14
+INSTALLED_ROOT = "/apps"
+LAYOUT_FILE = "/state/menu_layout.json"
 BAND_FONT = font.ark
 BAND_LINE = color.rgb(255, 255, 255, 50)
 
@@ -346,20 +349,58 @@ class Apps:
             return (APP_ORDER.index(slug) if slug in APP_ORDER else len(APP_ORDER), slug)
 
         animated = animated_slugs()
-        folders = [entry[0] for entry in os.ilistdir(root) if entry[1] == 0x4000]
         tiles = []
         custom = []
-        for slug in sorted(folders, key=order):
-            path = f"{root}/{slug}"
-            if slug == "menu":
-                continue
-            if not (file_exists(f"{path}/__init__.py") or file_exists(f"{path}/__init__.mpy")):
-                continue
+        installed = []
+
+        def scan(folder):
+            try:
+                entries = [entry[0] for entry in os.ilistdir(folder) if entry[1] == 0x4000]
+            except OSError:
+                return []
+            found = []
+            for slug in sorted(entries, key=order):
+                path = f"{folder}/{slug}"
+                if slug == "menu":
+                    continue
+                if not (file_exists(f"{path}/__init__.py") or file_exists(f"{path}/__init__.mpy")):
+                    continue
+                found.append((slug, path))
+            return found
+
+        def tile(slug, path):
             name = " ".join([capitalize(word) for word in slug.split("_")])
             icon_key = slug if slug in ICONS else "default"
-            app = App(len(tiles) + len(custom), name, slug, path, icon_key in animated)
-            (custom if slug in CUSTOM_APPS else tiles).append(app)
-        custom.sort(key=lambda app: CUSTOM_APPS.index(app.slug))
+            return App(len(tiles) + len(custom) + len(installed), name, slug, path, icon_key in animated)
+
+        # Badge Studio can save the home screen layout in the writable /state:
+        # which apps go under CUSTOM, their order, and which are hidden
+        layout = load_layout()
+        custom_slugs = list(layout.get("custom", CUSTOM_APPS) or ())
+        hidden = set(layout.get("hidden") or ())
+        order_list = list(layout.get("order") or ())
+
+        found = [(slug, path, False) for slug, path in scan(root)]
+        # Apps added from Badge Studio live in the writable /apps (the badge
+        # cannot write to /system); an app there never hides a built-in one
+        built_in = {slug for slug, _, _ in found}
+        found += [(slug, path, True) for slug, path in scan(INSTALLED_ROOT) if slug not in built_in]
+        for slug, path, added in found:
+            if slug in hidden:
+                continue
+            if slug in custom_slugs:
+                custom.append(tile(slug, path))
+            elif added:
+                installed.append(tile(slug, path))
+            else:
+                tiles.append(tile(slug, path))
+
+        def placed(app, fallback):
+            return (order_list.index(app.slug) if app.slug in order_list else len(order_list), fallback)
+
+        custom.sort(key=lambda app: placed(app, custom_slugs.index(app.slug)))
+        installed.sort(key=lambda app: placed(app, app.slug))
+        tiles.sort(key=lambda app: placed(app, order(app.slug)))
 
         from achievements import POSITION, Achievements, AchievementsTile
         self.achievements = Achievements()
@@ -373,12 +414,17 @@ class Apps:
 
         # the achievements and the photos keep their places among the stock apps
         self.sections = []
-        stock_row = 0
-        if custom:
-            stock_row = self.pack(custom, 0, BAND)
-            self.sections = [("CUSTOM", 0, BAND), ("STOCK", stock_row, BAND * 2)]
-        self.pack(tiles, stock_row, BAND * 2 if custom else 0)
-        self.apps = self.number(custom + tiles)
+        groups = [("CUSTOM", custom), ("INSTALLED", installed), ("STOCK", tiles)]
+        groups = [(label, group) for label, group in groups if group]
+        row = 0
+        if len(groups) == 1:
+            self.pack(tiles, 0, 0)
+        else:
+            # Each band pushes the sections under it down by one band height
+            for depth, (label, group) in enumerate(groups, 1):
+                self.sections.append((label, row, BAND * depth))
+                row = self.pack(group, row, BAND * depth)
+        self.apps = self.number(custom + installed + tiles)
         boundary = self.achievements_tile.row + self.achievements_tile.rows
         # (tile, first row, row after its last, below the picker) for the draw loop
         self.layout = [(tile, tile.row, tile.row + tile.rows, tile.row >= boundary) for tile in self.apps]
@@ -577,6 +623,16 @@ class Apps:
 
 
 shared_apps = {}
+
+
+def load_layout():
+    """The home screen layout saved by Badge Studio, or {} for the default one."""
+    try:
+        with open(LAYOUT_FILE) as f:
+            layout = json.load(f)
+        return layout if isinstance(layout, dict) else {}
+    except (OSError, ValueError):
+        return {}
 
 
 def shared(root):
