@@ -15,6 +15,7 @@ import ui
 from app import shared as shared_apps
 from achievements import draw_marquee
 from celebration import Celebration
+from dizzy import DizzyMona
 from gallery import Viewer, prefetch
 from opening import Opening, after_cold_boot
 
@@ -42,6 +43,7 @@ IDLE_MS = 600
 fade = 0 if opening is None else 255
 viewer = None
 celebration = None
+dizzy = DizzyMona()
 
 
 def resume_sparkle():
@@ -59,6 +61,18 @@ def restore():
 
 def update():
     global fade, opening, viewer, celebration
+
+    # Shaking the badge makes Mona dizzy; any button brings the menu back
+    now = badge.ticks
+    events = badge.imu_event()
+    if opening is None and dizzy.shaken(now, events, badge.imu()):
+        dizzy.trigger(now)
+    if dizzy.active(now):
+        if badge.pressed():
+            # Only closes the animation: the press must not also launch an app
+            dizzy.stop(now)
+        dizzy.draw(now)
+        return None
 
     if opening is not None:
         opening.advance()

@@ -24,6 +24,8 @@ Screenshots taken straight from the badge with `tools/screenshot.ps1`.
 | ![Hot / Cold](docs/screenshots/radar-game.png) | ![Encounters](docs/screenshots/radar-history.png) | ![Pedometer](docs/screenshots/pedometer.png) |
 | **Mona Pet** | **Menu: CUSTOM first** | **Duck Maze** |
 | ![Mona Pet](docs/screenshots/mona_pet.png) | ![Menu](docs/screenshots/menu.png) | ![Duck Maze](docs/screenshots/duck-maze.png) |
+| **Menu: shake the badge** | | |
+| ![Dizzy Mona](docs/screenshots/menu-dizzy.png) | | |
 
 The badges on the Radar screenshots are simulated (I only have one badge), and so are the steps on the Pedometer one.
 
@@ -90,7 +92,7 @@ To try a pull request: `git checkout <branch>` then `./tools/deploy.ps1`.
 | **Pedometer** (new) | The day's steps from the watch, hour by hour, distance and a 6,000-step goal |
 | **Duck Maze** (new) | Tilt the badge to roll a marble through 6 mazes: collect the rubber ducks, avoid the bug holes, reach the merge |
 | **Mona Pet** | Steps from the watch feed Mona (500 steps = 1 meal) and lift her mood; Down shows her walk |
-| **Menu** | Shows an app's `icon.png` when it has no built-in icon (Radar ships one; Badge keeps its built-in icon); the apps this repo changed come first, under a **CUSTOM** band, then the stock ones under **STOCK** |
+| **Menu** | Shows an app's `icon.png` when it has no built-in icon (Radar ships one; Badge keeps its built-in icon); the apps this repo changed come first, under a **CUSTOM** band, then the stock ones under **STOCK**. **Shake the badge** and Mona gets dizzy: X eyes, rubber ducks circling her head |
 
 ### Radar
 
@@ -161,6 +163,12 @@ A tilt game in the CUSTOM band of the menu. Tilt the badge to roll the marble; w
 - **How it rolls**: acceleration follows the tilt (side to side from the accelerometer's X axis, forwards and back from the angle around the screen's horizontal axis), with drag, bounces off the walls and sub-steps so a fast marble cannot pass through a wall.
 - **Smooth on the badge**: walls and holes are drawn once per level into an off-screen image, and each frame only restores and redraws the spots that move (marble, trail, ducks, merge). That takes the game from 15 to about 29 frames per second on the hardest level.
 - Levels live in `system/apps/duck_maze/levels.py` as text grids; `tests/test_duck_maze.py` checks their size and that every duck and the merge can be reached without crossing a hole. The duck and the icon are drawn by `tools/make_maze_art.py`.
+
+### Shake the badge: dizzy Mona
+
+On the menu, shaking the badge shows Mona dizzy, with X eyes and three rubber ducks circling her head (bigger in front, smaller behind) for 3.5 s; any button closes it without launching an app. Code in `system/apps/menu/dizzy.py`, sprites drawn by `tools/make_dizzy_sprites.py` from Mona Pet's own sprite and palette.
+
+A shake is any of: the `16` significant-motion event, 4 tap events within 1.5 s, or 3 jolts within 1 s in the raw readings (acceleration more than about 0.55 g away from 1 g, or a fast spin). Two or three taps are not enough, and after each animation there is a 1.5 s pause before the next one. The thresholds are constants at the top of `dizzy.py`.
 
 ## Hardware add-ons (Qw/ST port)
 
