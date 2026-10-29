@@ -5,6 +5,7 @@ Notable changes to this repo. Format based on [Keep a Changelog](https://keepach
 ## Unreleased
 
 ### Added
+- Menu: the apps this repo changed or added (Badge, Contacts, Radar, Mona Pet, Pedometer) come first under a **CUSTOM** band, the stock ones follow under **STOCK** (`CUSTOM_APPS` in `menu/app.py`).
 - **Steps from the watch**: Badger Remote reads the day's steps from Health Services (total and per hour, recorded in the background) and sends them to the badge on a second characteristic; `remote.py` keeps the last ones in `/state/watch_steps`. The badge can count steps with its own LSM6DS3 too, but it is not used: worn around the neck, it does not count reliably.
 - **Pedometer** app: the day's steps from the watch, GitHub Universe day, hourly squares, distance, goal (`STEPS_GOAL`) and sync time.
 - Mona Pet: steps from the watch feed Mona (500 steps = 1 meal) and lift her mood; Down now shows her walk instead of the stats.
@@ -31,6 +32,7 @@ Notable changes to this repo. Format based on [Keep a Changelog](https://keepach
 - `CHANGELOG.md`.
 
 ### Changed
+- README: Mona Pet and the Menu move to the "Apps changed in this repo" gallery; new menu screenshot.
 - README: new "Built-in sensors" section (motion sensor and its events, orientation, light, buttons, battery), with values measured on the badge.
 - README: `tests/` listed in the repo contents; hardware table updated for the Radar changes (fading and Hot / Cold on the matrix, merged arrival vibrations and Hot / Cold pulses); Radar README mentions the DRV2605L.
 - Radar: **Very near / Near / Far** replace metre estimates; labelled rings explicitly represent signal strength, not direction. Badges fade from 4 to 12 seconds without a signal, including matrix and case-light feedback.

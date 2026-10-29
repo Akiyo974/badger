@@ -2,7 +2,7 @@ import math
 from array import array
 
 import ui
-from app import BORDER, GAP, GRID_BOTTOM, GRID_LEFT, GRID_TOP, GRID_WIDTH, ICON_SHIFT, ROW_PITCH, TILE, TILE_FILTER, Tile, build_icon, polygon
+from app import BORDER, GAP, GRID_BOTTOM, GRID_LEFT, GRID_TOP, GRID_WIDTH, ICON_SHIFT, TILE, TILE_FILTER, Tile, build_icon, polygon
 from icons import ICONS
 from silhouettes import SILHOUETTES
 from badgeware import State
@@ -576,7 +576,8 @@ class Picker:
 
     def focus_scroll(self):
         tile = self.tile
-        return GRID_TOP + (tile.row + tile.rows) * ROW_PITCH + TILE / 2 - STRIP_CENTRE_Y
+        # tile.top already counts the section bands above it
+        return tile.top + tile.height + GAP + TILE / 2 - STRIP_CENTRE_Y
 
     def item_centre(self, scroll):
         x = GRID_LEFT + self.slot * STRIP - self.target_offset() + TILE / 2
