@@ -43,6 +43,7 @@ The badges on the Radar screenshots are simulated (I only have one badge).
 |---|---|
 | `system/` | Exact copy of the badge's USB drive (`/system` on the device): `main.py`, the boot animation, apps and assets |
 | `tools/` | PC scripts: deploy, screenshots, contacts export, QR codes |
+| `tests/` | Simulated tests run in CI: Contacts compatibility with stock badges, Radar behaviour |
 | `wear/` | **Badger Remote**, the Wear OS watch app that presses the badge's buttons (Kotlin, Compose for Wear OS) |
 | `docs/screenshots/` | README screenshots and their list (`captures.json`) |
 | `secrets.example.py` | Settings template; the real `secrets.py` is never committed |
@@ -105,9 +106,9 @@ The badge has a Qw/ST (Qwiic / STEMMA QT) I²C connector. Badge and Radar look f
 
 | Board | I²C address | Used by | What it does |
 |---|---|---|---|
-| 13×9 RGB LED matrix (IS31FL3741) | `0x30` | Badge, Radar | **Badge**: the last 13 weeks of the contribution graph in green, plus the weekly total on the bottom row; a blue dot sweeps the top row while loading, amber means missing settings, red a connection error. **Radar**: a small radar with the sweep and the nearby badges, coloured by app (blue Radar, yellow Contacts, orange Pong). |
+| 13×9 RGB LED matrix (IS31FL3741) | `0x30` | Badge, Radar | **Badge**: the last 13 weeks of the contribution graph in green, plus the weekly total on the bottom row; a blue dot sweeps the top row while loading, amber means missing settings, red a connection error. **Radar**: a small radar with the sweep and the nearby badges, coloured by app (blue Radar, yellow Contacts, orange Pong); fading badges dim, and during Hot / Cold only the selected badge is shown. |
 | NFC tag (Adafruit ST25DV) | `0x53` (+ `0x57`) | Badge | Holds a **contact card**: a phone held near the antenna offers to add the contact (name, title, company, labelled Website / LinkedIn / GitHub links), with the website link as a fallback. While Badge is open, a **scan is detected**: Mona appears with hearts and "thanks for the scan!", a heart pulses on the matrix, the motor buzzes and a scan counter goes up. The tag must be NDEF-formatted; any data already on it is replaced. |
-| Haptic driver (DRV2605 or DRV2605L) + ERM motor | `0x5A` | Radar, Badge | **Radar**: a short vibration when a badge is first detected, and again if it leaves and comes back. **Badge**: a buzz on each NFC scan. |
+| Haptic driver (DRV2605 or DRV2605L) + ERM motor | `0x5A` | Radar, Badge | **Radar**: a short vibration for new arrivals (simultaneous ones are merged); during Hot / Cold, pulses that speed up as the target gets closer. **Badge**: a buzz on each NFC scan. |
 
 - The matrix runs at a limited global current (`0x40`), and its previous registers are restored when the app exits.
 - Each app checks the chip id before using a board, and prints what it found in the serial console (e.g. `Radar matrix: IS31FL3741 at 0x30, 13x9 RGB`).
