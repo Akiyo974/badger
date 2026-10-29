@@ -47,6 +47,8 @@ The template draws a square you move with the arrows: change it into your idea.
 
 ### 3. Try it on the badge
 
+No badge at hand? Paste your `__init__.py` into the official [badge simulator](https://badger.github.io/editor) for a first look at the screen and the buttons (no Bluetooth there), then finish on a real badge.
+
 Plug the badge in over USB and switch it on.
 
 - **Windows**: `./tools/deploy.ps1 -Only apps/my_app` copies the app and reboots the badge. Your app is in the menu.

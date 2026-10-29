@@ -32,15 +32,29 @@ function rawUrl(source, path) {
   return `https://raw.githubusercontent.com/${source.repo}/${source.branch}/${source.base}/${path}`;
 }
 
+let snapshotPromise;
+function snapshot() {
+  snapshotPromise ||= fetch("catalog.json").then((r) => (r.ok ? r.json() : { trees: {} })).then((d) => d.trees, () => ({}));
+  return snapshotPromise;
+}
+
 async function tree(source) {
   const key = "studio-tree-" + source.id;
   try {
     const cached = JSON.parse(sessionStorage.getItem(key) || "null");
     if (cached && Date.now() - cached.at < 10 * 60 * 1000) return cached.tree;
   } catch (_) {}
-  const response = await fetch(`https://api.github.com/repos/${source.repo}/git/trees/${source.branch}?recursive=1`);
-  if (!response.ok) throw new Error(`GitHub answered ${response.status}`);
-  const entries = (await response.json()).tree.filter((e) => e.type === "blob" && e.path.startsWith(source.base + "/"));
+  let entries;
+  try {
+    const response = await fetch(`https://api.github.com/repos/${source.repo}/git/trees/${source.branch}?recursive=1`);
+    if (!response.ok) throw new Error(`GitHub answered ${response.status}`);
+    entries = (await response.json()).tree.filter((e) => e.type === "blob" && e.path.startsWith(source.base + "/"));
+  } catch (error) {
+    // GitHub allows 60 calls an hour per IP address: a shared Wi-Fi runs out.
+    // catalog.json is the same list, refreshed by tools/make_catalog.py
+    entries = (await snapshot())[`${source.repo}@${source.branch}:${source.base}`];
+    if (!entries) throw error;
+  }
   try { sessionStorage.setItem(key, JSON.stringify({ at: Date.now(), tree: entries })); } catch (_) {}
   return entries;
 }
@@ -72,7 +86,7 @@ async function describe(source, app, el) {
       try { sessionStorage.setItem(key, text); } catch (_) {}
     }
     const paragraph = text.split(/\n\s*\n/).map((p) => p.trim()).find((p) => p && !p.startsWith("#") && !p.startsWith("!") && !p.startsWith("<") && !p.startsWith("|")) || "";
-    el.textContent = paragraph.replace(/\[([^\]]+)\]\([^)]*\)/g, "$1").replace(/[*_`]/g, "").slice(0, 150);
+    app.desc = el.textContent = paragraph.replace(/\[([^\]]+)\]\([^)]*\)/g, "$1").replace(/[*_`]/g, "").slice(0, 150);
   } catch (_) {}
 }
 
@@ -111,7 +125,7 @@ function render() {
   for (const item of apps) {
     if (filter === "here" && item.kind === "official") continue;
     if (filter === "official" && item.kind === "new") continue;
-    if (query && !item.slug.replace(/_/g, " ").toLowerCase().includes(query)) continue;
+    if (query && !(item.slug.replace(/_/g, " ") + " " + (item.app.desc || "")).toLowerCase().includes(query)) continue;
     const card = document.createElement("a");
     card.className = "app";
     card.href = `studio/#app=${item.source.id}/${encodeURIComponent(item.slug)}`;
@@ -134,4 +148,16 @@ for (const button of document.querySelectorAll("#market-filter button")) {
   };
 }
 $("#market-search").oninput = render;
+
+// Phones and tablets have no USB Web Serial: say so before the visitor taps through
+if (!("serial" in navigator) || navigator.userAgentData?.mobile || /Android|iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+  $("#desktop-only").hidden = false;
+  $("#send-link").onclick = async () => {
+    const url = location.origin + location.pathname;
+    try {
+      if (navigator.share) await navigator.share({ title: "Badge Studio", text: "Open on a computer with the badge plugged in", url });
+      else { await navigator.clipboard.writeText(url); $("#send-link").textContent = "Link copied"; }
+    } catch (_) {}
+  };
+}
 load();

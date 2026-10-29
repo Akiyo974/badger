@@ -5,6 +5,9 @@ Notable changes to this repo. Format based on [Keep a Changelog](https://keepach
 ## Unreleased
 
 ### Added
+- Store fallback: when the GitHub API rate limit is reached (shared Wi-Fi), the home page and Badge Studio read `docs/catalog.json`, the same app list made by `tools/make_catalog.py` from git and refreshed hourly by `.github/workflows/catalog.yml`; `tests/test_catalog.py` checks every built-in source is in it.
+- Home page and Badge Studio: on a phone or tablet, a note says Badge Studio needs a computer, with a button to share or copy the link. The home page search also matches app descriptions.
+- Links to the official [badge simulator](https://badger.github.io/editor) for trying an app without a badge, and to the official site's store in the README.
 - `CREDITS.md` (authors, licenses, trademarks), `SECURITY.md` (private reporting, keeping `secrets.py` out of git) and `PRIVACY.md` (no tracking; what each app shares nearby), linked from the README, the contributing guide, the issue chooser and the site footer.
 - **Contributing**: `CONTRIBUTING.md` with a 10-minute first app, `CODE_OF_CONDUCT.md`, MIT `LICENSE`, issue forms (bug, app idea), a pull request template, and a contributing section on the home page and in the README.
 - `tools/new_app.py` creates an app from `templates/app` (a working app, README and icon); `tests/test_apps.py` (in CI) checks every app has what the menu and Badge Studio need.
