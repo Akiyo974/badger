@@ -5,6 +5,11 @@ Notable changes to this repo. Format based on [Keep a Changelog](https://keepach
 ## Unreleased
 
 ### Added
+- Home page: the whole app store (official apps and this repo's), read live from GitHub, with screenshots, search and filters; each app opens its page in Badge Studio (`studio/#app=<source>/<slug>`). Share image `docs/media/og.png` and a 20-second video `docs/media/badge-studio.mp4`, both drawn by `tools/make_promo.py`.
+- READMEs for Duck Maze, Pedometer, Contacts and Mona Pet, shown in the store.
+
+### Fixed
+- Badge Studio, from the review of #20: an update is written apart and only replaces the installed app once complete; one install, uninstall or restore at a time; backups without their manifest cannot be restored; the serial link frees its locks on errors, times out cleanly and only buffers output a command waits for; the hero hides once connected; the Screenshot list fills on the first connection; a late catalogue no longer overwrites another; settings have accessible names; apps can change section from the keyboard.
 - **Badge Studio** (`docs/studio/`, on GitHub Pages): manage the badge from Chrome or Edge over Web Serial. App store (official apps and this repo) installing to `/apps` with checked writes, home screen editor (order, CUSTOM band, hidden apps), extensions that replace built-in apps through USB drive mode with backups and restore, settings, screenshots and a console.
 - Menu: apps in `/apps` (installed from Badge Studio) show up under an **INSTALLED** band; `/state/menu_layout.json` can set the order, the CUSTOM apps and the hidden ones.
 - GitHub Pages landing page (`docs/index.html`).

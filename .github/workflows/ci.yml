@@ -57,7 +57,7 @@ jobs:
         run: python tests/test_duck_maze.py
 
       - name: Badge Studio syntax
-        run: node --check docs/studio/studio.js
+        run: node --check docs/studio/studio.js && node --check docs/site.js
 
   wear:
     name: Wear OS app (build, tests, lint)

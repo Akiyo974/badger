@@ -7,6 +7,7 @@
 
 const USB_FILTER = { usbVendorId: 0x2e8a, usbProductId: 0x1101 };
 const INSTALL_ROOT = "/apps";
+const STAGING_ROOT = "/.studio-staging";
 const BUILT_IN_ROOT = "/system/apps";
 const WRITE_CHUNK = 1536;
 const SHOT_CHUNK = 3072;
@@ -182,24 +183,31 @@ class Badge {
 
   async connect(port) {
     this.port = port || (await navigator.serial.requestPort({ filters: [USB_FILTER] }));
+    this.closing = false;
     await this.port.open({ baudRate: 115200, bufferSize: 1 << 20 });
     try {
       await this.port.setSignals({ dataTerminalReady: true });
     } catch (_) {}
     this.writer = this.port.writable.getWriter();
-    this.readLoop();
+    this.reading = this.readLoop();
     await this.interrupt();
     await this.run(HELPERS);
     this.state("ok", "connected");
   }
 
   async disconnect() {
+    await this.teardown();
+    this.state("", "not connected");
+  }
+
+  // Ends the read loop, frees both stream locks and closes the port
+  async teardown() {
     this.closing = true;
     try { await this.reader?.cancel(); } catch (_) {}
+    try { await this.reading; } catch (_) {}
     try { this.writer?.releaseLock(); } catch (_) {}
-    try { await this.port?.close(); } catch (_) {}
     this.writer = null;
-    this.state("", "not connected");
+    try { await this.port?.close(); } catch (_) {}
   }
 
   state(kind, text) {
@@ -216,7 +224,8 @@ class Badge {
             const { value, done } = await this.reader.read();
             if (done) break;
             const text = decoder.decode(value, { stream: true });
-            this.buffer += text;
+            // Only a waiting command needs the text; the console keeps its own copy
+            if (this.waiter) this.buffer += text;
             if (!this.busy && this.onText) this.onText(text);
             this.check();
           }
@@ -227,6 +236,7 @@ class Badge {
     } catch (error) {
       // The badge reboots after an app exits or on reset: the port goes away
     }
+    try { this.writer?.releaseLock(); } catch (_) {}
     this.writer = null;
     if (this.waiter) this.waiter.reject(new Error("The badge disconnected."));
     if (this.closing) {
@@ -282,13 +292,16 @@ class Badge {
     const b64 = bytesToBase64(encoder.encode(code));
     this.busy++;
     return new Promise((resolve, reject) => {
-      const timer = setTimeout(() => {
-        if (this.waiter && this.waiter.id === id) {
-          this.waiter = null;
-          reject(new Error("No answer from the badge."));
-        }
-      }, timeout);
-      const done = (fn) => (value) => { clearTimeout(timer); this.busy--; fn(value); };
+      let settled = false;
+      const done = (fn) => (value) => {
+        if (settled) return;
+        settled = true;
+        clearTimeout(timer);
+        if (this.waiter && this.waiter.id === id) this.waiter = null;
+        this.busy--;
+        fn(value);
+      };
+      const timer = setTimeout(() => done(reject)(new Error("No answer from the badge.")), timeout);
       this.waiter = {
         id, start: this.buffer.length,
         pattern: new RegExp("^" + marker + "\\r?$", "m"),
@@ -368,7 +381,7 @@ async function reconnect() {
       await loadAll();
       return;
     } catch (_) {
-      try { await ports[0].close(); } catch (_) {}
+      await badge.teardown();
     }
   }
   badge.state("err", "not connected");
@@ -392,8 +405,7 @@ async function connect() {
     await loadDevice();
     await loadAll();
   } catch (error) {
-    try { await badge.port?.close(); } catch (_) {}
-    badge.writer = null;
+    await badge.teardown();
     badge.state("", "not connected");
     // NotFoundError: the chooser was closed without picking the badge
     toast(error.name === "NotFoundError" ? "No badge picked. Plug it in, then choose it in the list." : "Could not connect: " + error.message, 6000);
@@ -402,7 +414,7 @@ async function connect() {
 
 async function loadAll() {
   // The commands queue up on the serial link: start with what is on screen
-  await Promise.all([loadInstalled().then(renderStore), loadSettings(), loadShotApps()]);
+  await Promise.all([loadInstalled().then(() => Promise.all([renderStore(), loadShotApps()])), loadSettings()]);
   try {
     await loadHome();
   } catch (error) {
@@ -547,13 +559,17 @@ function rawUrl(source, path) {
 async function renderStore() {
   const box = $("#apps-store");
   const source = SOURCES.find((s) => s.id === $("#apps-source").value) || SOURCES[0];
+  // Only the latest call draws: an older catalogue may arrive last
+  const turn = (renderStore.turn = (renderStore.turn || 0) + 1);
   let list;
   try {
     list = await loadCatalogue(source);
   } catch (error) {
+    if (turn !== renderStore.turn) return;
     box.innerHTML = `<div class="notice err">Could not load the catalogue: ${escapeHtml(error.message)}</div>`;
     return;
   }
+  if (turn !== renderStore.turn) return;
   const query = $("#apps-search").value.trim().toLowerCase();
   const filter = $("#apps-filter").value;
   const builtin = new Set(installed.builtin);
@@ -573,6 +589,7 @@ async function renderStore() {
     const icon = app.files.some((f) => f.path === "icon.png") ? `<img alt="" loading="lazy" src="${rawUrl(source, app.slug + "/icon.png")}">` : `<div class="noicon"></div>`;
     const card = document.createElement("div");
     card.className = "card app";
+    card.dataset.slug = app.slug;
     card.innerHTML = `
       <div class="top">${icon}<div><div class="name">${escapeHtml(titleCase(app.slug))}${tag}</div>
         <div class="meta">${formatBytes(app.size)} · ${app.files.length} files</div></div></div>
@@ -623,10 +640,32 @@ async function describe(source, app, el) {
   }
 }
 
-async function install(source, app, card) {
+// One install, uninstall or restore at a time: badge.run() orders single
+// commands, not whole operations
+let operation = false;
+
+async function exclusive(work) {
+  if (operation) {
+    toast("Wait for the current operation to finish.");
+    return;
+  }
+  operation = true;
+  try {
+    return await work();
+  } finally {
+    operation = false;
+  }
+}
+
+const install = (...args) => exclusive(() => installNow(...args));
+const uninstall = (...args) => exclusive(() => uninstallNow(...args));
+
+async function installNow(source, app, card) {
   if (!badge.connected) return;
   const target = INSTALL_ROOT + "/" + app.slug;
-  if (device && app.size + 16 * 1024 > device.root_free + (installed.apps.find((a) => a.slug === app.slug)?.size || 0)) {
+  // The new version is written apart; the old one stays until it is complete
+  const staging = STAGING_ROOT + "/" + app.slug;
+  if (device && app.size + 16 * 1024 > device.root_free) {
     toast(`Not enough space: ${formatBytes(app.size)} needed, ${formatBytes(device.root_free)} free.`, 6000);
     return;
   }
@@ -652,9 +691,9 @@ async function install(source, app, card) {
     }
     const total = files.reduce((n, f) => n + f.bytes.length, 0);
     let sent = 0;
-    await badge.run(`_st_rm(${pyString(target)})\n_st_mkdirs(${pyString(target)})`);
+    await badge.run(`_st_rm(${pyString(staging)})\n_st_mkdirs(${pyString(staging)})`);
     for (const file of files) {
-      const path = target + "/" + file.path;
+      const path = staging + "/" + file.path;
       const folder = path.slice(0, path.lastIndexOf("/"));
       await badge.run(`_st_mkdirs(${pyString(folder)})\nopen(${pyString(path)}, "wb").close()`);
       for (let i = 0; i < file.bytes.length; i += WRITE_CHUNK) {
@@ -669,12 +708,14 @@ async function install(source, app, card) {
       }
     }
     const meta = { repo: source.repo, branch: source.branch, base: source.base, source: source.id, version: app.version, installed: new Date().toISOString() };
-    await badge.run(`f = open(${pyString(target + "/.studio.json")}, "w"); f.write(${pyString(JSON.stringify(meta))}); f.close()`);
+    await badge.run(`f = open(${pyString(staging + "/.studio.json")}, "w"); f.write(${pyString(JSON.stringify(meta))}); f.close()`);
+    await badge.run(`_st_mkdirs(${pyString(INSTALL_ROOT)})\n_st_rm(${pyString(target)})\nos.rename(${pyString(staging)}, ${pyString(target)})`);
     toast(`${titleCase(app.slug)} installed.`);
     $("#apps-reboot").hidden = !installed.menu;
   } catch (error) {
-    toast("Install failed: " + error.message, 7000);
-    try { await badge.run(`_st_rm(${pyString(target)})`); } catch (_) {}
+    const kept = installed.apps.some((a) => a.slug === app.slug) ? " The installed version was kept." : "";
+    toast("Install failed: " + error.message + "." + kept, 7000);
+    try { await badge.run(`_st_rm(${pyString(staging)})`); } catch (_) {}
   }
   await refreshApps();
 }
@@ -688,7 +729,7 @@ async function installFromMeta(app) {
   await install(source, entry, card);
 }
 
-async function uninstall(slug) {
+async function uninstallNow(slug) {
   if (!confirm(`Remove ${titleCase(slug)} from the badge?`)) return;
   try {
     await badge.run(`_st_rm(${pyString(INSTALL_ROOT + "/" + slug)})`);
@@ -757,6 +798,7 @@ _st_out({"values": _v, "locked": _locked, "can_save": hasattr(_s, "save")})`);
       }
     }
     input.dataset.key = key;
+    input.setAttribute("aria-label", label);
     input.dataset.initial = kind === "password" ? "" : input.value;
     input.disabled = locked;
     row.innerHTML = `<div><div>${locked ? "🔒 " : ""}${escapeHtml(label)}</div><div class="hint mono">${key}</div></div>`;
@@ -940,6 +982,7 @@ function draw(raw, width, height, stride) {
 // ---------- home screen layout ----------
 
 const LAYOUT_FILE = "/state/menu_layout.json";
+const SECTIONS = { custom: "Custom", order: "Apps", hidden: "Hidden" };
 let home = null;
 
 function pyTuple(source, name) {
@@ -1040,7 +1083,11 @@ function renderHome() {
         <span class="label">${escapeHtml(titleCase(app.slug))}</span>
         <span class="src">${app.added ? "installed" : "built in"}</span>
         <button class="small" data-move="-1" title="Move up" ${index === 0 ? "disabled" : ""}>↑</button>
-        <button class="small" data-move="1" title="Move down" ${index === apps.length - 1 ? "disabled" : ""}>↓</button>`;
+        <button class="small" data-move="1" title="Move down" ${index === apps.length - 1 ? "disabled" : ""}>↓</button>
+        <select class="small" aria-label="Section of ${escapeHtml(titleCase(app.slug))}">
+          ${Object.entries(SECTIONS).map(([list, title]) => `<option value="${list}" ${list === name ? "selected" : ""}>${title}</option>`).join("")}
+        </select>`;
+      item.querySelector("select").onchange = (e) => moveApp(app.slug, e.target.value, Infinity);
       item.querySelectorAll("[data-move]").forEach((button) => {
         button.onclick = () => moveApp(app.slug, name, index + Number(button.dataset.move));
       });
@@ -1370,7 +1417,10 @@ async function backup(slug, note) {
   return name;
 }
 
-async function installExtension(app, card) {
+const installExtension = (...args) => exclusive(() => installExtensionNow(...args));
+const restoreBackup = (...args) => exclusive(() => restoreBackupNow(...args));
+
+async function installExtensionNow(app, card) {
   if (!drive) return;
   const bar = document.createElement("div");
   bar.className = "progress";
@@ -1408,8 +1458,9 @@ async function loadBackups() {
   if (await hasEntry(drive, BACKUPS, "directory")) {
     for await (const [name, handle] of (await drive.getDirectoryHandle(BACKUPS)).entries()) {
       if (handle.kind !== "directory") continue;
-      let meta = { slug: name.replace(/-\d{8}-\d{6}$/, "") };
-      try { meta = { ...meta, ...JSON.parse(await (await (await handle.getFileHandle(".studio-backup.json")).getFile()).text()) }; } catch (_) {}
+      // The manifest is written last: without it the copy did not finish
+      let meta = { slug: name.replace(/-\d{8}-\d{6}$/, ""), complete: false };
+      try { meta = { ...meta, ...JSON.parse(await (await (await handle.getFileHandle(".studio-backup.json")).getFile()).text()), complete: true }; } catch (_) {}
       backups.push({ name, meta });
     }
   }
@@ -1422,8 +1473,9 @@ async function loadBackups() {
     card.innerHTML = `
       <div class="top"><div class="noicon"></div><div><div class="name">${escapeHtml(titleCase(item.meta.slug))}</div>
         <div class="meta">${escapeHtml(when)}${item.meta.note ? " · " + escapeHtml(item.meta.note) : ""}</div></div></div>
-      <div class="actions"><button class="small" data-act="restore">Restore</button><button class="small danger" data-act="delete">Delete</button></div>`;
-    card.querySelector('[data-act="restore"]').onclick = () => restoreBackup(item);
+      <div class="actions">${item.meta.complete ? `<button class="small" data-act="restore">Restore</button>` : `<span class="muted" style="font-size:13px">Incomplete copy</span>`}<button class="small danger" data-act="delete">Delete</button></div>`;
+    const restore = card.querySelector('[data-act="restore"]');
+    if (restore) restore.onclick = () => restoreBackup(item);
     card.querySelector('[data-act="delete"]').onclick = async () => {
       if (!confirm(`Delete this backup of ${titleCase(item.meta.slug)}?`)) return;
       await (await drive.getDirectoryHandle(BACKUPS)).removeEntry(item.name, { recursive: true });
@@ -1433,7 +1485,7 @@ async function loadBackups() {
   }
 }
 
-async function restoreBackup(item) {
+async function restoreBackupNow(item) {
   const slug = item.meta.slug;
   if (!confirm(`Put back this version of ${titleCase(slug)}? The current one is backed up first.`)) return;
   try {
@@ -1634,7 +1686,23 @@ function wire() {
   $("#console-line").onkeydown = (e) => { if (e.key === "Enter") sendConsole(); };
   $("#console-ctrlc").onclick = () => badge.write("\x03");
   $("#console-clear").onclick = () => (consoleOut.textContent = "");
-  renderStore();
+  renderStore().then(openFromLink);
+}
+
+// The landing page links to studio/#app=<source>/<slug>
+async function openFromLink() {
+  const match = location.hash.match(/^#app=([\w-]+)\/([\w-]+)$/);
+  if (!match) return;
+  const source = SOURCES.find((s) => s.id === match[1]);
+  if (!source) return;
+  document.querySelector('#tabs [data-tab="apps"]').click();
+  if ($("#apps-source").value !== source.id) {
+    $("#apps-source").value = source.id;
+    await renderStore();
+  }
+  const app = (await loadCatalogue(source)).find((a) => a.slug === match[2]);
+  const card = document.querySelector(`#apps-store .card[data-slug="${match[2]}"]`);
+  if (app) openDetail(source, app, card);
 }
 
 wire();
