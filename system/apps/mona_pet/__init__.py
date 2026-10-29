@@ -6,7 +6,7 @@ Controls:
 * > = Pick something to feed her
 * Enter = Clean up after her
 * Up = Run her day faster
-* Down = Show what she needs
+* Down = Show her walk: steps from the watch, what she needs, her mood
 * Upside down: left and right pick a button, Enter presses it
 * In the matching game, hold Enter to stop playing
 """
@@ -19,6 +19,7 @@ import icons
 import match
 import tufty
 import ui
+import walk
 from badgeware import State
 
 # how much faster the day runs with UP held
@@ -38,6 +39,9 @@ CLEARED_HAPPY = 30
 QUIT_HOLD_MS = 1000
 SAD_FACE = ")"
 SAD_FILL = color.rgb(249, 193, 62)
+# where she waits beside the walk panel
+WALK_SPOT = 26
+WALK_CHECK_S = 5
 
 stats_shown = False
 cursor = 0
@@ -57,6 +61,8 @@ def draw(hour, minute):
   if pet.asleep():
     # nothing rouses her early, so there is nothing to press
     ui.draw_strip_text("Mona is sleeping. Zzz.")
+  elif stats_shown:
+    ui.draw_strip_text(steps.strip_text())
   elif game is not None:
     ui.draw_strip_text("FIND THE PAIRS: %d LEFT" % game.pairs_left())
   elif picker is not None:
@@ -84,9 +90,7 @@ def draw(hour, minute):
   if game is None:
     ui.draw_clock(hour, minute)
   if stats_shown:
-    ui.draw_stats((("fed", pet.hunger()),
-                   ("clean", pet.clean()),
-                   ("happy", pet.happy())))
+    steps.draw(pet)
 
   ui.draw_header()
 
@@ -196,9 +200,17 @@ def play():
     speed = WARP if not busy and badge.held(BUTTON_UP) else 1
     passed = clock.advance(badge.ticks_delta / 1000 * speed)
 
-    # DOWN shows his stats and hides them again
+    # DOWN shows her walk and hides it again
     if not busy and badge.pressed(BUTTON_DOWN):
       stats_shown = not stats_shown
+      if stats_shown:
+        pet.move_to(WALK_SPOT)
+
+    # the watch may have sent new steps: they turn into meals
+    if badge.ticks - steps_checked[0] >= WALK_CHECK_S * 1000:
+      steps_checked[0] = badge.ticks
+      steps.reload()
+      feed_from_steps()
 
     hour, minute = clock.now()
 
@@ -220,8 +232,9 @@ def play():
       else:
         choose_button()
 
-        # left to himself he crosses to a new spot and finds something to do
-        if pet.time_since_last_position_change() > 20:
+        # left to himself he crosses to a new spot and finds something to do,
+        # unless she is showing her walk
+        if not stats_shown and pet.time_since_last_position_change() > 20:
           pet.set_mood("run")
           pet.move_to_random()
 
@@ -254,6 +267,11 @@ def game_over():
       return
 
 
+def feed_from_steps():
+  if pet.alive() and steps.feed(pet):
+    pet.do_action("eat")
+
+
 def save_state():
   saved = pet.save()
   saved["clock"] = clock.reading()
@@ -280,6 +298,8 @@ def on_exit():
 
 saved = get_state()
 pet = None
+steps = walk.Walk()
+steps_checked = [0]
 
 while True:
   # a Tufty already in hand skips the titles
@@ -293,6 +313,9 @@ while True:
     pet.load(saved)
     clock.resume(saved["clock"])
     saved = None
+
+  # the steps walked since she was last seen are waiting for her
+  feed_from_steps()
 
   save_state()
   play()

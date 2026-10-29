@@ -88,7 +88,7 @@ def draw_intro(sprite):
   screen.text("> = FEED")
   screen.text("ENTER = CLEAN")
   screen.text("UP = WARP")
-  screen.text("DOWN = STATS")
+  screen.text("DOWN = WALK")
 
   # pixel-doubled, centred on x 34 with her feet at 98
   w, h = sprite.width * 2, sprite.height * 2
@@ -97,24 +97,3 @@ def draw_intro(sprite):
   # blink the prompt, half a second on and half a second off
   if int(badge.ticks / 500) % 2:
     screen.text("PRESS ENTER TO START", rect(0, 108, 160, 11), align=image.CENTER)
-
-
-STATS_PITCH = 9
-STATS_PAD_X = 8
-STATS_PAD_Y = 6
-
-
-def draw_stats(stats):
-  lines = ["%s %d%%" % (name, value) for name, value in stats]
-  width = max(screen.measure_text(line)[0] for line in lines) + STATS_PAD_X * 2
-  # the two extra pixels give the last line a little more under it
-  height = len(lines) * STATS_PITCH + STATS_PAD_Y * 2 + 2
-  x = SCENE.x + (SCENE.w - width) / 2
-  y = SCENE.y + (SCENE.h - height) / 2
-  screen.pen = color.rgb(228, 220, 220, 200)
-  screen.shape(shape.rounded_rectangle(x - 1, y - 1, width + 2, height + 2, 5))
-  screen.pen = color.rgb(18, 16, 28, 215)
-  screen.shape(shape.rounded_rectangle(x, y, width, height, 4))
-
-  for n, line in enumerate(lines):
-    draw_shadowed(line, x + STATS_PAD_X, y + STATS_PAD_Y + n * STATS_PITCH)

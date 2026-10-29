@@ -13,6 +13,7 @@
   {"app": "merge_conflict", "file": "docs/screenshots/merge_conflict.png", "seconds": 3},
   {"app": "flappy_mona", "file": "docs/screenshots/flappy_mona.png", "seconds": 3},
   {"app": "mona_pet", "file": "docs/screenshots/mona_pet.png", "seconds": 3},
+  {"app": "pedometer", "file": "docs/screenshots/pedometer.png", "seconds": 2},
   {"app": "mona_paint", "file": "docs/screenshots/mona_paint.png", "seconds": 3},
   {"app": "rogue", "file": "docs/screenshots/rogue.png", "seconds": 4},
   {"app": "brattal", "file": "docs/screenshots/brattal.png", "seconds": 4},

@@ -19,11 +19,11 @@ Screenshots taken straight from the badge with `tools/screenshot.ps1`.
 | **Contacts** | **Radar** | **Radar: list** |
 | ![Contacts](docs/screenshots/contacts.png) | ![Radar](docs/screenshots/radar.png) | ![Radar list](docs/screenshots/radar-list.png) |
 
-| Radar: Hot / Cold game | Radar: encounter history |
-|---|---|
-| ![Hot / Cold](docs/screenshots/radar-game.png) | ![Encounters](docs/screenshots/radar-history.png) |
+| Radar: Hot / Cold game | Radar: encounter history | Pedometer |
+|---|---|---|
+| ![Hot / Cold](docs/screenshots/radar-game.png) | ![Encounters](docs/screenshots/radar-history.png) | ![Pedometer](docs/screenshots/pedometer.png) |
 
-The badges on the Radar screenshots are simulated (I only have one badge).
+The badges on the Radar screenshots are simulated (I only have one badge), and so are the steps on the Pedometer one.
 
 ### Stock apps
 
@@ -87,6 +87,8 @@ To try a pull request: `git checkout <branch>` then `./tools/deploy.ps1`.
 | **Badge** | QR code pages (↑ / ↓), a "Last push" line under the name, contribution graph on an LED matrix, NFC contact card and a reaction when a phone scans it |
 | **Contacts** | Received links are checked, website field, delete a contact, export to the PC |
 | **Radar** (new) | Nearby badges with signal-based proximity, fading, encounter history and an opt-in Hot / Cold game; optional matrix and haptic feedback |
+| **Pedometer** (new) | The day's steps from the watch, hour by hour, distance and a 6 000-step goal |
+| **Mona Pet** | Steps from the watch feed Mona (500 steps = 1 meal) and lift her mood; Down shows her walk |
 | **Menu** | Shows an app's `icon.png` when it has no built-in icon (Radar ships one; Badge keeps its built-in icon) |
 
 ### Radar
@@ -172,6 +174,17 @@ The badge has a Qw/ST (Qwiic / STEMMA QT) I²C connector. Badge and Radar look f
 - **Not available** in Contacts, Pong, Merge Conflict and Radar: they need the badge's Bluetooth. The watch reconnects on its own once you leave them (the badge reboots after every app).
 - **No pairing**: any phone or watch running the app nearby can press your buttons while the remote is on. `WATCH_REMOTE = False` in `secrets.py` turns it off.
 
+### Steps from the watch
+
+The badge hangs around the neck, so its own step counter (`get_step_count()` of the LSM6DS3) is not used: the steps come from the watch.
+
+- **On the watch**: Badger Remote asks once for **Physical activity**. Health Services then hands it the day's total and the steps of each interval, in the background, even while the app is closed; it adds them up per hour from the moment it starts listening. Under the buttons, the app shows the day's steps, with ✓ once the badge has them.
+- **Sync**: each time Badger Remote opens and connects (and when new steps come in while it is open), it writes them to a second characteristic (`6e1d1002-…`): version 1, the watch's date and time, the day's total, then the steps per hour (`STEPS_HEADER` in `system/remote.py`; the hours are left out if the link is too small).
+- **On the badge**: `remote.py` saves the last steps received in `/state/watch_steps` with the watch's date and sync time. They stay there across reboots until the next sync.
+- **Pedometer**: big number of the day's steps, "GitHub Universe '26 · Day 1 / 2" (from the watch's date, Universe being on October 28–29, 2026), one square per hour recorded by the watch (the brighter, the more steps), distance (0.75 m per step), progress to the goal (`STEPS_GOAL` in `secrets.py`, 6 000 by default) and the sync time. Without an hourly history, it shows "synced 14:32 from Galaxy Watch" instead of the squares.
+- **Mona Pet**: every 500 steps of the day is a meal (+15 food, +5 fun), given when Mona Pet opens or the watch syncs; each meal is given once, even to a new Mona. **Down** shows her walk: steps today, food / fun / clean, meals of the day and her mood, which rises with the steps (sleepy, perking up, happy, very happy, over the moon).
+- The badge has no clock of its own: "today" means the day the watch synced.
+
 ### Installing on the watch
 
 1. Download the APK: the **badger-remote-debug** artifact of the latest [CI run](https://github.com/Akiyo974/badger/actions/workflows/ci.yml) (a zip containing `app-debug.apk`), or a `wear-v*` release.
@@ -216,11 +229,14 @@ Reads the cards swapped with the **Contacts** app (in `/state`, outside the USB 
 ```powershell
 py tests/test_contacts_compat.py
 py tests/test_radar.py
+py tests/test_watch_steps.py
 ```
 
 Simulates card swaps between the stock Contacts app (read from the first commit) and the version in this repo, to check that swapping with an unmodified badge still works.
 
 The Radar tests simulate BLE traffic, proximity/fading, the opt-in game and persistent encounter history without requiring hardware.
+
+The watch steps tests feed the bytes the watch app builds to `remote.py`, then check what the Pedometer shows and how many meals Mona gets (once per meal, new day, no sync yet).
 
 GitHub Actions (`.github/workflows/ci.yml`) runs these tests, checks the syntax of `system/`, and builds, tests and lints the watch app on every pull request. Pushing a `wear-v*` tag publishes a signed APK (`wear-release.yml`, needs the `SIGNING_KEYSTORE_BASE64`, `SIGNING_PASSWORD` and `SIGNING_KEY_ALIAS` secrets).
 

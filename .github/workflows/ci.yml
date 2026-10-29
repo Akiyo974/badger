@@ -50,6 +50,9 @@ jobs:
       - name: Radar behavior tests
         run: python tests/test_radar.py
 
+      - name: Watch steps tests
+        run: python tests/test_watch_steps.py
+
   wear:
     name: Wear OS app (build, tests, lint)
     runs-on: ubuntu-latest
