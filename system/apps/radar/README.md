@@ -37,7 +37,7 @@ Changed entries are saved at most once every 10 seconds, and on normal exit, to 
 
 The external matrix is supported when a 13×9 RGB matrix using the IS31FL3741 is connected to the Qw/ST I²C port at address `0x30`. It shows the radar sweep and nearby badges, with colors identifying Radar, Contacts, Pong, and other apps. Its global current is limited to `0x40`, and the driver's previous register values are restored when Radar exits.
 
-With a DRV2605 haptic driver at I²C address `0x5A` and an ERM vibration motor, Radar gives a short vibration for new arrivals. Simultaneous arrivals are coalesced rather than building a long vibration backlog. During Hot / Cold, pulses guide you towards the selected target instead. The motor is configured for the Adafruit-style ERM motor.
+With a DRV2605 or DRV2605L haptic driver at I²C address `0x5A` and an ERM vibration motor, Radar gives a short vibration for new arrivals. Simultaneous arrivals are coalesced rather than building a long vibration backlog. During Hot / Cold, pulses guide you towards the selected target instead. The motor is configured for the Adafruit-style ERM motor.
 
 ## Development
 
