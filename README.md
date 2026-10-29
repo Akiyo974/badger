@@ -47,7 +47,7 @@ The badges on the Radar screenshots are simulated (I only have one badge), and s
 | `tools/` | PC scripts: deploy, screenshots, contacts export, QR codes |
 | `tests/` | Simulated tests run in CI: Contacts compatibility with stock badges, Radar behaviour |
 | `wear/` | **Badger Remote**, the Wear OS watch app that presses the badge's buttons (Kotlin, Compose for Wear OS) |
-| `docs/screenshots/` | README screenshots and their list (`captures.json`) |
+| `docs/` | GitHub Pages site and **Badge Studio** (`docs/studio/`), README screenshots and their list (`docs/screenshots/captures.json`) |
 | `secrets.example.py` | Settings template; the real `secrets.py` is never committed |
 | `CHANGELOG.md` | Change history |
 
@@ -76,6 +76,21 @@ The script:
 
 To try a pull request: `git checkout <branch>` then `./tools/deploy.ps1`.
 
+### From the browser: Badge Studio
+
+**[akiyo974.github.io/badger/studio](https://akiyo974.github.io/badger/studio/)**, in Chrome or Edge on a computer (Web Serial). Plug the badge in, press **Connect badge**:
+
+| Tab | What it does |
+|---|---|
+| **Apps** | Store of the official badge apps ([badger/home](https://github.com/badger/home)) and of this repo: install, update, reinstall, uninstall, details with the README. Apps go to the writable `/apps` folder (the badge cannot write to `/system`); every file is checked (size and CRC) after it is written |
+| **Home screen** | Drag the apps into the order you want, choose the ones under **CUSTOM**, hide the others. Saved in `/state/menu_layout.json` |
+| **Extensions** | Compares the built-in apps with the versions in this repo and installs the ones you want: the badge switches to USB drive mode, you pick the drive's `apps` folder once, and every app replaced is **backed up** in `apps/.studio-backups` first, with a Restore button |
+| **Settings** | Wi-Fi, GitHub name, contact card, NFC, Radar status, steps goal, watch remote. Saved through the firmware's own `secrets` module; the Wi-Fi password is never shown |
+| **Screenshot** | The screen, or any app after a few seconds, as a PNG |
+| **Console** | The MicroPython REPL |
+
+The menu of this repo is needed for the installed apps to show up (under an **INSTALLED** band) and for the home screen layout: on a stock badge, install the **Menu** extension first. The page itself is in `docs/studio/` and runs locally with `py -m http.server 8765 --directory docs`.
+
 ### By hand
 
 1. Put the badge in USB drive mode (**Mass Storage** app, or double-tap RESET).
@@ -92,7 +107,7 @@ To try a pull request: `git checkout <branch>` then `./tools/deploy.ps1`.
 | **Pedometer** (new) | The day's steps from the watch, hour by hour, distance and a 6,000-step goal |
 | **Duck Maze** (new) | Tilt the badge to roll a marble through 6 mazes: collect the rubber ducks, avoid the bug holes, reach the merge |
 | **Mona Pet** | Steps from the watch feed Mona (500 steps = 1 meal) and lift her mood; Down shows her walk |
-| **Menu** | Shows an app's `icon.png` when it has no built-in icon (Radar ships one; Badge keeps its built-in icon); the apps this repo changed come first, under a **CUSTOM** band, then the stock ones under **STOCK**. **Shake the badge** and Mona gets dizzy: X eyes, rubber ducks circling her head |
+| **Menu** | Shows an app's `icon.png` when it has no built-in icon (Radar ships one; Badge keeps its built-in icon); the apps this repo changed come first, under a **CUSTOM** band, then the stock ones under **STOCK**. Apps installed from Badge Studio (`/apps`) show up under **INSTALLED**, and the order, the CUSTOM apps and the hidden ones can be changed from Badge Studio. **Shake the badge** and Mona gets dizzy: X eyes, rubber ducks circling her head |
 
 ### Radar
 

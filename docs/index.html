@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Badger Apps</title>
+<meta name="description" content="Apps and tools for the GitHub Universe badge (Badger 2350), and Badge Studio to manage it from the browser.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><rect width='24' height='24' rx='5' fill='%230d1117'/><rect x='4' y='4' width='7' height='7' rx='1.5' fill='%2339d353'/><rect x='13' y='4' width='7' height='7' rx='1.5' fill='%23006d32'/><rect x='4' y='13' width='7' height='7' rx='1.5' fill='%2326a641'/><circle cx='16.5' cy='16.5' r='3.5' fill='%23d3fa37'/></svg>">
+<style>
+  :root {
+    --bg: #0d1117; --panel: #161b22; --panel-2: #1c2330; --line: #30363d;
+    --text: #e6edf3; --dim: #8b949e; --accent: #d3fa37;
+    --g1: #0e4429; --g2: #006d32; --g3: #26a641; --g4: #39d353;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--text); font: 16px/1.55 "Mona Sans", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif; }
+  a { color: var(--accent); }
+  .wrap { max-width: 1040px; margin: 0 auto; padding: 0 16px; }
+  header { display: flex; align-items: center; gap: 10px; padding: 18px 0; font-weight: 700; }
+  header .spacer { flex: 1; }
+  header a.plain { color: var(--dim); text-decoration: none; font-weight: 500; font-size: 14px; }
+  .mark { width: 22px; height: 22px; display: grid; grid-template-columns: 1fr 1fr; gap: 2px; }
+  .mark i:nth-child(1) { background: var(--g4); } .mark i:nth-child(2) { background: var(--g2); }
+  .mark i:nth-child(3) { background: var(--g3); } .mark i:nth-child(4) { background: var(--accent); border-radius: 50%; }
+  .mark i { border-radius: 2px; }
+  .hero { display: grid; grid-template-columns: 1.1fr 1fr; gap: 36px; align-items: center; padding: 40px 0 28px; }
+  @media (max-width: 820px) { .hero { grid-template-columns: 1fr; } }
+  h1 { font-size: clamp(32px, 6vw, 52px); line-height: 1.05; margin: 0 0 14px; letter-spacing: -0.02em; text-wrap: balance; }
+  h1 em { font-style: normal; color: var(--accent); }
+  .lead { color: var(--dim); font-size: 18px; margin: 0 0 22px; max-width: 34em; }
+  .buttons { display: flex; gap: 10px; flex-wrap: wrap; }
+  .button { display: inline-block; padding: 11px 18px; border-radius: 10px; border: 1px solid var(--line); background: var(--panel-2); color: var(--text); text-decoration: none; font-weight: 600; }
+  .button.primary { background: var(--accent); border-color: var(--accent); color: #0d1117; }
+  .screen { background: #000; border: 10px solid #1f2630; border-radius: 18px; box-shadow: 0 20px 60px #0008; overflow: hidden; }
+  .screen img { display: block; width: 100%; image-rendering: pixelated; aspect-ratio: 4 / 3; }
+  h2 { font-size: 13px; text-transform: uppercase; letter-spacing: .08em; color: var(--dim); margin: 36px 0 14px; }
+  .features { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px; }
+  .feature { background: var(--panel); border: 1px solid var(--line); border-radius: 12px; padding: 16px; }
+  .feature b { display: block; margin-bottom: 4px; }
+  .feature span { color: var(--dim); font-size: 14px; }
+  .gallery { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 12px; }
+  .gallery figure { margin: 0; }
+  .gallery img { width: 100%; display: block; border-radius: 8px; border: 1px solid var(--line); image-rendering: pixelated; aspect-ratio: 4 / 3; background: #000; }
+  .gallery figcaption { color: var(--dim); font-size: 13px; margin-top: 5px; }
+  footer { color: var(--dim); font-size: 13px; padding: 40px 0 30px; border-top: 1px solid var(--line); margin-top: 44px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <span class="mark" aria-hidden="true"><i></i><i></i><i></i><i></i></span> badger apps
+    <span class="spacer"></span>
+    <a class="plain" href="https://github.com/Akiyo974/badger">GitHub</a>
+  </header>
+
+  <section class="hero">
+    <div>
+      <h1>Your GitHub Universe badge, <em>from the browser</em>.</h1>
+      <p class="lead">Apps, games and tools for the Badger 2350. Plug the badge in over USB and use <b>Badge Studio</b> to install apps, put your own versions of the built-in ones, reorder the home screen, change its settings and take screenshots. No install: Chrome or Edge is enough.</p>
+      <div class="buttons">
+        <a class="button primary" href="studio/">Open Badge Studio</a>
+        <a class="button" href="https://github.com/Akiyo974/badger">Source on GitHub</a>
+      </div>
+    </div>
+    <div class="screen"><img src="screenshots/menu.png" alt="The badge's home screen, with the CUSTOM band of apps"></div>
+  </section>
+
+  <h2>Badge Studio</h2>
+  <div class="features">
+    <div class="feature"><b>App store</b><span>Install, update and remove apps from the official badge apps and this repo. Every file is checked after it is written.</span></div>
+    <div class="feature"><b>Extensions</b><span>Replace a built-in app with another version, like the ones in this repo. The old one is backed up on the badge and can be put back.</span></div>
+    <div class="feature"><b>Home screen</b><span>Drag the apps into the order you want, pick the ones at the top, hide the others.</span></div>
+    <div class="feature"><b>Settings, screenshots, console</b><span>Wi-Fi, GitHub name, contact card and NFC; screenshots of any app as PNG; the MicroPython REPL.</span></div>
+  </div>
+
+  <h2>Apps</h2>
+  <div class="gallery">
+    <figure><img loading="lazy" src="screenshots/badge.png" alt=""><figcaption>Badge, with GitHub stats</figcaption></figure>
+    <figure><img loading="lazy" src="screenshots/badge-qr.png" alt=""><figcaption>QR codes and NFC</figcaption></figure>
+    <figure><img loading="lazy" src="screenshots/radar.png" alt=""><figcaption>Radar: badges met nearby</figcaption></figure>
+    <figure><img loading="lazy" src="screenshots/duck-maze.png" alt=""><figcaption>Duck Maze: tilt to play</figcaption></figure>
+    <figure><img loading="lazy" src="screenshots/contacts.png" alt=""><figcaption>Contacts</figcaption></figure>
+    <figure><img loading="lazy" src="screenshots/pedometer.png" alt=""><figcaption>Pedometer</figcaption></figure>
+    <figure><img loading="lazy" src="screenshots/mona_pet.png" alt=""><figcaption>Mona Pet</figcaption></figure>
+    <figure><img loading="lazy" src="screenshots/menu-dizzy.png" alt=""><figcaption>Shake it: Mona gets dizzy</figcaption></figure>
+  </div>
+
+  <footer>Not affiliated with GitHub or Pimoroni. Badge Studio talks to the badge over Web Serial, from your browser. Apps come from GitHub; your settings never leave your computer.</footer>
+</div>
+</body>
+</html>

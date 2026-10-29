@@ -56,6 +56,9 @@ jobs:
       - name: Duck Maze level checks
         run: python tests/test_duck_maze.py
 
+      - name: Badge Studio syntax
+        run: node --check docs/studio/studio.js
+
   wear:
     name: Wear OS app (build, tests, lint)
     runs-on: ubuntu-latest

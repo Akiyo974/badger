@@ -5,6 +5,9 @@ Notable changes to this repo. Format based on [Keep a Changelog](https://keepach
 ## Unreleased
 
 ### Added
+- **Badge Studio** (`docs/studio/`, on GitHub Pages): manage the badge from Chrome or Edge over Web Serial. App store (official apps and this repo) installing to `/apps` with checked writes, home screen editor (order, CUSTOM band, hidden apps), extensions that replace built-in apps through USB drive mode with backups and restore, settings, screenshots and a console.
+- Menu: apps in `/apps` (installed from Badge Studio) show up under an **INSTALLED** band; `/state/menu_layout.json` can set the order, the CUSTOM apps and the hidden ones.
+- GitHub Pages landing page (`docs/index.html`).
 - Menu: **shake the badge** and Mona gets dizzy, with X eyes and rubber ducks circling her head; any button closes it. Sprites drawn by `tools/make_dizzy_sprites.py` in Mona's palette.
 - **Duck Maze** app: tilt the badge to roll a marble through 6 levels drawn like a contribution graph, collecting rubber ducks and avoiding bug holes; best times and unlocked levels saved; listed under CUSTOM in the menu. Level checks in `tests/test_duck_maze.py` (run in CI) and art drawn by `tools/make_maze_art.py`.
 - Menu: the apps this repo changed or added (Badge, Contacts, Radar, Mona Pet, Pedometer) come first under a **CUSTOM** band, the stock ones follow under **STOCK** (`CUSTOM_APPS` in `menu/app.py`).
