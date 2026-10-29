@@ -56,6 +56,7 @@ The badges on the Radar screenshots are simulated (I only have one badge), and s
 | `docs/` | GitHub Pages site and **Badge Studio** (`docs/studio/`), README screenshots and their list (`docs/screenshots/captures.json`) |
 | `secrets.example.py` | Settings template; the real `secrets.py` is never committed |
 | `CHANGELOG.md` | Change history |
+| `CREDITS.md`, `SECURITY.md`, `PRIVACY.md` | Who made what and licenses, how to report a security issue, what the badge and the site share |
 
 The stock badge software in `system/` (MonaOS and its apps) belongs to its authors and is included here so the changes can be read and deployed. Fonts are under the SIL Open Font License (`system/assets/fonts/licences/OFL.txt`).
 
@@ -312,3 +313,9 @@ Code under the [MIT License](LICENSE); the stock badge software in `system/` bel
 - `/system` is read-only for the badge itself: it is only changed through the USB drive.
 - Caches and saves (GitHub stats, achievements, contacts…) live in `/state`, outside the USB drive.
 - MicroPython console on the badge's serial port (115200 baud), e.g. with Thonny.
+
+## Credits, security and privacy
+
+See [CREDITS.md](CREDITS.md) for the authors and licenses of everything this builds on, [SECURITY.md](SECURITY.md) to report a vulnerability privately (and keep your `secrets.py` out of git), and [PRIVACY.md](PRIVACY.md): no tracking, and what each app shares nearby.
+
+Not affiliated with GitHub or Pimoroni. MIT licensed: see [LICENSE](LICENSE).
