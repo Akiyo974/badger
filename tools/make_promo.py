@@ -2,6 +2,7 @@
 
 Writes, in docs/media:
 - og.png: 1200x630 preview shown when the site's link is shared.
+- thumbnail.png: 1080x1080 cover of the video.
 - badge-studio.mp4: 1080x1080, 30 fps, 20 s (needs ffmpeg on the PATH).
 
 The video uses the badge screenshots of docs/screenshots and two captures of
@@ -285,6 +286,21 @@ def og_image():
     canvas.convert("RGB").save(f"{OUT}/og.png")
 
 
+def thumbnail():
+    """The video's cover, at the video's size: what the feed shows before it plays."""
+    canvas = Image.new("RGBA", (SIZE, SIZE), BG + (255,))
+    contribution_grid(canvas, 10, 860, alpha=0.6)
+    draw = ImageDraw.Draw(canvas)
+    centered(draw, 70, "I hacked my", BOLD(84), TEXT)
+    centered(draw, 170, "GitHub Universe badge", BOLD(84), ACCENT)
+    frame = badge_frame(DIZZY, 700)
+    paste_shadowed(canvas, frame, ((SIZE - frame.width) // 2, 320))
+    draw = ImageDraw.Draw(canvas)
+    draw.rounded_rectangle((250, 900, 830, 980), radius=40, fill=ACCENT)
+    centered(draw, 910, "35 apps · in your browser", BOLD(40), BG)
+    canvas.convert("RGB").save(f"{OUT}/thumbnail.png")
+
+
 def video(landing_path, studio_path):
     landing = Image.open(landing_path).convert("RGB")
     studio = Image.open(studio_path).convert("RGB")
@@ -305,7 +321,8 @@ def video(landing_path, studio_path):
 
 if __name__ == "__main__":
     og_image()
-    print("wrote", f"{OUT}/og.png")
+    thumbnail()
+    print("wrote", f"{OUT}/og.png and {OUT}/thumbnail.png")
     if len(sys.argv) == 3:
         video(sys.argv[1], sys.argv[2])
         print("wrote", f"{OUT}/badge-studio.mp4")
