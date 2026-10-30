@@ -29,7 +29,7 @@ Install [bleak](https://pypi.org/project/bleak/) once with `pip install bleak`, 
 py tools/ble_remote.py                         # list the badges nearby
 py tools/ble_remote.py select                  # tap Select on every badge found
 py tools/ble_remote.py --badge 1A2B up up select
-py tools/ble_remote.py --hold right 2          # hold Right for 2 seconds
+py tools/ble_remote.py --hold 2 right          # hold Right for 2 seconds
 ```
 
 [`tools/ble_remote.py`](https://github.com/Akiyo974/badger/blob/main/tools/ble_remote.py) works on Windows, macOS and Linux and drives every badge it finds at once.

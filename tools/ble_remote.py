@@ -10,7 +10,7 @@ Needs Python 3 and bleak (pip install bleak). From the repo root:
   py tools/ble_remote.py                      lists the badges nearby
   py tools/ble_remote.py select               taps Select on every badge found
   py tools/ble_remote.py --badge 1A2B up up select
-  py tools/ble_remote.py --hold right 2       holds Right for 2 seconds
+  py tools/ble_remote.py --hold 2 right       holds Right for 2 seconds
 """
 import argparse
 import asyncio
@@ -43,10 +43,12 @@ async def press(client, presses, hold):
     for button in presses:
         code = BUTTONS.index(button)
         if hold:
-            end = asyncio.get_running_loop().time() + hold
-            while asyncio.get_running_loop().time() < end:
+            loop = asyncio.get_running_loop()
+            end = loop.time() + hold
+            while loop.time() < end:
                 await client.write_gatt_char(COMMAND_UUID, bytes((DOWN, code)), response=False)
-                await asyncio.sleep(HOLD_REPEAT_S)
+                # UP goes out at the requested end, not at the next repeat
+                await asyncio.sleep(min(HOLD_REPEAT_S, max(0, end - loop.time())))
             await client.write_gatt_char(COMMAND_UUID, bytes((UP, code)), response=False)
         else:
             await client.write_gatt_char(COMMAND_UUID, bytes((TAP, code)), response=False)

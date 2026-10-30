@@ -45,7 +45,7 @@
     <span></span><button data-button="1" aria-label="Down">↓</button><span></span>
   </div>
   <div class="row"><button data-button="5">Back</button><button data-button="6">Home</button></div>
-  <div class="keys">Keyboard: <kbd>↑</kbd> <kbd>↓</kbd> <kbd>←</kbd> <kbd>→</kbd>, <kbd>Enter</kbd> Select, <kbd>Backspace</kbd> Back, <kbd>H</kbd> Home. Presses go to every ticked badge.</div>
+  <div class="keys">Keyboard: <kbd>↑</kbd> <kbd>↓</kbd> <kbd>←</kbd> <kbd>→</kbd>, <kbd>Enter</kbd> Select (when no button has focus), <kbd>Backspace</kbd> Back, <kbd>H</kbd> Home. Presses go to every ticked badge.</div>
 </main>
 <script>
 "use strict";
@@ -76,6 +76,7 @@ async function addBadge() {
   const badge = { device, command: null, li };
   badges.push(badge);
   li.querySelector("button").onclick = () => {
+    clearTimeout(badge.retry);
     device.gatt.disconnect();
     badges.splice(badges.indexOf(badge), 1);
     li.remove();
@@ -84,9 +85,15 @@ async function addBadge() {
     badge.command = null;
     li.classList.add("off");
     li.querySelector(".state").textContent = "disconnected, reconnecting…";
-    setTimeout(() => badges.includes(badge) && connect(badge), 2000);
+    retry(badge);
   });
   await connect(badge);
+}
+
+// One pending attempt per badge, again and again while it stays in the list
+function retry(badge) {
+  clearTimeout(badge.retry);
+  badge.retry = setTimeout(() => badges.includes(badge) && connect(badge), 2000);
 }
 
 async function connect(badge) {
@@ -97,7 +104,8 @@ async function connect(badge) {
     badge.li.querySelector(".state").textContent = "connected";
   } catch (error) {
     badge.li.classList.add("off");
-    badge.li.querySelector(".state").textContent = "not reachable: " + error.message;
+    badge.li.querySelector(".state").textContent = "not reachable, retrying…";
+    retry(badge);
   }
 }
 
@@ -115,17 +123,29 @@ function send(action, button) {
 const holding = {};
 function down(button) {
   if (holding[button]) return;
-  holding[button] = { since: Date.now(), timer: setTimeout(function repeat() {
+  const hold = (holding[button] = { held: false });
+  hold.timer = setTimeout(function repeat() {
+    hold.held = true;
     send(DOWN, button);
-    holding[button].timer = setTimeout(repeat, HOLD_REPEAT_MS);
-  }, 300) };
+    hold.timer = setTimeout(repeat, HOLD_REPEAT_MS);
+  }, 300);
 }
 function up(button) {
   const hold = holding[button];
   if (!hold) return;
   clearTimeout(hold.timer);
   delete holding[button];
-  send(Date.now() - hold.since < 300 ? TAP : UP, button);
+  send(hold.held ? UP : TAP, button);
+}
+// A key let go in another window never sends keyup here: let go of everything
+function releaseAll() {
+  for (const button of Object.keys(holding).map(Number)) {
+    const hold = holding[button];
+    clearTimeout(hold.timer);
+    delete holding[button];
+    if (hold.held) send(UP, button);
+  }
+  document.querySelectorAll(".down").forEach((el) => el.classList.remove("down"));
 }
 
 if (!navigator.bluetooth) {
@@ -137,14 +157,19 @@ for (const el of document.querySelectorAll("[data-button]")) {
   const button = Number(el.dataset.button);
   el.onpointerdown = (e) => { el.setPointerCapture(e.pointerId); el.classList.add("down"); down(button); };
   el.onpointerup = el.onpointercancel = () => { el.classList.remove("down"); up(button); };
+  // Space, Enter on the focused button or a screen reader click it without a pointer (detail 0)
+  el.onclick = (e) => { if (e.detail === 0) send(TAP, button); };
 }
 addEventListener("keydown", (e) => {
-  // Keys drive the badges even after ticking a box; only typing in a text field is left alone
+  // Keys drive the badges even after ticking a box, but a focused button or link keeps Enter
   if (!(e.key in KEYS) || e.target.type === "text") return;
+  if (e.key === "Enter" && e.target.closest("button, a")) return;
   e.preventDefault();
   if (!e.repeat) down(KEYS[e.key]);
 });
 addEventListener("keyup", (e) => { if (e.key in KEYS) up(KEYS[e.key]); });
+addEventListener("blur", releaseAll);
+document.addEventListener("visibilitychange", () => document.hidden && releaseAll());
 </script>
 </body>
 </html>
