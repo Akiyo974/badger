@@ -13,6 +13,7 @@ const GUIDES = [
   ["mona_pet", "Mona Pet"],
   ["menu", "Menu"],
   ["badger_remote", "Badger Remote"],
+  ["bluetooth", "Bluetooth from a computer"],
 ];
 
 const $ = (selector) => document.querySelector(selector);

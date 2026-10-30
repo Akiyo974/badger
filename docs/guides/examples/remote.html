@@ -1,0 +1,150 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Badge Remote</title>
+<meta name="description" content="Press the buttons of one or more GitHub Universe badges over Bluetooth, from Chrome or Edge. A starting point for your own projects.">
+<style>
+  :root { --bg: #0d1117; --panel: #161b22; --line: #30363d; --text: #e6edf3; --dim: #8b949e; --accent: #d3fa37; --green: #39d353; --red: #f85149; }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--text); font: 16px/1.5 ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif; }
+  main { max-width: 640px; margin: 0 auto; padding: 24px 16px 40px; }
+  h1 { font-size: 26px; margin: 0 0 4px; }
+  p { color: var(--dim); margin: 0 0 16px; }
+  a { color: var(--accent); }
+  button { font: inherit; color: var(--text); background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 10px 16px; cursor: pointer; touch-action: none; user-select: none; }
+  button:active, button.down { border-color: var(--accent); background: #2a3317; }
+  button:disabled { opacity: .4; cursor: default; }
+  .primary { background: var(--accent); border-color: var(--accent); color: #0d1117; font-weight: 600; }
+  .notice { border-left: 3px solid var(--red); background: var(--panel); padding: 10px 14px; border-radius: 6px; margin-bottom: 16px; }
+  #badges { list-style: none; padding: 0; margin: 16px 0; display: grid; gap: 8px; }
+  #badges li { display: flex; align-items: center; gap: 10px; background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 8px 12px; }
+  #badges li .name { flex: 1; font-weight: 600; }
+  #badges li .state { color: var(--green); font-size: 13px; }
+  #badges li.off .state { color: var(--red); }
+  .pad { display: grid; grid-template-columns: repeat(3, 72px); grid-template-rows: repeat(3, 56px); gap: 8px; justify-content: center; margin: 24px 0 12px; }
+  .pad button { padding: 0; font-size: 20px; }
+  .row { display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; }
+  .keys { text-align: center; font-size: 13px; margin-top: 18px; }
+  kbd { border: 1px solid var(--line); border-radius: 4px; padding: 0 5px; font-size: 12px; }
+</style>
+</head>
+<body>
+<main>
+  <h1>Badge Remote</h1>
+  <p>Press the buttons of your GitHub Universe badges over Bluetooth. The badge must run <a href="https://github.com/Akiyo974/badger">Akiyo974/badger</a>'s <code>remote.py</code> and be on the menu or an app that leaves Bluetooth free. <a href="../#bluetooth">Guide</a></p>
+  <div id="unsupported" class="notice" hidden>This browser has no Web Bluetooth. Use Chrome or Edge on Windows, macOS, ChromeOS or Android.</div>
+
+  <button id="add" class="primary">Add a badge</button>
+  <ul id="badges"></ul>
+
+  <div class="pad">
+    <span></span><button data-button="0" aria-label="Up">↑</button><span></span>
+    <button data-button="2" aria-label="Left">←</button><button data-button="4">Select</button><button data-button="3" aria-label="Right">→</button>
+    <span></span><button data-button="1" aria-label="Down">↓</button><span></span>
+  </div>
+  <div class="row"><button data-button="5">Back</button><button data-button="6">Home</button></div>
+  <div class="keys">Keyboard: <kbd>↑</kbd> <kbd>↓</kbd> <kbd>←</kbd> <kbd>→</kbd>, <kbd>Enter</kbd> Select, <kbd>Backspace</kbd> Back, <kbd>H</kbd> Home. Presses go to every ticked badge.</div>
+</main>
+<script>
+"use strict";
+// Same service as Badger Remote, the watch app (system/remote.py on the badge).
+// Each write is 2 bytes: an action (0 tap, 1 down, 2 up), then a button
+// (0 up, 1 down, 2 left, 3 right, 4 select, 5 back, 6 home).
+const SERVICE = "6e1d1000-8d5c-4b52-9a57-2a6b4c1b0001";
+const COMMAND = "6e1d1001-8d5c-4b52-9a57-2a6b4c1b0001";
+const TAP = 0, DOWN = 1, UP = 2;
+// The badge lets go of a held button after 1.5 s without news: repeat DOWN sooner
+const HOLD_REPEAT_MS = 500;
+const KEYS = { ArrowUp: 0, ArrowDown: 1, ArrowLeft: 2, ArrowRight: 3, Enter: 4, Backspace: 5, h: 6, H: 6 };
+
+const badges = [];  // { device, command, li, on }
+
+async function addBadge() {
+  let device;
+  try {
+    device = await navigator.bluetooth.requestDevice({ filters: [{ services: [SERVICE] }] });
+  } catch (_) {
+    return;  // the person closed the chooser
+  }
+  if (badges.some((b) => b.device.id === device.id)) return;
+  const li = document.createElement("li");
+  li.innerHTML = `<input type="checkbox" checked aria-label="Send to this badge"><span class="name"></span><span class="state">connecting…</span><button class="small">Remove</button>`;
+  li.querySelector(".name").textContent = device.name || "Badger";
+  document.querySelector("#badges").appendChild(li);
+  const badge = { device, command: null, li };
+  badges.push(badge);
+  li.querySelector("button").onclick = () => {
+    device.gatt.disconnect();
+    badges.splice(badges.indexOf(badge), 1);
+    li.remove();
+  };
+  device.addEventListener("gattserverdisconnected", () => {
+    badge.command = null;
+    li.classList.add("off");
+    li.querySelector(".state").textContent = "disconnected, reconnecting…";
+    setTimeout(() => badges.includes(badge) && connect(badge), 2000);
+  });
+  await connect(badge);
+}
+
+async function connect(badge) {
+  try {
+    const server = await badge.device.gatt.connect();
+    badge.command = await (await server.getPrimaryService(SERVICE)).getCharacteristic(COMMAND);
+    badge.li.classList.remove("off");
+    badge.li.querySelector(".state").textContent = "connected";
+  } catch (error) {
+    badge.li.classList.add("off");
+    badge.li.querySelector(".state").textContent = "not reachable: " + error.message;
+  }
+}
+
+// Writes go one after another per badge: a GATT connection takes one at a time
+function send(action, button) {
+  for (const badge of badges) {
+    if (!badge.command || !badge.li.querySelector("input").checked) continue;
+    badge.queue = (badge.queue || Promise.resolve())
+      .then(() => badge.command.writeValueWithoutResponse(new Uint8Array([action, button])))
+      .catch(() => {});
+  }
+}
+
+// A short press is a tap; a long one holds the button until it is let go
+const holding = {};
+function down(button) {
+  if (holding[button]) return;
+  holding[button] = { since: Date.now(), timer: setTimeout(function repeat() {
+    send(DOWN, button);
+    holding[button].timer = setTimeout(repeat, HOLD_REPEAT_MS);
+  }, 300) };
+}
+function up(button) {
+  const hold = holding[button];
+  if (!hold) return;
+  clearTimeout(hold.timer);
+  delete holding[button];
+  send(Date.now() - hold.since < 300 ? TAP : UP, button);
+}
+
+if (!navigator.bluetooth) {
+  document.querySelector("#unsupported").hidden = false;
+  document.querySelector("#add").disabled = true;
+}
+document.querySelector("#add").onclick = addBadge;
+for (const el of document.querySelectorAll("[data-button]")) {
+  const button = Number(el.dataset.button);
+  el.onpointerdown = (e) => { el.setPointerCapture(e.pointerId); el.classList.add("down"); down(button); };
+  el.onpointerup = el.onpointercancel = () => { el.classList.remove("down"); up(button); };
+}
+addEventListener("keydown", (e) => {
+  // Keys drive the badges even after ticking a box; only typing in a text field is left alone
+  if (!(e.key in KEYS) || e.target.type === "text") return;
+  e.preventDefault();
+  if (!e.repeat) down(KEYS[e.key]);
+});
+addEventListener("keyup", (e) => { if (e.key in KEYS) up(KEYS[e.key]); });
+</script>
+</body>
+</html>

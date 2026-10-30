@@ -260,6 +260,10 @@ Each CI run signs its debug APK with a different key: if `adb install` answers `
 
 From `wear/`, with JDK 17 and the Android SDK: `./gradlew assembleDebug`, then `adb install -r app/build/outputs/apk/debug/app-debug.apk`.
 
+### From a computer
+
+The same Bluetooth service works from a computer: **[Badge Remote](https://akiyo974.github.io/badger/guides/examples/remote.html)** in Chrome or Edge, or `py tools/ble_remote.py select` with [bleak](https://pypi.org/project/bleak/), for one badge or several at once. See the [Bluetooth guide](docs/guides/bluetooth.md) for the protocol and building your own.
+
 ## Screenshots
 
 ```powershell
