@@ -1350,6 +1350,10 @@ function renderDrive() {
   } else if (drive && !badge.connected) {
     note.className = "notice";
     note.innerHTML = "Working on the badge's drive (<b>BADGER/apps</b>). When you are done, press <b>Restart the badge</b>.";
+  } else if (badge.connected) {
+    // The install buttons stay grey until then: say why where it shows
+    note.className = "notice";
+    note.innerHTML = "To install, press <b>Switch to USB drive mode</b>, then <b>Pick the apps folder</b> and choose the <b>apps</b> folder of the BADGER drive.";
   } else {
     note.hidden = true;
   }

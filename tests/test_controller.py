@@ -91,6 +91,40 @@ class ParseTest(unittest.TestCase):
 
 
 class KeysTest(unittest.TestCase):
+    def run_main(self, stream, *args):
+        """The keys main() presses and releases for these badge events."""
+        log = []
+
+        class Keyboard:
+            def press(self, key):
+                log.append(("press", key))
+
+            def release(self, key):
+                log.append(("release", key))
+
+        class Key:
+            up, down, left, right, space, esc = "UP", "DOWN", "LEFT", "RIGHT", "SPACE", "ESC"
+
+        keyboard = types.ModuleType("pynput.keyboard")
+        keyboard.Controller, keyboard.Key = Keyboard, Key
+        keyboard.KeyCode = types.SimpleNamespace(from_char=lambda c: "char:" + c)
+        sys.modules["pynput"] = types.ModuleType("pynput")
+        sys.modules["pynput.keyboard"] = keyboard
+        original = badge_controller.events
+        badge_controller.events = lambda port=None: iter(stream)
+        sys.argv = ["badge_controller.py", *args]
+        try:
+            with contextlib.redirect_stderr(io.StringIO()):
+                badge_controller.main()
+        finally:
+            badge_controller.events = original
+        return log
+
+    def test_two_buttons_on_one_key(self):
+        stream = [(True, "up"), (True, "select"), (False, "up"), (False, "select")]
+        log = self.run_main(stream, "--map", "up=z", "select=z")
+        self.assertEqual(log, [("press", "char:z"), ("release", "char:z")])
+
     def test_keys_follow_the_badge_and_are_let_go_when_unplugged(self):
         log = []
 
