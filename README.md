@@ -119,6 +119,7 @@ The menu of this repo is needed for the installed apps to show up (under an **IN
 | **Contacts** | Received links are checked, website field, delete a contact, export to the PC |
 | **Radar** (new) | Nearby badges with signal-based proximity, fading, encounter history and an opt-in Hot / Cold game; optional matrix and haptic feedback |
 | **Pedometer** (new) | The day's steps from the watch, hour by hour, distance and a 6,000-step goal |
+| **Controller** (new) | The badge as a game pad for the computer: each press goes out on USB, and `tools/badge_controller.py` turns it into a key press ([guide](docs/guides/controller.md)) |
 | **Duck Maze** (new) | Tilt the badge to roll a marble through 6 mazes: collect the rubber ducks, avoid the bug holes, reach the merge |
 | **Mona Pet** | Steps from the watch feed Mona (500 steps = 1 meal) and lift her mood; Down shows her walk |
 | **Menu** | Shows an app's `icon.png` when it has no built-in icon (Radar ships one; Badge keeps its built-in icon); the apps this repo changed come first, under a **CUSTOM** band, then the stock ones under **STOCK**. Apps installed from Badge Studio (`/apps`) show up under **INSTALLED**, and the order, the CUSTOM apps and the hidden ones can be changed from Badge Studio. **Shake the badge** and Mona gets dizzy: X eyes, rubber ducks circling her head |
@@ -293,6 +294,7 @@ py tests/test_duck_maze.py
 py tests/test_apps.py
 py tests/test_catalog.py
 py tests/test_guides.py
+py tests/test_controller.py
 ```
 
 Simulates card swaps between the stock Contacts app (read from the first commit) and the version in this repo, to check that swapping with an unmodified badge still works.

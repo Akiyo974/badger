@@ -12,6 +12,7 @@ Step-by-step guides for the apps made or changed in this repo. Read them here on
 | [Mona Pet](mona_pet.md) | Look after Mona; your steps feed her |
 | [Menu](menu.md) | The home screen: CUSTOM band, installed apps, and a dizzy Mona |
 | [Badger Remote](badger_remote.md) | Use a Wear OS watch as the badge's buttons |
+| [Controller](controller.md) | The badge as a game pad for your computer, or for your own program |
 | [Bluetooth from a computer](bluetooth.md) | Press the buttons of one or more badges from a browser or a script, and build your own project |
 
 ## Before you start: installing the apps

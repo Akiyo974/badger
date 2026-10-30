@@ -65,6 +65,9 @@ jobs:
       - name: Guides checks
         run: python tests/test_guides.py
 
+      - name: Controller checks
+        run: python tests/test_controller.py
+
       - name: Badge Studio syntax
         run: node --check docs/studio/studio.js && node --check docs/site.js && node --check docs/guides/guides.js
 
