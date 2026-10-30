@@ -37,6 +37,7 @@ CUSTOM_APPS = (
     "mona_pet",
     "pedometer",
     "duck_maze",
+    "controller",
 )
 BAND = 14
 INSTALLED_ROOT = "/apps"

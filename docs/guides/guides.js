@@ -13,6 +13,7 @@ const GUIDES = [
   ["mona_pet", "Mona Pet"],
   ["menu", "Menu"],
   ["badger_remote", "Badger Remote"],
+  ["controller", "Controller"],
   ["bluetooth", "Bluetooth from a computer"],
 ];
 
@@ -65,7 +66,7 @@ function markdown(text) {
     const line = lines[i];
     if (line.trim().startsWith("```")) {
       const code = [];
-      for (i++; i < lines.length && !lines[i].trim().startsWith("```"); i++) code.push(lines[i].replace(/^ {3}/, ""));
+      for (i++; i < lines.length && !lines[i].trim().startsWith("```"); i++) code.push(lines[i]);
       out.push(`<pre><code>${escapeHtml(code.join("\n"))}</code></pre>`);
       i++;
       continue;
@@ -103,7 +104,9 @@ function markdown(text) {
             i++;
           }
           while (block.length && !block[block.length - 1].trim()) block.pop();
-          items[items.length - 1].push(markdown(block.map((l) => l.replace(/^\s{3}/, "")).join("\n")));
+          // Takes off the block's own indentation, whatever its width
+          const indent = Math.min(...block.filter((l) => l.trim()).map((l) => l.match(/^\s*/)[0].length));
+          items[items.length - 1].push(markdown(block.map((l) => l.slice(indent)).join("\n")));
           continue;
         }
         // A blank line goes on with the list when an item or an indented block follows
