@@ -829,6 +829,21 @@
     "size": 22433
    },
    {
+    "path": "system/apps/controller/README.md",
+    "sha": "85fdb41c187d84656aa6f2f2fdcdeeff83286ffd",
+    "size": 520
+   },
+   {
+    "path": "system/apps/controller/__init__.py",
+    "sha": "4444a465f6e6a17acd8b7a53a1f017296cef3d6d",
+    "size": 2671
+   },
+   {
+    "path": "system/apps/controller/icon.png",
+    "sha": "ea54e5b83824c3deda8d4c2c006b9ccf58128835",
+    "size": 146
+   },
+   {
     "path": "system/apps/duck_maze/README.md",
     "sha": "a0b58f1de44a19de97a2bde943c5017660b89c79",
     "size": 394
@@ -1005,8 +1020,8 @@
    },
    {
     "path": "system/apps/menu/app.py",
-    "sha": "e1e76be96374fbf797f5986f15939a7b0e908c4f",
-    "size": 22883
+    "sha": "88a29f224afdecd66987e80dd886ec66559267d6",
+    "size": 22901
    },
    {
     "path": "system/apps/menu/awards/ascii-donut-small.png",
@@ -1726,6 +1741,21 @@
     "size": 22433
    },
    {
+    "path": "system/apps/controller/README.md",
+    "sha": "85fdb41c187d84656aa6f2f2fdcdeeff83286ffd",
+    "size": 520
+   },
+   {
+    "path": "system/apps/controller/__init__.py",
+    "sha": "4444a465f6e6a17acd8b7a53a1f017296cef3d6d",
+    "size": 2671
+   },
+   {
+    "path": "system/apps/controller/icon.png",
+    "sha": "ea54e5b83824c3deda8d4c2c006b9ccf58128835",
+    "size": 146
+   },
+   {
     "path": "system/apps/duck_maze/README.md",
     "sha": "a0b58f1de44a19de97a2bde943c5017660b89c79",
     "size": 394
@@ -1902,8 +1932,8 @@
    },
    {
     "path": "system/apps/menu/app.py",
-    "sha": "e1e76be96374fbf797f5986f15939a7b0e908c4f",
-    "size": 22883
+    "sha": "88a29f224afdecd66987e80dd886ec66559267d6",
+    "size": 22901
    },
    {
     "path": "system/apps/menu/awards/ascii-donut-small.png",
