@@ -13,7 +13,10 @@ repo root, with the badge plugged in and Controller open:
 
 In your own Python program:
   from badge_controller import events
-  for pressed, button in events():
+  for event in events():
+      if event is None:
+          continue  # unplugged: it reconnects by itself
+      pressed, button = event
       print(button, "down" if pressed else "up")
 """
 import argparse
@@ -115,28 +118,35 @@ def main():
     except ValueError as error:
         parser.error(str(error))
     keyboard = Controller()
-    down = set()
+    down = set()  # badge buttons held
+
+    def key_held(button):
+        # Two buttons may share a key: it stays down while either one is held
+        return any(keys[other] == keys[button] for other in down if other != button)
+
     print("Badge buttons:", ", ".join(f"{b} → {mapping[b]}" for b in BUTTONS), file=sys.stderr)
     try:
         for event in events(args.port):
             if event is None:
                 # Unplugged: never leave a key stuck down
-                for button in list(down):
-                    keyboard.release(keys[button])
+                for key in {keys[button] for button in down}:
+                    keyboard.release(key)
                 down.clear()
                 continue
             pressed, button = event
             if pressed and button not in down:
-                keyboard.press(keys[button])
+                if not key_held(button):
+                    keyboard.press(keys[button])
                 down.add(button)
             elif not pressed and button in down:
-                keyboard.release(keys[button])
                 down.discard(button)
+                if not key_held(button):
+                    keyboard.release(keys[button])
     except KeyboardInterrupt:
         pass
     finally:
-        for button in down:
-            keyboard.release(keys[button])
+        for key in {keys[button] for button in down}:
+            keyboard.release(key)
 
 
 if __name__ == "__main__":
